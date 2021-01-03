@@ -56,7 +56,7 @@ if __name__ == '__main__':
     setup(
         name='rpy2-arrow',
         version=pack_version,
-        description='Arrow',
+        description='Bridge Arrow between Python and R when using rpy2',
         license='MIT',
         requires=['numpy', 'pyarrow', 'rpy2', 'rpy2_R6'],
         packages=['rpy2_arrow'],
