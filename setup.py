@@ -58,7 +58,7 @@ if __name__ == '__main__':
         version=pack_version,
         description='Arrow',
         license='MIT',
-        requires=['rpy2_R6'],
+        requires=['numpy', 'pyarrow', 'rpy2', 'rpy2_R6'],
         packages=['rpy2_arrow'],
         ext_modules=add_arrow_setup(extensions),
         classifiers=['Programming Language :: Python',
