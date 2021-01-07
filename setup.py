@@ -10,7 +10,6 @@ if __name__ == '__main__':
         license='MIT',
         requires=['rpy2', 'rpy2_R6'],
         packages=['rpy2_arrow'],
-        ext_modules=add_arrow_setup(extensions),
         classifiers=['Programming Language :: Python',
                      'Programming Language :: Python :: 3',
                      'Programming Language :: Python :: 3.6',

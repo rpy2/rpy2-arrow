@@ -16,9 +16,9 @@ def pyarrow_to_sexpextptr_array(obj):
 
 
 def pyarrow_to_sexpextptr_recordbatch(obj):
-    schema_ptr = rarrow.allocate_arrow_schema()
-    table_ptr = rarrow.allocate_arrow_table()
-    table._export_to_c(table_ptr, schema_ptr)
+    schema_ptr = rarrow.allocate_arrow_schema()[0]
+    table_ptr = rarrow.allocate_arrow_table()[0]
+    table._export_to_c(int(table_ptr), int(schema_ptr))
     r_recordbatch = rarrow.ImportRecordBatch(table_ptr, schema_ptr)
     rarrow.delete_arrow_schema(schema_ptr)
     rarrow.delete_arrow_table(array_ptr)
@@ -36,8 +36,8 @@ def pyarrow_to_sexpextptr_table(obj):
 
 
 def pyarrow_to_sexpextptr_schema(obj):
-    schema_ptr = rarrow.allocate_arrow_schema()
-    table._export_to_c(schema_ptr)
+    schema_ptr = rarrow.allocate_arrow_schema()[0]
+    table._export_to_c(int(schema_ptr))
     r_recordbatch = rarrow.ImportSchema(schema_ptr)
     rarrow.delete_arrow_schema(schema_ptr)
     return r_recordbatch

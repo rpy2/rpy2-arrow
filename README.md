@@ -30,4 +30,20 @@ r_array = dollar(RArray, 'new')(r_a)
 # Run an R function on our insance
 base = packages.importr('base')
 print(base.sum(r_array))
+
+
+
+import rpy2_R6.r6b as r6b
+
+# Python proxy for the R6 class
+rarray_factory = r6b.R6DynamicClassGenerator(rarrow.Array)
+
+# Create an instance using our pointer
+r_array = rarray_factory.new(r_a)
+
+# Run an R function on our insance
+base = packages.importr('base')
+print(base.sum(r_array))
+
+print(''.join(r_array.ToString()))
 ```
