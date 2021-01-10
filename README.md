@@ -6,7 +6,7 @@ example/demo:
 ```python
 import rpy2.robjects.packages as packages
 import pyarrow
-import rpy2_arrow.sexpextptr as r_ptr
+import rpy2_arrow.pyarrow_rarrow as pyra
 
 base = packages.importr('base')
 rarrow = packages.importr('arrow')
@@ -15,7 +15,7 @@ rarrow = packages.importr('arrow')
 py_array = pyarrow.array(range(10))
 
 # Vanilla rpy2 
-r_array = r_ptr.pyarrow_to_r_array(py_array)
+r_array = pyra.pyarrow_to_r_array(py_array)
 # (r_array is wrapped in an R environment)
 
 print(base.sum(r_array))
@@ -28,7 +28,7 @@ print(''.join(r_array['ToString']()))
 # and conversion rules.
 
 # Create an R external pointer (wrapping the Python C pointer)
-r_a = r_ptr.pyarrow_to_sexpextptr_array(py_array)
+r_a = pyra.pyarrow_to_sexpextptr_array(py_array)
 
 # The R6 wrapper comes in two flavors: a and b.
 import rpy2_R6.r6a as r6a
