@@ -14,7 +14,7 @@ if __name__ == '__main__':
         version=pack_version,
         description='Bridge Arrow between Python and R when using rpy2',
         license='MIT',
-        requires=['rpy2'],
+        requires=['pyarrow', 'rpy2'],
         extras_require=extras_require,
         packages=['rpy2_arrow'],
         classifiers=['Programming Language :: Python',
