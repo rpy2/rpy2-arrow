@@ -1,16 +1,14 @@
 import array
 import pandas
 import rpy2.rinterface as rinterface
-import rpy2_arrow.sexpextptr as r_ptr
+import rpy2_arrow.pyarrow_rarrow as pyr
 import pyarrow
 
 
 def test_Array():
     a = array.array('i', [1, 2, 3])
     py_ar = pyarrow.array(a)
-    r_sptr = r_ptr.pyarrow_to_sexpextptr_array(py_ar)
-    assert isinstance(r_sptr, rinterface.SexpExtPtr)
-    r_ar = r_ptr.pyarrow_to_r_array(py_ar)
+    r_ar = pyr.pyarrow_to_r_array(py_ar)
     assert isinstance(r_ar, rinterface.SexpEnvironment)
 
 
@@ -20,14 +18,14 @@ def test_RecordBatch():
          'b': [4, 5, 6]}
     )
     py_rb = pyarrow.record_batch(dataf)
-    r_rb = r_ptr.pyarrow_to_sexpextptr_recordbatch(py_rb)
-    assert isinstance(r_rb, rinterface.SexpExtPtr)
+    r_rb = pyr.pyarrow_to_r_recordbatch(py_rb)
+    assert isinstance(r_rb, rinterface.SexpEnvironment)
 
 
 def test_ChunkedArray():
     py_ca = pyarrow.chunked_array([[1, 2, 3], [4, 5]])
-    r_ca = r_ptr.pyarrow_to_sexpextptr_chunkedarray(py_ca)
-    assert isinstance(r_ca, rinterface.SexpExtPtr)
+    r_ca = pyr.pyarrow_to_r_chunkedarray(py_ca)
+    assert isinstance(r_ca, rinterface.SexpEnvironment)
 
 
 def test_Table():
@@ -36,5 +34,5 @@ def test_Table():
          'b': [4, 5, 6]}
     )
     py_tb = pyarrow.record_batch(dataf)
-    r_tb = r_ptr.pyarrow_to_sexpextptr_table(py_tb)
-    assert isinstance(r_tb, rinterface.SexpExtPtr)
+    r_tb = pyr.pyarrow_to_r_table(py_tb)
+    assert isinstance(r_tb, rinterface.SexpEnvironment)
