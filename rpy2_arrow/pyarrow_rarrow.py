@@ -1,5 +1,4 @@
 import rpy2.robjects.packages as packages
-import rpy2.rinterface as rinterface
 import warnings
 from typing import TYPE_CHECKING
 
@@ -107,4 +106,3 @@ def pyarrow_to_r_schema(
     finally:
         rarrow.delete_arrow_schema(schema_ptr)
     return r_recordbatch
-
