@@ -7,10 +7,12 @@ import pyarrow
 
 
 def test_Array():
-    a = array.array('i', [1,2,3])
+    a = array.array('i', [1, 2, 3])
     py_ar = pyarrow.array(a)
-    r_ar = r_ptr.pyarrow_to_sexpextptr_array(py_ar)
-    assert isinstance(r_ar, rinterface.SexpExtPtr)
+    r_sptr = r_ptr.pyarrow_to_sexpextptr_array(py_ar)
+    assert isinstance(r_sptr, rinterface.SexpExtPtr)
+    r_ar = r_ptr.pyarrow_to_r_array(py_ar)
+    assert isinstance(r_ar, rinterface.SexpEnvironment)
 
 
 def test_RecordBatch():

@@ -7,13 +7,25 @@ example/demo:
 import rpy2.robjects.packages as packages
 import pyarrow
 import rpy2_arrow.sexpextptr as r_ptr
-from rpy2_R6.utils import dollar
 
-
+base = packages.importr('base')
 rarrow = packages.importr('arrow')
 
 
 py_array = pyarrow.array(range(10))
+
+# Vanilla rpy2 
+r_array = r_ptr.pyarrow_to_r_array(py_array)
+# (r_array is wrapped in an R environment)
+
+print(base.sum(r_array))
+print(''.join(r_array['ToString']()))
+
+
+# --WIP--
+
+# The package rpy2-R6 offers a better integration of R6 objects,
+# and conversion rules.
 
 # Create an R external pointer (wrapping the Python C pointer)
 r_a = r_ptr.pyarrow_to_sexpextptr_array(py_array)
@@ -25,10 +37,9 @@ import rpy2_R6.r6a as r6a
 RArray = r6a.R6Class(rarrow.Array)
 
 # Create an instance using our pointer
-r_array = dollar(RArray, 'new')(r_a)
+r_array = RArray['new'](r_a)
 
 # Run an R function on our insance
-base = packages.importr('base')
 print(base.sum(r_array))
 
 
@@ -42,7 +53,6 @@ rarray_factory = r6b.R6DynamicClassGenerator(rarrow.Array)
 r_array = rarray_factory.new(r_a)
 
 # Run an R function on our insance
-base = packages.importr('base')
 print(base.sum(r_array))
 
 print(''.join(r_array.ToString()))
