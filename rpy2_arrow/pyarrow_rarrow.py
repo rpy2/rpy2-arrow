@@ -1,4 +1,3 @@
-import rpy2.robjects as ro
 import rpy2.robjects.packages as packages
 
 rarrow = packages.importr('arrow')

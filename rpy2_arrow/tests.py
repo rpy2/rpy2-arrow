@@ -1,4 +1,3 @@
-import pytest
 import array
 import pandas
 import rpy2.rinterface as rinterface
