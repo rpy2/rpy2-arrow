@@ -18,7 +18,7 @@ converter = rpy2.robjects.conversion.Converter(
     template=rpy2.robjects.default_converter
 )
 
-        
+
 def rpy2py_array(obj):
     return array_factory.__R6CLASS__(obj)
 
@@ -47,5 +47,3 @@ def rpy2py_table(obj):
      'Table': table_factory.__R6CLASS__,
      'Schema': schema_factory.__R6CLASS__
  }))
-
-

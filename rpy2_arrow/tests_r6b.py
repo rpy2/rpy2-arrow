@@ -10,12 +10,12 @@ import pyarrow
 def test_rpy2py_Array():
     a = [1, 2, 3]
     py_ar = pyarrow.array(a)
-    r_ar = pyr.pyarrow_to_r_array(py_ar)
-    assert isinstance(r_ar, rinterface.SexpEnvironment)
+    r6_ar = pyr.pyarrow_to_r_array(py_ar)
+    assert isinstance(r6_ar, rinterface.SexpEnvironment)
     # TODO: bug in rpy2's layering of conversion rules?
-    #with conversion.local_converter(
-    #        ro.default_converter + r6b_ar.converter
-    #) as cv:
+    # with conversion.local_converter(
+    #         ro.default_converter + r6b_ar.converter
+    # ) as cv:
     env_map = (ro.conversion
                .converter.rpy2py_nc_name[rinterface.SexpEnvironment])
     with conversion.NameClassMapContext(
@@ -23,4 +23,4 @@ def test_rpy2py_Array():
             r6b_ar.converter.rpy2py_nc_name[rinterface.SexpEnvironment]._map
     ):
         r6_ar = pyr.pyarrow_to_r_array(py_ar)
-        assert isinstance(r_ar, r6b.R6)
+        assert isinstance(r6_ar, r6b.R6)
