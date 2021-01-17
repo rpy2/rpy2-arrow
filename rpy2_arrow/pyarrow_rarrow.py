@@ -142,7 +142,7 @@ def rarrow_to_py_table(
 
     if rpy2py is None:
         rpy2py = converter
-    # TODO: rpy2 conversion forces something a little kludgy here. 
+    # TODO: rpy2 conversion forces something a little kludgy here.
     columns = [
         (rpy2py._rpy2py_nc_map[rinterface.SexpEnvironment]
          .find(obj['columns'][0].rclass))
