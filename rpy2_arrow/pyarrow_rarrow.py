@@ -98,7 +98,7 @@ def rarrow_to_py_chunkedarray(
     """
     chunks = tuple(rarrow_to_py_array(x) for x in obj['chunks'])
     return pyarrow.chunked_array(chunks)
-    
+
 
 def pyarrow_to_r_table(
         obj: 'pyarrow.lib.Table'
@@ -131,7 +131,7 @@ def rarrow_to_py_table(
     columns = [_RPY2PY_ARROW[tuple(x.rclass)](x) for x in obj['columns']]
     schema = rarrow_to_py_schema(obj['schema'])
     py_table = pyarrow.Table.from_arrays(columns,
-                                         schema = schema)
+                                         schema=schema)
     return py_table
 
 
@@ -179,4 +179,3 @@ _RPY2PY_ARROW = {
     ('Schema', 'ArrowObject', 'R6'): rarrow_to_py_schema,
     ('Table', 'ArrowObject', 'R6'): rarrow_to_py_table
 }
-    
