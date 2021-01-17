@@ -111,7 +111,9 @@ def pyarrow_to_r_table(
     """
 
     kwargs = dict(
-        (k, pyarrow_to_r_array(v))
+        (k, pyarrow_to_r_chunkedarray(v)
+            if isinstance(v, pyarrow.ChunkedArray)
+            else pyarrow_to_r_array(v))
         for k, v in zip(obj.schema.names, obj.columns)
     )
     kwargs['schema'] = pyarrow_to_r_schema(obj.schema)
