@@ -18,7 +18,7 @@ easily:
 
 .. code-block:: bash
 
-   pip install rpy2-arrow
+   pip install -e git://github.com/rpy2/rpy2-arrow.git@master#egg=rpy2_arrow
 
 The package allows the sharing of Apache Arrow data structures
 (Array, ChunkedArray, Table, Schema) between Python and R
@@ -27,6 +27,14 @@ meaning potentially large gain in performance compared to regular
 arrays or data frames shared between Python and R through the
 conversion rules included in :mod:`rpy2`.
 
+.. warning::
+
+   This currently requires a nightly build of the R package `arrow`. It
+   can be installed with:
+
+   .. code-block:: r
+
+      install.packages("arrow", repos = "https://arrow-r-nightly.s3.amazonaws.com")
    
 Basic usage
 ===========
