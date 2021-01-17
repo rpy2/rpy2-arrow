@@ -1,5 +1,9 @@
 import pyarrow
+import rpy2.rinterface as rinterface
+import rpy2.robjects as robjects
+import rpy2.robjects.conversion as conversion
 import rpy2.robjects.packages as packages
+import typing
 import warnings
 from typing import TYPE_CHECKING
 
@@ -101,7 +105,9 @@ def rarrow_to_py_chunkedarray(
 
 
 def pyarrow_to_r_table(
-        obj: 'pyarrow.lib.Table'
+        obj: 'pyarrow.lib.Table',
+        py2rpy: typing.Optional[
+            conversion.Converter] = None
 ):
     """Create an R `arrow::Table` object from a pyarrow Table.
 
@@ -110,10 +116,12 @@ def pyarrow_to_r_table(
     rpy2. By default it will be an `rpy2.robjects.Environment`.
     """
 
+    if py2rpy is None:
+        py2rpy = converter
+    # TODO: this is using the converter defined in the module,
+    # not the converter currently in rpy2.robjects.conversion.
     kwargs = dict(
-        (k, pyarrow_to_r_chunkedarray(v)
-            if isinstance(v, pyarrow.ChunkedArray)
-            else pyarrow_to_r_array(v))
+        (k, converter.py2rpy(v))
         for k, v in zip(obj.schema.names, obj.columns)
     )
     kwargs['schema'] = pyarrow_to_r_schema(obj.schema)
@@ -121,7 +129,9 @@ def pyarrow_to_r_table(
 
 
 def rarrow_to_py_table(
-        obj: 'rpy2.robjects.Environment'
+        obj: 'rpy2.robjects.Environment',
+        rpy2py: typing.Optional[
+            conversion.Converter] = None
 ):
     """Create a pyarrow Table fomr an R `arrow::Table` object.
 
@@ -130,7 +140,14 @@ def rarrow_to_py_table(
     rpy2.
     """
 
-    columns = [_RPY2PY_ARROW[tuple(x.rclass)](x) for x in obj['columns']]
+    if rpy2py is None:
+        rpy2py = converter
+    # TODO: rpy2 conversion forces something a little kludgy here. 
+    columns = [
+        (rpy2py._rpy2py_nc_map[rinterface.SexpEnvironment]
+         .find(obj['columns'][0].rclass))
+        for x in obj['columns']
+    ]
     schema = rarrow_to_py_schema(obj['schema'])
     py_table = pyarrow.Table.from_arrays(columns,
                                          schema=schema)
@@ -175,9 +192,28 @@ def rarrow_to_py_schema(
     return py_schema
 
 
-_RPY2PY_ARROW = {
-    ('Array', 'ArrowObject', 'R6'): rarrow_to_py_array,
-    ('ChunkedArray', 'ArrowObject', 'R6'): rarrow_to_py_chunkedarray,
-    ('Schema', 'ArrowObject', 'R6'): rarrow_to_py_schema,
-    ('Table', 'ArrowObject', 'R6'): rarrow_to_py_table
-}
+converter = conversion.Converter('default arrow conversion',
+                                 template=robjects.default_converter)
+# Pyarrow to R arrow.
+converter.py2rpy.register(pyarrow.Array, pyarrow_to_r_array)
+converter.py2rpy.register(pyarrow.ChunkedArray,
+                          pyarrow_to_r_chunkedarray)
+converter.py2rpy.register(pyarrow.Schema, pyarrow_to_r_schema)
+converter.py2rpy.register(pyarrow.Table, pyarrow_to_r_table)
+# R arrow to pyarrow.
+converter._rpy2py_nc_map.update(
+    {
+        rinterface.SexpEnvironment:
+        conversion.NameClassMap(robjects.Environment)
+    }
+)
+
+# TODO: use complete class name hierarchy to be safer?
+converter._rpy2py_nc_map[rinterface.SexpEnvironment].update(
+    {
+        'Array': rarrow_to_py_array,
+        'ChunkedArray': rarrow_to_py_chunkedarray,
+        'Schema': rarrow_to_py_schema,
+        'Table': rarrow_to_py_table
+    }
+)
