@@ -14,7 +14,7 @@ Installation
 ============
 
 This is still highly experimental, but it can be installed
-easily:
+easily from the repository:
 
 .. code-block:: bash
 
