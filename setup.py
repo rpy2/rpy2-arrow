@@ -16,7 +16,7 @@ if __name__ == '__main__':
         license='MIT',
         requires=['pyarrow', 'rpy2'],
         extras_require=extras_require,
-        packages=['rpy2_arrow'],
+        packages=['rpy2_arrow', ],
         classifiers=['Programming Language :: Python',
                      'Programming Language :: Python :: 3',
                      'Programming Language :: Python :: 3.6',
