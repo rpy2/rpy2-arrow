@@ -97,14 +97,15 @@ strings.
    r_code = """
    ## this assumes a R Arrow array my_array
 
-   a <- my_array$ToString()
-   print(a)
+   res = sum(my_array > 5)
+   print(res)
    """
    
    import rpy2.rinterface
+   import rpy2.robjects
    with rpy2.rinterface.local_context() as r_context: 
        r_context['my_array'] = r_array
-       res = robjects.evalr(r_code)
+       res = rpy2.robjects.r(r_code)
 
 
 Indices and tables
