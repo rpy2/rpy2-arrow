@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     import pyarrow
 
 rarrow = packages.importr('arrow')
-TARGET_VERSION = '2.2.'
+TARGET_VERSION = '2.0.'
 if not rarrow.__version__.startswith(TARGET_VERSION):
     warnings.warn(
         'This was designed againt arrow versions starting with %s'
