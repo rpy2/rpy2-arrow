@@ -12,6 +12,11 @@ jobs:
         python-version: [3.7, 3.8]
         r-version: ['4.0']
         os: [ubuntu-latest, macOS-latest]
+	include:
+        - os: ubuntu-latest
+          SYSTEM_DEPS: sudo apt-get install -y libcurl4-gnutls-dev
+        - os: macOS-latest
+          SYSTEM_DEPS: brew install curl
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python ${{ matrix.python-version }}
@@ -23,8 +28,7 @@ jobs:
       with:
         r-version: ${{ matrix.r-version }}
     - name: Install system dependencies
-      run: |
-        sudo apt-get install -y libcurl4-gnutls-dev
+      run: ${{ matrix.SYSTEM_DEPS }}        
     - name: Install R dependencies
       run: |
         install.packages(c("assertthat", "cpp11", "tidyselect", "vctrs", "R6", "purr", "bit64"))
