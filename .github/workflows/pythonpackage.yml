@@ -22,6 +22,9 @@ jobs:
       uses: r-lib/actions/setup-r@master
       with:
         r-version: ${{ matrix.r-version }}
+    - name: Install system dependencies
+      run: |
+        sudo apt-get install -y libcurl4-gnutls-dev
     - name: Install R dependencies
       run: |
         install.packages(c("assertthat", "cpp11", "tidyselect", "vctrs", "R6", "purr", "bit64"))
