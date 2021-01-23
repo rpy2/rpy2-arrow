@@ -37,6 +37,15 @@ def test_ChunkedArray():
     assert isinstance(r_ca, rinterface.SexpEnvironment)
 
 
+def test_r2py_ChunkedArray():
+    r_ca = rinterface.evalr("""
+    require('arrow')
+    arrow::ChunkedArray$create(c(1, 2, 3))
+    """)
+    py_ca = pyr.rarrow_to_py_chunkedarray(r_ca)
+    assert isinstance(py_ca, pyarrow.ChunkedArray)
+
+
 def test_py2r_Table():
     dataf = pandas.DataFrame.from_dict(
         {'a': [1, 2, 3],

@@ -144,8 +144,7 @@ def rarrow_to_py_table(
         rpy2py = converter
     # TODO: rpy2 conversion forces something a little kludgy here.
     columns = [
-        (rpy2py._rpy2py_nc_map[rinterface.SexpEnvironment]
-         .find(obj['columns'][0].rclass))
+        (rpy2py._rpy2py_nc_map[rinterface.SexpEnvironment][x.rclass[0]](x))
         for x in obj['columns']
     ]
     schema = rarrow_to_py_schema(obj['schema'])

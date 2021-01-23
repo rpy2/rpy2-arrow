@@ -5,12 +5,21 @@ import rpy2_arrow.pyarrow_rarrow as pyr
 import rpy2_arrow.r6b as r6b_ar
 import rpy2_R6.r6b as r6b
 import pyarrow
+import pytest
 
 
-def test_rpy2py_Array():
+@pytest.mark.xfail
+@pytest.mark.parametrize(
+    'pyarrow_constructor,pyr_py2r',
+    [
+        (pyarrow.array, pyr.pyarrow_to_r_array),
+        (pyarrow.chunked_array, pyr.pyarrow_to_r_chunkedarray)
+    ]
+)
+def test_rpy2py_arrays(pyarrow_constructor, pyr_py2r):
     a = [1, 2, 3]
-    py_ar = pyarrow.array(a)
-    r6_ar = pyr.pyarrow_to_r_array(py_ar)
+    py_ar = pyarrow_constructor(a)
+    r6_ar = pyr_py2r(py_ar)
     assert isinstance(r6_ar, rinterface.SexpEnvironment)
     # TODO: bug in rpy2's layering of conversion rules?
     # with conversion.local_converter(
@@ -22,5 +31,5 @@ def test_rpy2py_Array():
             env_map,
             r6b_ar.converter.rpy2py_nc_name[rinterface.SexpEnvironment]._map
     ):
-        r6_ar = pyr.pyarrow_to_r_array(py_ar)
+        r6_ar = pyr_py2r(py_ar)
         assert isinstance(r6_ar, r6b.R6)
