@@ -24,6 +24,7 @@ jobs:
         r-version: ${{ matrix.r-version }}
     - name: Install R dependencies
       run: |
+        install.packages(c("assertthat", "cpp11", "tidyselect", "vctrs", "R6", "purr", "bit64"))
         install.packages("arrow", repos = "https://arrow-r-nightly.s3.amazonaws.com")
       shell: Rscript {0}
     - name: Install dependencies
