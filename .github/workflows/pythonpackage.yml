@@ -12,7 +12,7 @@ jobs:
         python-version: [3.7, 3.8]
         r-version: ['4.0']
         os: [ubuntu-latest, macOS-latest]
-	include:
+        include:
         - os: ubuntu-latest
           SYSTEM_DEPS: sudo apt-get install -y libcurl4-gnutls-dev
         - os: macOS-latest
