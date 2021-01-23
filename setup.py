@@ -4,7 +4,8 @@ pack_version = __import__('rpy2_arrow').__version__
 
 if __name__ == '__main__':
 
-    extras_require = {'R6': ['rpy2_R6']}
+    extras_require = {'R6': ['rpy2_R6'],
+                      'test': ['pytest', 'pandas']}
     extras_require['all'] = list(
         set(x for lst in extras_require.values()
             for x in lst)

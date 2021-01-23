@@ -31,7 +31,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -e git://github.com/rpy2/rpy2-R6.git@master#egg=rpy2_R6
-        python setup.py install
     - name: Lint with flake8
       run: |
         pip install flake8
@@ -42,5 +41,6 @@ jobs:
     - name: Test with pytest
       run: |
         export LD_LIBRARY_PATH=$(python -m rpy2.situation LD_LIBRARY_PATH):${LD_LIBRARY_PATH}
+        pip install .[test]
         pip install pytest codecov pytest-cov
         pytest --cov rpy2_arrow rpy2_arrow/tests*
