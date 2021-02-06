@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-${{ env.R_VERSION }}-build-
       - name: Install R dependencies
         run: |
-          install.packages("arrow", repos = "https://arrow-r-nightly.s3.amazonaws.com")
+          install.packages("arrow")
         shell: Rscript {0}
       - name: Install Python dependencies
         run: |

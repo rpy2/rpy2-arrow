@@ -27,14 +27,14 @@ meaning potentially large gain in performance compared to regular
 arrays or data frames shared between Python and R through the
 conversion rules included in :mod:`rpy2`.
 
-.. warning::
+.. note::
 
-   This currently requires a nightly build of the R package `arrow`. It
-   can be installed with:
+   The R package `arrow` >= 3.0.0 is required. It can be installed
+   with the following R command.
 
    .. code-block:: r
 
-      install.packages("arrow", repos = "https://arrow-r-nightly.s3.amazonaws.com")
+      install.packages("arrow")
    
 Basic usage
 ===========

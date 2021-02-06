@@ -90,7 +90,13 @@ def pyarrow_to_r_chunkedarray(
     rpy2. By default it will be an `rpy2.robjects.Environment`.
     """
     chunks = tuple(pyarrow_to_r_array(x) for x in obj.chunks)
-    return rarrow.ChunkedArray['create'](*chunks)
+    print(len(chunks))
+    import time
+    t0 = time.time()
+    res = rarrow.ChunkedArray['create'](*chunks)
+    t1 = time.time()
+    print(f'rarrow.ChunkedArray: {t1-t0}')
+    return res
 
 
 def rarrow_to_py_chunkedarray(
