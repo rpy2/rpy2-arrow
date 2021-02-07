@@ -1,4 +1,4 @@
-.. rpy2-arrow documentation master file, created by
+.. rpy2-arrow documentation main file, created by
    sphinx-quickstart on Sat Jan 16 16:15:55 2021.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
@@ -18,7 +18,7 @@ easily from the repository:
 
 .. code-block:: bash
 
-   pip install -e git://github.com/rpy2/rpy2-arrow.git@master#egg=rpy2_arrow
+   pip install -e git://github.com/rpy2/rpy2-arrow.git@main#egg=rpy2_arrow
 
 The package allows the sharing of Apache Arrow data structures
 (Array, ChunkedArray, Table, Schema) between Python and R
