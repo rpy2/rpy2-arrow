@@ -39,6 +39,12 @@ conversion rules included in :mod:`rpy2`.
 Basic usage
 ===========
 
+.. note::
+
+   If you like better seeing an example first, there is a demo Jupyter
+   notebook here: https://github.com/rpy2/rpy2-arrow/blob/main/doc/notebooks/demo.ipynb
+
+
 .. code-block:: python
 
    import pyarrow
