@@ -23,8 +23,7 @@ if __name__ == '__main__':
                      'Programming Language :: Python :: 3.6',
                      'Programming Language :: Python :: 3.7',
                      'Programming Language :: Python :: 3.8',
-                     ('License :: OSI Approved :: GNU General '
-                      'MIT'),
+                     ('License :: OSI Approved :: MIT License'),
                      'Intended Audience :: Developers',
                      'Intended Audience :: Science/Research']
     )
