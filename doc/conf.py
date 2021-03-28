@@ -32,6 +32,7 @@ release = '2020-01-16'
 # ones.
 extensions = [
     'sphinx.ext.intersphinx',
+    'sphinx.ext.doctest'
 ]
 
 intersphinx_mapping = {'rpy2': ('https://rpy2.github.io/doc/v3.4.x/html', None)}
