@@ -39,7 +39,7 @@ conversion rules included in :mod:`rpy2`.
 Basic usage
 ===========
 
-.. code-block:: python
+.. testcode::
 
    import pyarrow
    import rpy2_arrow.pyarrow_rarrow as pyra
@@ -57,9 +57,40 @@ The attributes of that R object in the OOP system
 used can are like keys for a mapping. We can list them
 with:
 
-.. code-block:: python
+.. testcode::
 
    tuple(r_array.keys())
+
+.. testouput::
+
+   ('.__enclos_env__',
+    '.:xp:.',
+    'ApproxEquals',
+    'as_vector',
+    'cast',
+    'clone',
+    'data',
+    'Equals',
+    'Filter',
+    'initialize',
+    'invalidate',
+    'IsNull',
+    'IsValid',
+    'length',
+    'null_count',
+    'offset',
+    'pointer',
+   'print',
+   'RangeEquals',
+   'set_pointer',
+   'Slice',
+   'Take',
+   'ToString',
+   'type',
+   'type_id',
+   'Validate',
+   'View')
+
 
 .. note::
 
@@ -72,7 +103,7 @@ with:
 
 For exampple, we can call its method `ToString`:
 
-.. code-block:: python
+.. testcode::
 
    print(
        ''.join(
@@ -80,19 +111,42 @@ For exampple, we can call its method `ToString`:
 	)
     )
 
+.. testouput::
+   
+   <int64>
+   [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9
+   ]
+
+
 The R object can also be used with R functions able to use
 use arrow objects. For example:
 
-.. code-block:: python
+.. testcode::
 
    import rpy2.robjects.packages as packages
    base = packages.importr('base')
    print(base.sum(r_array))
 
+.. testoutput::
+
+   Scalar
+   45
+
+
 The object can also be passed to blocks of R code in
 strings.
 
-.. code-block:: python
+.. testcode::
 
    r_code = """
    ## this assumes a R Arrow array my_array
@@ -106,6 +160,16 @@ strings.
    with rpy2.rinterface.local_context() as r_context: 
        r_context['my_array'] = r_array
        res = rpy2.robjects.r(r_code)
+
+.. testoutput::
+
+   Scalar
+   4
+
+Demo Notebook
+=============
+
+A demo notebook is available here: https://github.com/rpy2/rpy2-arrow/blob/main/doc/notebooks/demo.ipynb
 
 
 Indices and tables
