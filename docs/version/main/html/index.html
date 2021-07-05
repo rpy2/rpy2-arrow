@@ -15,6 +15,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Conversion" href="conversion.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -34,21 +35,31 @@
   <section id="welcome-to-rpy2-arrow-s-documentation">
 <h1>Welcome to rpy2-arrow’s documentation!<a class="headerlink" href="#welcome-to-rpy2-arrow-s-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="conversion.html">Conversion</a></li>
+</ul>
 </div>
 </section>
 <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>This is still highly experimental, but it can be installed
-easily from the repository:</p>
+<p>Releases are available on pypi, and can be installed with <cite>pip</cite>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install rpy2-arrow
+</pre></div>
+</div>
+<p>To install the development version with <cite>pip</cite>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -e git://github.com/rpy2/rpy2-arrow.git@main#egg<span class="o">=</span>rpy2_arrow
 </pre></div>
 </div>
-<p>The package allows the sharing of Apache Arrow data structures
+<p>The package allows the sharing of <a class="reference external" href="https://arrow.apache.org/">Apache Arrow</a> data structures
 (Array, ChunkedArray, Table, Schema) between Python and R
 within the same process. The underlying C/C++ pointer is shared,
 meaning potentially large gain in performance compared to regular
 arrays or data frames shared between Python and R through the
-conversion rules included in <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2</span></code>.</p>
+conversion rules included in <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2</span></code>. When used with a test
+<code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> with half a million rows, making that data
+availble to R was measured to be 200 times faster with the use of Arrow
+(see <cite>:ref:conversion</cite>).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The R package <cite>arrow</cite> &gt;= 3.0.0 is required. It can be installed
@@ -83,6 +94,35 @@ with:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nb">tuple</span><span class="p">(</span><span class="n">r_array</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 </pre></div>
 </div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(&#39;.__enclos_env__&#39;,
+ &#39;.:xp:.&#39;,
+ &#39;ApproxEquals&#39;,
+ &#39;as_vector&#39;,
+ &#39;cast&#39;,
+ &#39;clone&#39;,
+ &#39;data&#39;,
+ &#39;Equals&#39;,
+ &#39;Filter&#39;,
+ &#39;initialize&#39;,
+ &#39;invalidate&#39;,
+ &#39;IsNull&#39;,
+ &#39;IsValid&#39;,
+ &#39;length&#39;,
+ &#39;null_count&#39;,
+ &#39;offset&#39;,
+ &#39;pointer&#39;,
+&#39;print&#39;,
+&#39;RangeEquals&#39;,
+&#39;set_pointer&#39;,
+&#39;Slice&#39;,
+&#39;Take&#39;,
+&#39;ToString&#39;,
+&#39;type&#39;,
+&#39;type_id&#39;,
+&#39;Validate&#39;,
+&#39;View&#39;)
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>On the R side object is using an R package called <cite>R6</cite> to
@@ -98,6 +138,21 @@ This package should soon offer a integration with it as an option.</p>
         <span class="n">r_array</span><span class="p">[</span><span class="s1">&#39;ToString&#39;</span><span class="p">]()</span>
      <span class="p">)</span>
  <span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;int64&gt;
+[
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9
+]
 </pre></div>
 </div>
 <p>The R object can also be used with R functions able to use
@@ -158,11 +213,16 @@ strings.</p>
 
 
 <h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="conversion.html">Conversion</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="conversion.html" title="next chapter">Conversion</a></li>
   </ul></li>
 </ul>
 </div>
