@@ -35,7 +35,7 @@ arrays or data frames shared between Python and R through the
 conversion rules included in :mod:`rpy2`. When used with a test
 :class:`pandas.DataFrame` with half a million rows, making that data
 availble to R was measured to be 200 times faster with the use of Arrow
-(see `:ref:conversion`).
+(see :ref:`conversion`).
 
 .. note::
 
