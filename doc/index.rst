@@ -10,22 +10,32 @@ Welcome to rpy2-arrow's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   conversion
+
 Installation
 ============
 
-This is still highly experimental, but it can be installed
-easily from the repository:
+Releases are available on pypi, and can be installed with `pip`:
+
+.. code-block:: bash
+
+   pip install rpy2-arrow
+  
+To install the development version with `pip`:
 
 .. code-block:: bash
 
    pip install -e git://github.com/rpy2/rpy2-arrow.git@main#egg=rpy2_arrow
 
-The package allows the sharing of Apache Arrow data structures
+The package allows the sharing of `Apache Arrow <https://arrow.apache.org/>`_ data structures
 (Array, ChunkedArray, Table, Schema) between Python and R
 within the same process. The underlying C/C++ pointer is shared,
 meaning potentially large gain in performance compared to regular
 arrays or data frames shared between Python and R through the
-conversion rules included in :mod:`rpy2`.
+conversion rules included in :mod:`rpy2`. When used with a test
+:class:`pandas.DataFrame` with half a million rows, making that data
+availble to R was measured to be 200 times faster with the use of Arrow
+(see `:ref:conversion`).
 
 .. note::
 
@@ -67,7 +77,7 @@ with:
 
    tuple(r_array.keys())
 
-.. testouput::
+.. testoutput::
 
    ('.__enclos_env__',
     '.:xp:.',
@@ -117,7 +127,7 @@ For exampple, we can call its method `ToString`:
 	)
     )
 
-.. testouput::
+.. testoutput::
    
    <int64>
    [
