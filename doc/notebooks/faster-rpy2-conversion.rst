@@ -1,5 +1,5 @@
 Moving pandas DataFrames faster between Python and R
-====================================================
+----------------------------------------------------
 
 We create a test ``pandas.DataFrame``. The size is set to show a
 noticeable able effect without waiting too long for the slowest
