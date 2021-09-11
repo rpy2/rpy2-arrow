@@ -1,2 +1,3 @@
+ipython
 rpy2
 sphinx
