@@ -133,11 +133,11 @@ gain. For example with the R package ``dplyr``:
        ...: suppressMessages(require(dplyr))
 
 .. ipython::
-      :doctest:
-	  
+
     In [9]: %%time
        ...: %%R -i pd_dataf -c conv2
        ...: 
-       ...: pd_dataf %>%
-       ...:   group_by(y) %>%
-       ...:   summarize(n = length(x))
+       ...: res <- pd_dataf %>%
+       ...: group_by(y) %>%
+       ...: summarize(n = length(x))
+       ...: print(res)
