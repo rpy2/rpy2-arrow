@@ -1,0 +1,190 @@
+Moving pandas DataFrames faster between Python and R
+====================================================
+
+We create a test ``pandas.DataFrame``. The size is set to show a
+noticeable able effect without waiting too long for the slowest
+conversion on the laptop the notebook ran on. Feel free to change the
+variable ``_N`` to what suits best your hardware, and your patience.
+
+.. code:: ipython3
+
+    import pandas as pd
+    # Number or rows in the DataFrame.
+    _N = 500000
+    pd_dataf = pd.DataFrame({'x': range(_N),
+                             'y': ['abc', 'def'] * (_N//2)})
+
+Next we load the ipython/jupyter extension in R to communicate with R in
+a (Python) notebook.
+
+.. code:: ipython3
+
+    %load_ext rpy2.ipython
+
+With the extension loaded, the ``DataFrame`` can be imported in a R cell
+(declared with ``%%R``) using the argument ``-i``. This is a
+reasonably-size data table and it takes few seconds for the conversion
+system to create a copy of it in R on the machine where the notebook was
+written.
+
+.. code:: ipython3
+
+    %%time
+    %%R -i pd_dataf
+    print(head(pd_dataf))
+    rm(pd_dataf)
+
+
+.. parsed-literal::
+
+      x   y
+    0 0 abc
+    1 1 def
+    2 2 abc
+    3 3 def
+    4 4 abc
+    5 5 def
+    CPU times: user 7.09 s, sys: 100 ms, total: 7.19 s
+    Wall time: 7.19 s
+
+
+The conversion of a ``pandas.DataFrame`` can be accelerated by using
+Apache Arrow as an intermediate step. The package ``pyarrow`` is using
+efficient compiled code to go from a ``pandas.DataFrame`` to an Arrow
+data structure, and the R package ``arrow`` can go from an Arrow data
+structure to an R ``data.frame``.
+
+The package ``rpy2_arrow`` can help manage the conversion between Python
+wrappers to Arrow data structures (Python package ``pyarrow``) and R
+wrappers to Arrow data structures (R package ``arrow``). Creating a
+custom converter for ``rpy2`` is done in few lines of code.
+
+.. code:: ipython3
+
+    import pyarrow
+    from rpy2.robjects.packages import importr
+    import rpy2.robjects.conversion
+    import rpy2.rinterface
+    import rpy2_arrow.pyarrow_rarrow as pyra
+    
+    base = importr('base')
+    
+    # We use the converter included in rpy2-arrow as template.
+    conv = rpy2.robjects.conversion.Converter('Pandas to data.frame',
+                                              template=pyra.converter)
+    
+    @conv.py2rpy.register(pd.DataFrame)
+    def py2rpy_pandas(dataf):
+        pa_tbl = pyarrow.Table.from_pandas(dataf)
+        # pa_tbl is a pyarrow table, and this is something that
+        # that converter shipping with rpy2-arrow knows how to handle.
+        return base.as_data_frame(pa_tbl)
+    
+    # We build a custom converter that is the default converter for
+    # ipython/jupyter shipping with rpy2, to which we add rules for
+    # Arrow + pandas we just made.
+    conv = rpy2.ipython.rmagic.converter + conv
+
+Our custom converter ``conv`` can be specified as a parameter to
+``%%R``:
+
+.. code:: ipython3
+
+    %%time
+    %%R -i pd_dataf -c conv
+    print(class(pd_dataf))
+    print(head(pd_dataf))
+    rm(pd_dataf)
+
+
+.. parsed-literal::
+
+    [1] "tbl_df"     "tbl"        "data.frame"
+      x   y
+    1 0 abc
+    2 1 def
+    3 2 abc
+    4 3 def
+    5 4 abc
+    6 5 def
+    CPU times: user 63.3 ms, sys: 12.3 ms, total: 75.6 ms
+    Wall time: 69.2 ms
+
+
+The conversion is much faster.
+
+It is also possible to only convert to an Arrow data structure.
+
+.. code:: ipython3
+
+    conv2 = rpy2.robjects.conversion.Converter('Pandas to pyarrow',
+                                               template=pyra.converter)
+    
+    @conv2.py2rpy.register(pd.DataFrame)
+    def py2rpy_pandas(dataf):
+        pa_tbl = pyarrow.Table.from_pandas(dataf)
+        return pyra.converter.py2rpy(pa_tbl)
+    
+    conv2 = rpy2.ipython.rmagic.converter + conv2
+
+.. code:: ipython3
+
+    %%time
+    %%R -i pd_dataf -c conv2
+    print(head(pd_dataf))
+    rm(pd_dataf)
+
+
+.. parsed-literal::
+
+    Table
+    6 rows x 2 columns
+    $x <int64>
+    $y <string>
+    
+    See $metadata for additional Schema metadata
+    CPU times: user 28.8 ms, sys: 4.07 ms, total: 32.9 ms
+    Wall time: 31 ms
+
+
+This time the conversion is about as fast but is likely requiring less
+memory. When casting the Arrow data table into an R ``data.frame``, I
+believe there is a moment in time where copies of the data will coexist
+in the Python ``DataFrame``, in the ``Arrow`` table, and in the R
+``data.frame``. This is transient though; the ``Arrow`` table only
+exists during the scope of ``py2rpy_pandas`` for ``conv``. For
+``conv2``, the data will only be copied once. It will coexist in the
+Python ``DataFrame`` and in the ``Arrow`` table (the content of which
+will be shared between Python and R if I understand it right).
+
+The R package ``arrow`` implements methods for its wrapped for Arrow
+data structures to make their behavior close to ``data.frame`` objects.
+There will be many situations where this will be sufficient to work with
+the data table in R, while benefiting from the very significant speed
+gain. For example with the R package ``dplyr``:
+
+.. code:: r
+
+    %%R
+    suppressMessages(require(dplyr))
+
+.. code:: ipython3
+
+    %%time
+    %%R -i pd_dataf -c conv2
+    
+    pd_dataf %>%
+      group_by(y) %>%
+      summarize(n = length(x))
+
+
+.. parsed-literal::
+
+    [90m# A tibble: 2 x 2[39m
+      y          n
+      [3m[90m<chr>[39m[23m  [3m[90m<int>[39m[23m
+    [90m1[39m abc   [4m2[24m[4m5[24m[4m0[24m000
+    [90m2[39m def   [4m2[24m[4m5[24m[4m0[24m000
+    CPU times: user 132 ms, sys: 15.7 ms, total: 148 ms
+    Wall time: 146 ms
+

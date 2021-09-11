@@ -15,7 +15,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Conversion" href="conversion.html" />
+    <link rel="next" title="Basic usage" href="basic-usage.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -35,9 +35,11 @@
   <section id="welcome-to-rpy2-arrow-s-documentation">
 <h1>Welcome to rpy2-arrow’s documentation!<a class="headerlink" href="#welcome-to-rpy2-arrow-s-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conversion.html">Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conversion.html#moving-pandas-dataframes-faster-between-python-and-r">Moving pandas DataFrames faster between Python and R</a></li>
 </ul>
 </div>
 </section>
@@ -69,124 +71,6 @@ with the following R command.</p>
 </div>
 </div>
 </section>
-<section id="basic-usage">
-<h1>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If you like better seeing an example first, there is a demo Jupyter
-notebook here: <a class="reference external" href="https://github.com/rpy2/rpy2-arrow/blob/main/doc/notebooks/demo.ipynb">https://github.com/rpy2/rpy2-arrow/blob/main/doc/notebooks/demo.ipynb</a></p>
-</div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyarrow</span>
-<span class="kn">import</span> <span class="nn">rpy2_arrow.pyarrow_rarrow</span> <span class="k">as</span> <span class="nn">pyra</span>
-
-<span class="c1"># Create an array on the Python side using pyarrow</span>
-<span class="n">py_array</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
-
-<span class="c1"># Pass the C/C++ pointer to an R arrow object</span>
-<span class="n">r_array</span> <span class="o">=</span> <span class="n">pyra</span><span class="o">.</span><span class="n">pyarrow_to_r_array</span><span class="p">(</span><span class="n">py_array</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2</span></code> objects obtained is a mapped to
-and <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2.robjects.Environment</span></code>.</p>
-<p>The attributes of that R object in the OOP system
-used can are like keys for a mapping. We can list them
-with:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nb">tuple</span><span class="p">(</span><span class="n">r_array</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-</pre></div>
-</div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(&#39;.__enclos_env__&#39;,
- &#39;.:xp:.&#39;,
- &#39;ApproxEquals&#39;,
- &#39;as_vector&#39;,
- &#39;cast&#39;,
- &#39;clone&#39;,
- &#39;data&#39;,
- &#39;Equals&#39;,
- &#39;Filter&#39;,
- &#39;initialize&#39;,
- &#39;invalidate&#39;,
- &#39;IsNull&#39;,
- &#39;IsValid&#39;,
- &#39;length&#39;,
- &#39;null_count&#39;,
- &#39;offset&#39;,
- &#39;pointer&#39;,
-&#39;print&#39;,
-&#39;RangeEquals&#39;,
-&#39;set_pointer&#39;,
-&#39;Slice&#39;,
-&#39;Take&#39;,
-&#39;ToString&#39;,
-&#39;type&#39;,
-&#39;type_id&#39;,
-&#39;Validate&#39;,
-&#39;View&#39;)
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>On the R side object is using an R package called <cite>R6</cite> to
-implement OOP. <cite>R6</cite> objects inherit from R environments,
-which is why they appear this say by default with
-<code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2_arrow</span></code>.
-<code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2</span></code> has an extension package <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2_R6</span></code> to map R6.
-This package should soon offer a integration with it as an option.</p>
-</div>
-<p>For exampple, we can call its method <cite>ToString</cite>:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
-    <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">r_array</span><span class="p">[</span><span class="s1">&#39;ToString&#39;</span><span class="p">]()</span>
-     <span class="p">)</span>
- <span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;int64&gt;
-[
-  0,
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9
-]
-</pre></div>
-</div>
-<p>The R object can also be used with R functions able to use
-use arrow objects. For example:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">rpy2.robjects.packages</span> <span class="k">as</span> <span class="nn">packages</span>
-<span class="n">base</span> <span class="o">=</span> <span class="n">packages</span><span class="o">.</span><span class="n">importr</span><span class="p">(</span><span class="s1">&#39;base&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">r_array</span><span class="p">))</span>
-</pre></div>
-</div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Scalar
-45
-</pre></div>
-</div>
-<p>The object can also be passed to blocks of R code in
-strings.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">## this assumes a R Arrow array my_array</span>
-
-<span class="s2">res = sum(my_array &gt; 5)</span>
-<span class="s2">print(res)</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="kn">import</span> <span class="nn">rpy2.rinterface</span>
-<span class="kn">import</span> <span class="nn">rpy2.robjects</span>
-<span class="k">with</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">rinterface</span><span class="o">.</span><span class="n">local_context</span><span class="p">()</span> <span class="k">as</span> <span class="n">r_context</span><span class="p">:</span>
-    <span class="n">r_context</span><span class="p">[</span><span class="s1">&#39;my_array&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_array</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="o">.</span><span class="n">r</span><span class="p">(</span><span class="n">r_code</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Scalar
-4
-</pre></div>
-</div>
-</section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
@@ -203,6 +87,9 @@ strings.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/rpy2-arrow-logo-web.png" alt="Logo"/>
+            </a></p>
 <h1 class="logo"><a href="#">rpy2-arrow</a></h1>
 
 
@@ -213,16 +100,18 @@ strings.</p>
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conversion.html">Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conversion.html#moving-pandas-dataframes-faster-between-python-and-r">Moving pandas DataFrames faster between Python and R</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="conversion.html" title="next chapter">Conversion</a></li>
+      <li>Next: <a href="basic-usage.html" title="next chapter">Basic usage</a></li>
   </ul></li>
 </ul>
 </div>
@@ -230,7 +119,7 @@ strings.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -252,7 +141,7 @@ strings.</p>
       &copy;2021, Laurent Gautier.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

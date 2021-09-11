@@ -54,7 +54,7 @@
   
   
   <form action="" method="get">
-    <input type="text" name="q" aria-labelledby="search-documentation" value="" />
+    <input type="text" name="q" aria-labelledby="search-documentation" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
     <input type="submit" value="search" />
     <span id="search-progress" style="padding-left: 10px"></span>
   </form>
@@ -72,6 +72,9 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/rpy2-arrow-logo-web.png" alt="Logo"/>
+            </a></p>
 <h1 class="logo"><a href="index.html">rpy2-arrow</a></h1>
 
 
@@ -82,9 +85,11 @@
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conversion.html">Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conversion.html#moving-pandas-dataframes-faster-between-python-and-r">Moving pandas DataFrames faster between Python and R</a></li>
 </ul>
 
 <div class="relations">
@@ -110,7 +115,7 @@
       &copy;2021, Laurent Gautier.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
