@@ -79,8 +79,8 @@ the notebook was written.</p>
 <span class="go">3 3 def</span>
 <span class="go">4 4 abc</span>
 <span class="go">5 5 def</span>
-<span class="go">CPU times: user 9.96 s, sys: 121 ms, total: 10.1 s</span>
-<span class="go">Wall time: 10.2 s</span>
+<span class="go">CPU times: user 7.86 s, sys: 140 ms, total: 8 s</span>
+<span class="go">Wall time: 8.11 s</span>
 </pre></div>
 </div>
 <p>The conversion of a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> can be accelerated by using
@@ -136,8 +136,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">4 3 def</span>
 <span class="go">5 4 abc</span>
 <span class="go">6 5 def</span>
-<span class="go">CPU times: user 48.7 ms, sys: 12 ms, total: 60.7 ms</span>
-<span class="go">Wall time: 58.8 ms</span>
+<span class="go">CPU times: user 38.6 ms, sys: 7.96 ms, total: 46.6 ms</span>
+<span class="go">Wall time: 45.8 ms</span>
 </pre></div>
 </div>
 <p>The conversion is much faster.</p>
@@ -166,8 +166,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 36 ms, sys: 3.95 ms, total: 39.9 ms</span>
-<span class="go">Wall time: 39.1 ms</span>
+<span class="go">CPU times: user 27.9 ms, sys: 4 ms, total: 31.9 ms</span>
+<span class="go">Wall time: 31.3 ms</span>
 </pre></div>
 </div>
 <p>This time the conversion is about as fast but is likely requiring less
@@ -193,8 +193,8 @@ gain. For example with the R package <code class="docutils literal notranslate">
 <span class="gp">   ...: </span><span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">pd_dataf</span> <span class="o">-</span><span class="n">c</span> <span class="n">conv2</span>
 <span class="gp">   ...: </span>
 <span class="gp">   ...: </span><span class="n">res</span> <span class="o">&lt;-</span> <span class="n">pd_dataf</span> <span class="o">%&gt;%</span>
-<span class="gp">   ...: </span><span class="n">group_by</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">%&gt;%</span>
-<span class="gp">   ...: </span><span class="n">summarize</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="gp">   ...: </span>    <span class="n">group_by</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">%&gt;%</span>
+<span class="gp">   ...: </span>    <span class="n">summarize</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 <span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 <span class="gp">   ...: </span>
 <span class="go"># A tibble: 2 × 2</span>
@@ -202,8 +202,8 @@ gain. For example with the R package <code class="docutils literal notranslate">
 <span class="go">  &lt;chr&gt;  &lt;int&gt;</span>
 <span class="go">1 abc   250000</span>
 <span class="go">2 def   250000</span>
-<span class="go">CPU times: user 355 ms, sys: 4.23 ms, total: 359 ms</span>
-<span class="go">Wall time: 358 ms</span>
+<span class="go">CPU times: user 275 ms, sys: 3.96 ms, total: 279 ms</span>
+<span class="go">Wall time: 277 ms</span>
 </pre></div>
 </div>
 </section>
