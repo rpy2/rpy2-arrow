@@ -37,7 +37,7 @@
 “R magic” in <a class="reference external" href="https://rpy2.github.io/doc/v3.4.x/html/interactive.html#module-rpy2.ipython" title="(in rpy2 v3.4.5)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2.ipython</span></code></a> demonstrates how
 Arrow can greatly improve performances when moving
 data between Python and R.</p>
-<p>We create a test <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>. The size is set to show a
+<p>We create a test <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>. The size is set to show a
 noticeable able effect without waiting too long for the slowest
 conversion on the laptop the notebook ran on. Feel free to change the
 variable <code class="docutils literal notranslate"><span class="pre">_N</span></code> to what suits best your hardware, and your patience.</p>
@@ -57,10 +57,9 @@ a (Python) notebook.</p>
 </pre></div>
 </div>
 <p>With the extension loaded, the <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> can be imported in a R cell
-(declared with <code class="docutils literal notranslate"><span class="pre">%%R</span></code>) using the argument <code class="docutils literal notranslate"><span class="pre">-i</span></code>. This is a
-reasonably-size data table and it takes few seconds for the conversion
-system to create a copy of it in R on the machine where the notebook was
-written.</p>
+(declared with <code class="docutils literal notranslate"><span class="pre">%%R</span></code>) using the argument <code class="docutils literal notranslate"><span class="pre">-i</span></code>. It takes few seconds
+for the conversion system to create a copy of it in R on the machine where
+the notebook was written.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [3]: </span><span class="o">%%time</span>
 <span class="gp">   ...: </span><span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">pd_dataf</span>
 <span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">))</span>
@@ -73,19 +72,19 @@ written.</p>
 <span class="go">3 3 def</span>
 <span class="go">4 4 abc</span>
 <span class="go">5 5 def</span>
-<span class="go">CPU times: user 10.5 s, sys: 163 ms, total: 10.7 s</span>
-<span class="go">Wall time: 10.7 s</span>
+<span class="go">CPU times: user 9.85 s, sys: 113 ms, total: 9.96 s</span>
+<span class="go">Wall time: 9.96 s</span>
 </pre></div>
 </div>
-<p>The conversion of a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> can be accelerated by using
+<p>The conversion of a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> can be accelerated by using
 Apache Arrow as an intermediate step. The package <code class="docutils literal notranslate"><span class="pre">pyarrow</span></code> is using
-efficient compiled code to go from a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to an Arrow
-data structure, and the R package <code class="docutils literal notranslate"><span class="pre">arrow</span></code> can go from an Arrow data
+compiled code to go efficiently from a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to an Arrow
+data structure, and the R package <code class="docutils literal notranslate"><span class="pre">arrow</span></code> can do the same from Arrow data
 structure to an R <code class="docutils literal notranslate"><span class="pre">data.frame</span></code>.</p>
-<p>The package <code class="docutils literal notranslate"><span class="pre">rpy2_arrow</span></code> can help manage the conversion between Python
-wrappers to Arrow data structures (Python package <code class="docutils literal notranslate"><span class="pre">pyarrow</span></code>) and R
+<p>The package <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2-arrow</span></code> can help manage the conversion between Python
+wrappers to Arrow data structures (Python package <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyarrow</span></code>) and R
 wrappers to Arrow data structures (R package <code class="docutils literal notranslate"><span class="pre">arrow</span></code>). Creating a
-custom converter for <code class="docutils literal notranslate"><span class="pre">rpy2</span></code> is done in few lines of code.</p>
+custom converter for <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2</span></code> is done in few lines of code.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="kn">import</span> <span class="nn">pyarrow</span>
 <span class="gp">   ...: </span><span class="kn">from</span> <span class="nn">rpy2.robjects.packages</span> <span class="kn">import</span> <span class="n">importr</span>
 <span class="gp">   ...: </span><span class="kn">import</span> <span class="nn">rpy2.robjects.conversion</span>
@@ -132,8 +131,8 @@ custom converter for <code class="docutils literal notranslate"><span class="pre
 <span class="go">4     3 def  </span>
 <span class="go">5     4 abc  </span>
 <span class="go">6     5 def  </span>
-<span class="go">CPU times: user 66.8 ms, sys: 8.16 ms, total: 74.9 ms</span>
-<span class="go">Wall time: 73.9 ms</span>
+<span class="go">CPU times: user 81 ms, sys: 4.03 ms, total: 85 ms</span>
+<span class="go">Wall time: 84.1 ms</span>
 </pre></div>
 </div>
 <p>The conversion is much faster.</p>
@@ -162,8 +161,8 @@ custom converter for <code class="docutils literal notranslate"><span class="pre
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 33.1 ms, sys: 17 us, total: 33.1 ms</span>
-<span class="go">Wall time: 32.9 ms</span>
+<span class="go">CPU times: user 31.1 ms, sys: 3.92 ms, total: 35.1 ms</span>
+<span class="go">Wall time: 34.8 ms</span>
 </pre></div>
 </div>
 <p>This time the conversion is about as fast but is likely requiring less
@@ -198,8 +197,8 @@ gain. For example with the R package <code class="docutils literal notranslate">
 <span class="go">  &lt;chr&gt;  &lt;int&gt;</span>
 <span class="go">1 abc   250000</span>
 <span class="go">2 def   250000</span>
-<span class="go">CPU times: user 111 ms, sys: 0 ns, total: 111 ms</span>
-<span class="go">Wall time: 110 ms</span>
+<span class="go">CPU times: user 118 ms, sys: 3.85 ms, total: 122 ms</span>
+<span class="go">Wall time: 121 ms</span>
 </pre></div>
 </div>
 </section>

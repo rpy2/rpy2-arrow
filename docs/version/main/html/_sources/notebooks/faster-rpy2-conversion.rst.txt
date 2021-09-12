@@ -6,7 +6,7 @@ This example of custom conversion with jupyter and the
 Arrow can greatly improve performances when moving
 data between Python and R.
 
-We create a test ``pandas.DataFrame``. The size is set to show a
+We create a test :class:`pandas.DataFrame`. The size is set to show a
 noticeable able effect without waiting too long for the slowest
 conversion on the laptop the notebook ran on. Feel free to change the
 variable ``_N`` to what suits best your hardware, and your patience.
@@ -27,10 +27,9 @@ a (Python) notebook.
     In [2]: %load_ext rpy2.ipython
 
 With the extension loaded, the ``DataFrame`` can be imported in a R cell
-(declared with ``%%R``) using the argument ``-i``. This is a
-reasonably-size data table and it takes few seconds for the conversion
-system to create a copy of it in R on the machine where the notebook was
-written.
+(declared with ``%%R``) using the argument ``-i``. It takes few seconds
+for the conversion system to create a copy of it in R on the machine where
+the notebook was written.
 
 .. ipython::
 
@@ -40,16 +39,16 @@ written.
        ...: rm(pd_dataf)
        
 
-The conversion of a ``pandas.DataFrame`` can be accelerated by using
+The conversion of a :class:`pandas.DataFrame` can be accelerated by using
 Apache Arrow as an intermediate step. The package ``pyarrow`` is using
-efficient compiled code to go from a ``pandas.DataFrame`` to an Arrow
-data structure, and the R package ``arrow`` can go from an Arrow data
+compiled code to go efficiently from a ``pandas.DataFrame`` to an Arrow
+data structure, and the R package ``arrow`` can do the same from Arrow data
 structure to an R ``data.frame``.
 
-The package ``rpy2_arrow`` can help manage the conversion between Python
-wrappers to Arrow data structures (Python package ``pyarrow``) and R
+The package :mod:`rpy2-arrow` can help manage the conversion between Python
+wrappers to Arrow data structures (Python package :mod:`pyarrow`) and R
 wrappers to Arrow data structures (R package ``arrow``). Creating a
-custom converter for ``rpy2`` is done in few lines of code.
+custom converter for :mod:`rpy2` is done in few lines of code.
 
 .. ipython::
     :okwarning:
