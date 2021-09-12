@@ -143,6 +143,6 @@ gain. For example with the R package ``dplyr``:
        ...: %%R -i pd_dataf -c conv2
        ...: 
        ...: res <- pd_dataf %>%
-       ...: group_by(y) %>%
-       ...: summarize(n = length(x))
+       ...:     group_by(y) %>%
+       ...:     summarize(n = length(x))
        ...: print(res)
