@@ -47,6 +47,7 @@ wrappers to Arrow data structures (R package ``arrow``). Creating a
 custom converter for ``rpy2`` is done in few lines of code.
 
 .. ipython::
+    :okwarning:
 
     In [4]: import pyarrow
        ...: from rpy2.robjects.packages import importr
