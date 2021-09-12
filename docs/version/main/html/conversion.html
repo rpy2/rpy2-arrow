@@ -47,16 +47,17 @@ The only remaining part is how to combine them for your own need.</p>
 noticeable able effect without waiting too long for the slowest
 conversion on the laptop the notebook ran on. Feel free to change the
 variable <code class="docutils literal notranslate"><span class="pre">_N</span></code> to what suits best your hardware, and your patience.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import pandas as pd
-# Number or rows in the DataFrame.
-_N = 500000
-pd_dataf = pd.DataFrame({&#39;x&#39;: range(_N),
-                         &#39;y&#39;: [&#39;abc&#39;, &#39;def&#39;] * (_N//2)})
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">   ...: </span><span class="c1"># Number or rows in the DataFrame.</span>
+<span class="gp">   ...: </span><span class="n">_N</span> <span class="o">=</span> <span class="mi">500000</span>
+<span class="gp">   ...: </span><span class="n">pd_dataf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="n">_N</span><span class="p">),</span>
+<span class="gp">   ...: </span>                         <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span> <span class="s1">&#39;def&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">_N</span><span class="o">//</span><span class="mi">2</span><span class="p">)})</span>
+<span class="gp">   ...: </span>
 </pre></div>
 </div>
 <p>Next we load the ipython/jupyter extension in R to communicate with R in
 a (Python) notebook.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%load_ext rpy2.ipython
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [2]: </span><span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
 </pre></div>
 </div>
 <p>With the extension loaded, the <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> can be imported in a R cell
@@ -64,21 +65,20 @@ a (Python) notebook.</p>
 reasonably-size data table and it takes few seconds for the conversion
 system to create a copy of it in R on the machine where the notebook was
 written.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%time
-%%R -i pd_dataf
-print(head(pd_dataf))
-rm(pd_dataf)
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  <span class="n">x</span>   <span class="n">y</span>
-<span class="mi">0</span> <span class="mi">0</span> <span class="n">abc</span>
-<span class="mi">1</span> <span class="mi">1</span> <span class="k">def</span>
-<span class="mi">2</span> <span class="mi">2</span> <span class="n">abc</span>
-<span class="mi">3</span> <span class="mi">3</span> <span class="k">def</span>
-<span class="mi">4</span> <span class="mi">4</span> <span class="n">abc</span>
-<span class="mi">5</span> <span class="mi">5</span> <span class="k">def</span>
-<span class="nf">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">7.09</span> <span class="n">s</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">100</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">7.19</span> <span class="n">s</span>
-<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">7.19</span> <span class="n">s</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [3]: </span><span class="o">%%time</span>
+<span class="gp">   ...: </span><span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">pd_dataf</span>
+<span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">))</span>
+<span class="gp">   ...: </span><span class="n">rm</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="go">  x   y</span>
+<span class="go">0 0 abc</span>
+<span class="go">1 1 def</span>
+<span class="go">2 2 abc</span>
+<span class="go">3 3 def</span>
+<span class="go">4 4 abc</span>
+<span class="go">5 5 def</span>
+<span class="go">CPU times: user 7.78 s, sys: 76.5 ms, total: 7.86 s</span>
+<span class="go">Wall time: 8.05 s</span>
 </pre></div>
 </div>
 <p>The conversion of a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> can be accelerated by using
@@ -90,79 +90,82 @@ structure to an R <code class="docutils literal notranslate"><span class="pre">d
 wrappers to Arrow data structures (Python package <code class="docutils literal notranslate"><span class="pre">pyarrow</span></code>) and R
 wrappers to Arrow data structures (R package <code class="docutils literal notranslate"><span class="pre">arrow</span></code>). Creating a
 custom converter for <code class="docutils literal notranslate"><span class="pre">rpy2</span></code> is done in few lines of code.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import pyarrow
-from rpy2.robjects.packages import importr
-import rpy2.robjects.conversion
-import rpy2.rinterface
-import rpy2_arrow.pyarrow_rarrow as pyra
-
-base = importr(&#39;base&#39;)
-
-# We use the converter included in rpy2-arrow as template.
-conv = rpy2.robjects.conversion.Converter(&#39;Pandas to data.frame&#39;,
-                                          template=pyra.converter)
-
-@conv.py2rpy.register(pd.DataFrame)
-def py2rpy_pandas(dataf):
-    pa_tbl = pyarrow.Table.from_pandas(dataf)
-    # pa_tbl is a pyarrow table, and this is something that
-    # that converter shipping with rpy2-arrow knows how to handle.
-    return base.as_data_frame(pa_tbl)
-
-# We build a custom converter that is the default converter for
-# ipython/jupyter shipping with rpy2, to which we add rules for
-# Arrow + pandas we just made.
-conv = rpy2.ipython.rmagic.converter + conv
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="kn">import</span> <span class="nn">pyarrow</span>
+<span class="gp">   ...: </span><span class="kn">from</span> <span class="nn">rpy2.robjects.packages</span> <span class="kn">import</span> <span class="n">importr</span>
+<span class="gp">   ...: </span><span class="kn">import</span> <span class="nn">rpy2.robjects.conversion</span>
+<span class="gp">   ...: </span><span class="kn">import</span> <span class="nn">rpy2.rinterface</span>
+<span class="gp">   ...: </span><span class="kn">import</span> <span class="nn">rpy2_arrow.pyarrow_rarrow</span> <span class="k">as</span> <span class="nn">pyra</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="n">base</span> <span class="o">=</span> <span class="n">importr</span><span class="p">(</span><span class="s1">&#39;base&#39;</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="c1"># We use the converter included in rpy2-arrow as template.</span>
+<span class="gp">   ...: </span><span class="n">conv</span> <span class="o">=</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">Converter</span><span class="p">(</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;Pandas to data.frame&#39;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">template</span><span class="o">=</span><span class="n">pyra</span><span class="o">.</span><span class="n">converter</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="nd">@conv</span><span class="o">.</span><span class="n">py2rpy</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+<span class="gp">   ...: </span><span class="k">def</span> <span class="nf">py2rpy_pandas</span><span class="p">(</span><span class="n">dataf</span><span class="p">):</span>
+<span class="gp">   ...: </span>    <span class="n">pa_tbl</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">dataf</span><span class="p">)</span>
+<span class="gp">   ...: </span>    <span class="c1"># pa_tbl is a pyarrow table, and this is something</span>
+<span class="gp">   ...: </span>    <span class="c1"># that the converter shipping with rpy2-arrow knows</span>
+<span class="gp">   ...: </span>    <span class="c1"># how to handle.</span>
+<span class="gp">   ...: </span>    <span class="k">return</span> <span class="n">base</span><span class="o">.</span><span class="n">as_data_frame</span><span class="p">(</span><span class="n">pa_tbl</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="c1"># We build a custom converter that is the default converter</span>
+<span class="gp">   ...: </span><span class="c1"># for ipython/jupyter shipping with rpy2, to which we add</span>
+<span class="gp">   ...: </span><span class="c1"># rules for Arrow + pandas we just made.</span>
+<span class="gp">   ...: </span><span class="n">conv</span> <span class="o">=</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">ipython</span><span class="o">.</span><span class="n">rmagic</span><span class="o">.</span><span class="n">converter</span> <span class="o">+</span> <span class="n">conv</span>
+<span class="gp">   ...: </span>
 </pre></div>
 </div>
 <p>Our custom converter <code class="docutils literal notranslate"><span class="pre">conv</span></code> can be specified as a parameter to
 <code class="docutils literal notranslate"><span class="pre">%%R</span></code>:</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%time
-%%R -i pd_dataf -c conv
-print(class(pd_dataf))
-print(head(pd_dataf))
-rm(pd_dataf)
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="s2">&quot;tbl_df&quot;</span>     <span class="s2">&quot;tbl&quot;</span>        <span class="s2">&quot;data.frame&quot;</span>
-  <span class="n">x</span>   <span class="n">y</span>
-<span class="mi">1</span> <span class="mi">0</span> <span class="n">abc</span>
-<span class="mi">2</span> <span class="mi">1</span> <span class="k">def</span>
-<span class="mi">3</span> <span class="mi">2</span> <span class="n">abc</span>
-<span class="mi">4</span> <span class="mi">3</span> <span class="k">def</span>
-<span class="mi">5</span> <span class="mi">4</span> <span class="n">abc</span>
-<span class="mi">6</span> <span class="mi">5</span> <span class="k">def</span>
-<span class="nf">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">63.3</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mf">12.3</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">75.6</span> <span class="n">ms</span>
-<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">69.2</span> <span class="n">ms</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [5]: </span><span class="o">%%time</span>
+<span class="gp">   ...: </span><span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">pd_dataf</span> <span class="o">-</span><span class="n">c</span> <span class="n">conv</span>
+<span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">class</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">))</span>
+<span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">))</span>
+<span class="gp">   ...: </span><span class="n">rm</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="go">[1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</span>
+<span class="go">  x   y</span>
+<span class="go">1 0 abc</span>
+<span class="go">2 1 def</span>
+<span class="go">3 2 abc</span>
+<span class="go">4 3 def</span>
+<span class="go">5 4 abc</span>
+<span class="go">6 5 def</span>
+<span class="go">CPU times: user 47.6 ms, sys: 100 us, total: 47.7 ms</span>
+<span class="go">Wall time: 45.7 ms</span>
 </pre></div>
 </div>
 <p>The conversion is much faster.</p>
 <p>It is also possible to only convert to an Arrow data structure.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>conv2 = rpy2.robjects.conversion.Converter(&#39;Pandas to pyarrow&#39;,
-                                           template=pyra.converter)
-
-@conv2.py2rpy.register(pd.DataFrame)
-def py2rpy_pandas(dataf):
-    pa_tbl = pyarrow.Table.from_pandas(dataf)
-    return pyra.converter.py2rpy(pa_tbl)
-
-conv2 = rpy2.ipython.rmagic.converter + conv2
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [6]: </span><span class="n">conv2</span> <span class="o">=</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">Converter</span><span class="p">(</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;Pandas to pyarrow&#39;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">template</span><span class="o">=</span><span class="n">pyra</span><span class="o">.</span><span class="n">converter</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="nd">@conv2</span><span class="o">.</span><span class="n">py2rpy</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+<span class="gp">   ...: </span><span class="k">def</span> <span class="nf">py2rpy_pandas</span><span class="p">(</span><span class="n">dataf</span><span class="p">):</span>
+<span class="gp">   ...: </span>    <span class="n">pa_tbl</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">dataf</span><span class="p">)</span>
+<span class="gp">   ...: </span>    <span class="k">return</span> <span class="n">pyra</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">py2rpy</span><span class="p">(</span><span class="n">pa_tbl</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="n">conv2</span> <span class="o">=</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">ipython</span><span class="o">.</span><span class="n">rmagic</span><span class="o">.</span><span class="n">converter</span> <span class="o">+</span> <span class="n">conv2</span>
+<span class="gp">   ...: </span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%time
-%%R -i pd_dataf -c conv2
-print(head(pd_dataf))
-rm(pd_dataf)
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Table
-6 rows x 2 columns
-$x &lt;int64&gt;
-$y &lt;string&gt;
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="o">%%time</span>
+<span class="gp">   ...: </span><span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">pd_dataf</span> <span class="o">-</span><span class="n">c</span> <span class="n">conv2</span>
+<span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">))</span>
+<span class="gp">   ...: </span><span class="n">rm</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="go">Table</span>
+<span class="go">6 rows x 2 columns</span>
+<span class="go">$x &lt;int64&gt;</span>
+<span class="go">$y &lt;string&gt;</span>
 
-See $metadata for additional Schema metadata
-CPU times: user 28.8 ms, sys: 4.07 ms, total: 32.9 ms
-Wall time: 31 ms
+<span class="go">See $metadata for additional Schema metadata</span>
+<span class="go">CPU times: user 20.8 ms, sys: 12 ms, total: 32.8 ms</span>
+<span class="go">Wall time: 31.9 ms</span>
 </pre></div>
 </div>
 <p>This time the conversion is about as fast but is likely requiring less
@@ -179,25 +182,26 @@ data structures to make their behavior close to <code class="docutils literal no
 There will be many situations where this will be sufficient to work with
 the data table in R, while benefiting from the very significant speed
 gain. For example with the R package <code class="docutils literal notranslate"><span class="pre">dplyr</span></code>:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">R</span>
-<span class="nf">suppressMessages</span><span class="p">(</span><span class="nf">require</span><span class="p">(</span><span class="n">dplyr</span><span class="p">))</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [8]: </span><span class="o">%%</span><span class="k">R</span>
+<span class="gp">   ...: </span>suppressMessages(require(dplyr))
+<span class="gp">   ...: </span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%time
-%%R -i pd_dataf -c conv2
-
-pd_dataf %&gt;%
-  group_by(y) %&gt;%
-  summarize(n = length(x))
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[90m# A tibble: 2 x 2[39m
-  y          n
-  [3m[90m&lt;chr&gt;[39m[23m  [3m[90m&lt;int&gt;[39m[23m
-[90m1[39m abc   [4m2[24m[4m5[24m[4m0[24m000
-[90m2[39m def   [4m2[24m[4m5[24m[4m0[24m000
-CPU times: user 132 ms, sys: 15.7 ms, total: 148 ms
-Wall time: 146 ms
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="o">%%time</span>
+<span class="gp">   ...: </span><span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">pd_dataf</span> <span class="o">-</span><span class="n">c</span> <span class="n">conv2</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="n">res</span> <span class="o">&lt;-</span> <span class="n">pd_dataf</span> <span class="o">%&gt;%</span>
+<span class="gp">   ...: </span><span class="n">group_by</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">%&gt;%</span>
+<span class="gp">   ...: </span><span class="n">summarize</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="go"># A tibble: 2 × 2</span>
+<span class="go">  y          n</span>
+<span class="go">  &lt;chr&gt;  &lt;int&gt;</span>
+<span class="go">1 abc   250000</span>
+<span class="go">2 def   250000</span>
+<span class="go">CPU times: user 250 ms, sys: 11.9 ms, total: 262 ms</span>
+<span class="go">Wall time: 261 ms</span>
 </pre></div>
 </div>
 </section>
@@ -266,7 +270,7 @@ Wall time: 146 ms
       &copy;2021, Laurent Gautier.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
