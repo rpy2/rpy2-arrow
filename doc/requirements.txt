@@ -1,4 +1,6 @@
 ipython
 pandas
+pyarrow
 rpy2
+rpy2-arrow
 sphinx
