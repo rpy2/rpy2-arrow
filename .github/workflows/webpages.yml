@@ -36,7 +36,7 @@ jobs:
             ${{ runner.os }}-${{ env.R_VERSION }}-build-
       - name: Install R dependencies
         run: |
-	  install.packages("dplyr")
+          install.packages("dplyr")
           install.packages("arrow")
         shell: Rscript {0}
       - name: Install Python dependencies
