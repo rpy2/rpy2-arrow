@@ -7,6 +7,7 @@ on:
 
 env:
   R-VERSION: "4.1"
+  SYSTEM_DEPS: sudo apt-get install -y libcurl4-gnutls-dev
 
 jobs:
   job_1:
