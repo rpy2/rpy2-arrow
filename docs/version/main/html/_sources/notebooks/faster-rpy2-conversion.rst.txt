@@ -1,5 +1,10 @@
-Moving pandas DataFrames faster between Python and R
-----------------------------------------------------
+Faster conversion between pandas and R
+--------------------------------------
+
+This example of custom conversion with jupyter and the
+"R magic" in :mod:`rpy2.ipython` demonstrates how
+Arrow can greatly improve performances when moving
+data between Python and R.
 
 We create a test ``pandas.DataFrame``. The size is set to show a
 noticeable able effect without waiting too long for the slowest

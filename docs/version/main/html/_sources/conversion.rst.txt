@@ -13,8 +13,6 @@ Rules for Arrow data structure can be specified, and the package
 :mod:`rpy2-arrow` already implements the bulk of what it is required.
 The only remaining part is how to combine them for your own need.
 
-An example of custom conversion for use with jupyter and the "R magic"
-
 .. _faster rpy2 conversions:
 
 .. include:: notebooks/faster-rpy2-conversion.rst

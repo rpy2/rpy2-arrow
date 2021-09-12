@@ -40,9 +40,12 @@ conversion</cite>).</p>
 <p>Rules for Arrow data structure can be specified, and the package
 <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2-arrow</span></code> already implements the bulk of what it is required.
 The only remaining part is how to combine them for your own need.</p>
-<p>An example of custom conversion for use with jupyter and the “R magic”</p>
-<section id="moving-pandas-dataframes-faster-between-python-and-r">
-<span id="faster-rpy2-conversions"></span><h2>Moving pandas DataFrames faster between Python and R<a class="headerlink" href="#moving-pandas-dataframes-faster-between-python-and-r" title="Permalink to this headline">¶</a></h2>
+<section id="faster-conversion-between-pandas-and-r">
+<span id="faster-rpy2-conversions"></span><h2>Faster conversion between pandas and R<a class="headerlink" href="#faster-conversion-between-pandas-and-r" title="Permalink to this headline">¶</a></h2>
+<p>This example of custom conversion with jupyter and the
+“R magic” in <a class="reference external" href="https://rpy2.github.io/doc/v3.4.x/html/interactive.html#module-rpy2.ipython" title="(in rpy2 v3.4.5)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2.ipython</span></code></a> demonstrates how
+Arrow can greatly improve performances when moving
+data between Python and R.</p>
 <p>We create a test <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>. The size is set to show a
 noticeable able effect without waiting too long for the slowest
 conversion on the laptop the notebook ran on. Feel free to change the
@@ -77,8 +80,8 @@ written.</p>
 <span class="go">3 3 def</span>
 <span class="go">4 4 abc</span>
 <span class="go">5 5 def</span>
-<span class="go">CPU times: user 7.78 s, sys: 76.5 ms, total: 7.86 s</span>
-<span class="go">Wall time: 8.05 s</span>
+<span class="go">CPU times: user 10.3 s, sys: 117 ms, total: 10.4 s</span>
+<span class="go">Wall time: 10.4 s</span>
 </pre></div>
 </div>
 <p>The conversion of a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> can be accelerated by using
@@ -134,8 +137,8 @@ custom converter for <code class="docutils literal notranslate"><span class="pre
 <span class="go">4 3 def</span>
 <span class="go">5 4 abc</span>
 <span class="go">6 5 def</span>
-<span class="go">CPU times: user 47.6 ms, sys: 100 us, total: 47.7 ms</span>
-<span class="go">Wall time: 45.7 ms</span>
+<span class="go">CPU times: user 50.7 ms, sys: 4.11 ms, total: 54.8 ms</span>
+<span class="go">Wall time: 53.1 ms</span>
 </pre></div>
 </div>
 <p>The conversion is much faster.</p>
@@ -164,8 +167,8 @@ custom converter for <code class="docutils literal notranslate"><span class="pre
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 20.8 ms, sys: 12 ms, total: 32.8 ms</span>
-<span class="go">Wall time: 31.9 ms</span>
+<span class="go">CPU times: user 38 ms, sys: 49 us, total: 38.1 ms</span>
+<span class="go">Wall time: 36.9 ms</span>
 </pre></div>
 </div>
 <p>This time the conversion is about as fast but is likely requiring less
@@ -200,8 +203,8 @@ gain. For example with the R package <code class="docutils literal notranslate">
 <span class="go">  &lt;chr&gt;  &lt;int&gt;</span>
 <span class="go">1 abc   250000</span>
 <span class="go">2 def   250000</span>
-<span class="go">CPU times: user 250 ms, sys: 11.9 ms, total: 262 ms</span>
-<span class="go">Wall time: 261 ms</span>
+<span class="go">CPU times: user 312 ms, sys: 24.3 ms, total: 337 ms</span>
+<span class="go">Wall time: 336 ms</span>
 </pre></div>
 </div>
 </section>
@@ -231,7 +234,7 @@ gain. For example with the R package <code class="docutils literal notranslate">
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Conversion</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#moving-pandas-dataframes-faster-between-python-and-r">Moving pandas DataFrames faster between Python and R</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#faster-conversion-between-pandas-and-r">Faster conversion between pandas and R</a></li>
 </ul>
 </li>
 </ul>
