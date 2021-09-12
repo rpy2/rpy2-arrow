@@ -7,7 +7,7 @@ on:
 
 env:
   R-VERSION: "4.1"
-  SYSTEM_DEPS: sudo apt-get install -y libcurl4-gnutls-dev
+
 
 jobs:
   job_1:
@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install systems dependencies
+        run: sudo apt-get install -y libcurl4-gnutls-dev
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
