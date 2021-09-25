@@ -1,5 +1,5 @@
-Faster conversion between pandas and R
---------------------------------------
+Faster pandas-R conversions
+---------------------------
 
 This example of custom conversion with jupyter and the
 "R magic" in :mod:`rpy2.ipython` demonstrates how
