@@ -28,8 +28,9 @@ To install the development version with `pip`:
 
    pip install -e git://github.com/rpy2/rpy2-arrow.git@main#egg=rpy2_arrow
 
-The package allows the sharing of `Apache Arrow <https://arrow.apache.org/>`_ data structures
-(Array, ChunkedArray, Table, Schema) between Python and R
+The package allows the sharing of `Apache Arrow <https://arrow.apache.org/>`_
+data structures (Array, ChunkedArray, Field, RecordBatch, RecordBatchReader,
+Table, Schema) between Python and R
 within the same process. The underlying C/C++ pointer is shared,
 meaning potentially large gain in performance compared to regular
 arrays or data frames shared between Python and R through the
@@ -40,8 +41,10 @@ availble to R was measured to be 200 times faster with the use of Arrow
 
 .. note::
 
-   The R package `arrow` >= 3.0.0 is required. It can be installed
-   with the following R command.
+   The R package `arrow` >= 3.0.0 is required. The current version of
+   :mod:`rpy2_arrow` is even targeting `arrow` v5.0.
+
+   The latest released version of the R package can be installed in R with:
 
    .. code-block:: r
 
