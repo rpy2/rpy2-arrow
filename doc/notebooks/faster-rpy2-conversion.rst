@@ -6,6 +6,11 @@ This example of custom conversion with jupyter and the
 Arrow can greatly improve performances when moving
 data between Python and R.
 
+.. note::
+
+   This section is a jupyter notebook. It can be downloaded
+   as a notebook from `here <./faster-rpy2-conversion.ipynb>`.
+
 We create a test :class:`pandas.DataFrame`. The size is set to show a
 noticeable able effect without waiting too long for the slowest
 conversion on the laptop the notebook ran on. Feel free to change the
@@ -126,11 +131,15 @@ exists during the scope of ``py2rpy_pandas`` for ``conv``. For
 Python ``DataFrame`` and in the ``Arrow`` table (the content of which
 will be shared between Python and R if I understand it right).
 
-The R package ``arrow`` implements methods for its wrapped for Arrow
+The R package ``arrow`` implements methods for Arrow
 data structures to make their behavior close to ``data.frame`` objects.
-There will be many situations where this will be sufficient to work with
-the data table in R, while benefiting from the very significant speed
-gain. For example with the R package ``dplyr``:
+This can make Arrow data table work with R functions designed for data frames,
+and bring very significant performance gains. When in combination with
+:mod:`rpy2-arrow`, this means that Arrow tables accessed or created
+from Python can be used with R code without the performance penalty of
+copying data, and with the possible performance gain that the R package
+``arrow`` may bring for such data structures. For example,
+with the R package ``dplyr``:
 
 .. ipython::
 
@@ -144,5 +153,6 @@ gain. For example with the R package ``dplyr``:
        ...: 
        ...: res <- pd_dataf %>%
        ...:     group_by(y) %>%
-       ...:     summarize(n = length(x))
+       ...:     summarize(n = length(x),
+       ...:               avg = mean(x))
        ...: print(res)
