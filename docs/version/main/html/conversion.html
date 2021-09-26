@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Conversion &#8212; rpy2-arrow 2020-01-16 documentation</title>
+    <title>Conversion &#8212; rpy2-arrow 0.0.4 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -49,7 +49,7 @@ data between Python and R.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This section is a jupyter notebook. It can be downloaded
-as a notebook from <cite>here &lt;./faster-rpy2-conversion.ipynb&gt;</cite>.</p>
+as a notebook from <a class="reference external" href="./faster-rpy2-conversion.ipynb">here</a>.</p>
 </div>
 <p>We create a test <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>. The size is set to show a
 noticeable able effect without waiting too long for the slowest
@@ -84,8 +84,8 @@ the notebook was written.</p>
 <span class="go">3 3 def</span>
 <span class="go">4 4 abc</span>
 <span class="go">5 5 def</span>
-<span class="go">CPU times: user 8.56 s, sys: 93.4 ms, total: 8.66 s</span>
-<span class="go">Wall time: 8.67 s</span>
+<span class="go">CPU times: user 8.95 s, sys: 136 ms, total: 9.08 s</span>
+<span class="go">Wall time: 9.16 s</span>
 </pre></div>
 </div>
 <p>The conversion of a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> can be accelerated by using
@@ -141,8 +141,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">4 3 def</span>
 <span class="go">5 4 abc</span>
 <span class="go">6 5 def</span>
-<span class="go">CPU times: user 30.8 ms, sys: 19.9 ms, total: 50.8 ms</span>
-<span class="go">Wall time: 49 ms</span>
+<span class="go">CPU times: user 52.9 ms, sys: 7.9 ms, total: 60.8 ms</span>
+<span class="go">Wall time: 58.6 ms</span>
 </pre></div>
 </div>
 <p>The conversion is much faster.</p>
@@ -171,8 +171,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 37.1 ms, sys: 4.16 ms, total: 41.2 ms</span>
-<span class="go">Wall time: 40.3 ms</span>
+<span class="go">CPU times: user 34.4 ms, sys: 7.95 ms, total: 42.3 ms</span>
+<span class="go">Wall time: 40.8 ms</span>
 </pre></div>
 </div>
 <p>This time the conversion is about as fast but is likely requiring less
@@ -212,7 +212,7 @@ with the R package <code class="docutils literal notranslate"><span class="pre">
 <span class="go">  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt;</span>
 <span class="go">1 abc   250000 249999</span>
 <span class="go">2 def   250000 250000</span>
-<span class="go">CPU times: user 286 ms, sys: 8.07 ms, total: 294 ms</span>
+<span class="go">CPU times: user 286 ms, sys: 7.93 ms, total: 294 ms</span>
 <span class="go">Wall time: 293 ms</span>
 </pre></div>
 </div>

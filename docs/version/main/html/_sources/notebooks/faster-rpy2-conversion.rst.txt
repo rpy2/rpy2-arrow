@@ -9,7 +9,7 @@ data between Python and R.
 .. note::
 
    This section is a jupyter notebook. It can be downloaded
-   as a notebook from `here <./faster-rpy2-conversion.ipynb>`.
+   as a notebook from `here <./faster-rpy2-conversion.ipynb>`__.
 
 We create a test :class:`pandas.DataFrame`. The size is set to show a
 noticeable able effect without waiting too long for the slowest
