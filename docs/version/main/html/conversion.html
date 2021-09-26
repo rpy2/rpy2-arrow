@@ -40,12 +40,17 @@ conversion</cite>).</p>
 <p>Rules for Arrow data structure can be specified, and the package
 <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2-arrow</span></code> already implements the bulk of what it is required.
 The only remaining part is how to combine them for your own need.</p>
-<section id="faster-conversion-between-pandas-and-r">
-<span id="faster-rpy2-conversions"></span><h2>Faster conversion between pandas and R<a class="headerlink" href="#faster-conversion-between-pandas-and-r" title="Permalink to this headline">¶</a></h2>
+<section id="faster-pandas-r-conversions">
+<span id="faster-rpy2-conversions"></span><h2>Faster pandas-R conversions<a class="headerlink" href="#faster-pandas-r-conversions" title="Permalink to this headline">¶</a></h2>
 <p>This example of custom conversion with jupyter and the
 “R magic” in <a class="reference external" href="https://rpy2.github.io/doc/v3.4.x/html/interactive.html#module-rpy2.ipython" title="(in rpy2 v3.4.5)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2.ipython</span></code></a> demonstrates how
 Arrow can greatly improve performances when moving
 data between Python and R.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This section is a jupyter notebook. It can be downloaded
+as a notebook from <cite>here &lt;./faster-rpy2-conversion.ipynb&gt;</cite>.</p>
+</div>
 <p>We create a test <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>. The size is set to show a
 noticeable able effect without waiting too long for the slowest
 conversion on the laptop the notebook ran on. Feel free to change the
@@ -79,8 +84,8 @@ the notebook was written.</p>
 <span class="go">3 3 def</span>
 <span class="go">4 4 abc</span>
 <span class="go">5 5 def</span>
-<span class="go">CPU times: user 7.86 s, sys: 140 ms, total: 8 s</span>
-<span class="go">Wall time: 8.11 s</span>
+<span class="go">CPU times: user 8.56 s, sys: 93.4 ms, total: 8.66 s</span>
+<span class="go">Wall time: 8.67 s</span>
 </pre></div>
 </div>
 <p>The conversion of a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> can be accelerated by using
@@ -136,8 +141,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">4 3 def</span>
 <span class="go">5 4 abc</span>
 <span class="go">6 5 def</span>
-<span class="go">CPU times: user 38.6 ms, sys: 7.96 ms, total: 46.6 ms</span>
-<span class="go">Wall time: 45.8 ms</span>
+<span class="go">CPU times: user 30.8 ms, sys: 19.9 ms, total: 50.8 ms</span>
+<span class="go">Wall time: 49 ms</span>
 </pre></div>
 </div>
 <p>The conversion is much faster.</p>
@@ -166,8 +171,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 27.9 ms, sys: 4 ms, total: 31.9 ms</span>
-<span class="go">Wall time: 31.3 ms</span>
+<span class="go">CPU times: user 37.1 ms, sys: 4.16 ms, total: 41.2 ms</span>
+<span class="go">Wall time: 40.3 ms</span>
 </pre></div>
 </div>
 <p>This time the conversion is about as fast but is likely requiring less
@@ -179,11 +184,15 @@ exists during the scope of <code class="docutils literal notranslate"><span clas
 <code class="docutils literal notranslate"><span class="pre">conv2</span></code>, the data will only be copied once. It will coexist in the
 Python <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> and in the <code class="docutils literal notranslate"><span class="pre">Arrow</span></code> table (the content of which
 will be shared between Python and R if I understand it right).</p>
-<p>The R package <code class="docutils literal notranslate"><span class="pre">arrow</span></code> implements methods for its wrapped for Arrow
+<p>The R package <code class="docutils literal notranslate"><span class="pre">arrow</span></code> implements methods for Arrow
 data structures to make their behavior close to <code class="docutils literal notranslate"><span class="pre">data.frame</span></code> objects.
-There will be many situations where this will be sufficient to work with
-the data table in R, while benefiting from the very significant speed
-gain. For example with the R package <code class="docutils literal notranslate"><span class="pre">dplyr</span></code>:</p>
+This can make Arrow data table work with R functions designed for data frames,
+and bring very significant performance gains. When in combination with
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2-arrow</span></code>, this means that Arrow tables accessed or created
+from Python can be used with R code without the performance penalty of
+copying data, and with the possible performance gain that the R package
+<code class="docutils literal notranslate"><span class="pre">arrow</span></code> may bring for such data structures. For example,
+with the R package <code class="docutils literal notranslate"><span class="pre">dplyr</span></code>:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [8]: </span><span class="o">%%</span><span class="k">R</span>
 <span class="gp">   ...: </span>suppressMessages(require(dplyr))
 <span class="gp">   ...: </span>
@@ -194,16 +203,17 @@ gain. For example with the R package <code class="docutils literal notranslate">
 <span class="gp">   ...: </span>
 <span class="gp">   ...: </span><span class="n">res</span> <span class="o">&lt;-</span> <span class="n">pd_dataf</span> <span class="o">%&gt;%</span>
 <span class="gp">   ...: </span>    <span class="n">group_by</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">%&gt;%</span>
-<span class="gp">   ...: </span>    <span class="n">summarize</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="gp">   ...: </span>    <span class="n">summarize</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+<span class="gp">   ...: </span>              <span class="n">avg</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 <span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 <span class="gp">   ...: </span>
-<span class="go"># A tibble: 2 × 2</span>
-<span class="go">  y          n</span>
-<span class="go">  &lt;chr&gt;  &lt;int&gt;</span>
-<span class="go">1 abc   250000</span>
-<span class="go">2 def   250000</span>
-<span class="go">CPU times: user 275 ms, sys: 3.96 ms, total: 279 ms</span>
-<span class="go">Wall time: 277 ms</span>
+<span class="go"># A tibble: 2 × 3</span>
+<span class="go">  y          n    avg</span>
+<span class="go">  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt;</span>
+<span class="go">1 abc   250000 249999</span>
+<span class="go">2 def   250000 250000</span>
+<span class="go">CPU times: user 286 ms, sys: 8.07 ms, total: 294 ms</span>
+<span class="go">Wall time: 293 ms</span>
 </pre></div>
 </div>
 </section>
@@ -233,7 +243,7 @@ gain. For example with the R package <code class="docutils literal notranslate">
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Conversion</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#faster-conversion-between-pandas-and-r">Faster conversion between pandas and R</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#faster-pandas-r-conversions">Faster pandas-R conversions</a></li>
 </ul>
 </li>
 </ul>
