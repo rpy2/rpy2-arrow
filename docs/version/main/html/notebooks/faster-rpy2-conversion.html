@@ -77,8 +77,8 @@ the notebook was written.</p>
 <span class="go">3 3 def</span>
 <span class="go">4 4 abc</span>
 <span class="go">5 5 def</span>
-<span class="go">CPU times: user 7.43 s, sys: 95.8 ms, total: 7.53 s</span>
-<span class="go">Wall time: 7.53 s</span>
+<span class="go">CPU times: user 8.47 s, sys: 116 ms, total: 8.59 s</span>
+<span class="go">Wall time: 8.59 s</span>
 </pre></div>
 </div>
 <p>The conversion of a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> can be accelerated by using
@@ -136,8 +136,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">4     3 def  </span>
 <span class="go">5     4 abc  </span>
 <span class="go">6     5 def  </span>
-<span class="go">CPU times: user 51.7 ms, sys: 0 ns, total: 51.7 ms</span>
-<span class="go">Wall time: 50.8 ms</span>
+<span class="go">CPU times: user 51.9 ms, sys: 4.01 ms, total: 55.9 ms</span>
+<span class="go">Wall time: 58.6 ms</span>
 </pre></div>
 </div>
 <p>The conversion is much faster.</p>
@@ -166,8 +166,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 24.9 ms, sys: 3.99 ms, total: 28.9 ms</span>
-<span class="go">Wall time: 28.7 ms</span>
+<span class="go">CPU times: user 32.6 ms, sys: 0 ns, total: 32.6 ms</span>
+<span class="go">Wall time: 32.5 ms</span>
 </pre></div>
 </div>
 <p>This time the conversion is about as fast but is likely requiring less
@@ -199,16 +199,17 @@ with the R package <code class="docutils literal notranslate"><span class="pre">
 <span class="gp">   ...: </span><span class="n">res</span> <span class="o">&lt;-</span> <span class="n">pd_dataf</span> <span class="o">%&gt;%</span>
 <span class="gp">   ...: </span>    <span class="n">group_by</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">%&gt;%</span>
 <span class="gp">   ...: </span>    <span class="n">summarize</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">length</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+<span class="gp">   ...: </span>              <span class="nb">min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
 <span class="gp">   ...: </span>              <span class="n">avg</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 <span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 <span class="gp">   ...: </span>
-<span class="go"># A tibble: 2 × 3</span>
-<span class="go">  y          n    avg</span>
-<span class="go">  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt;</span>
-<span class="go">1 abc   250000 249999</span>
-<span class="go">2 def   250000 250000</span>
-<span class="go">CPU times: user 80.2 ms, sys: 4.01 ms, total: 84.2 ms</span>
-<span class="go">Wall time: 83.3 ms</span>
+<span class="go"># A tibble: 2 × 4</span>
+<span class="go">  y          n   min    avg</span>
+<span class="go">  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;</span>
+<span class="go">1 abc   250000     0 249999</span>
+<span class="go">2 def   250000     1 250000</span>
+<span class="go">CPU times: user 93.4 ms, sys: 8.05 ms, total: 101 ms</span>
+<span class="go">Wall time: 101 ms</span>
 </pre></div>
 </div>
 </section>

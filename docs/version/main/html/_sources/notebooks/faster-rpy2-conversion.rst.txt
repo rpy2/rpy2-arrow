@@ -154,5 +154,6 @@ with the R package ``dplyr``:
        ...: res <- pd_dataf %>%
        ...:     group_by(y) %>%
        ...:     summarize(n = length(x),
+       ...:               min = min(x),
        ...:               avg = mean(x))
        ...: print(res)
