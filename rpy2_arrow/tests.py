@@ -21,7 +21,37 @@ def test_r2py_Array():
     assert isinstance(py_ar, pyarrow.Array)
 
 
-def test_RecordBatch():
+def test_py2r_DataType():
+    py_dt = pyarrow.bool_()
+    r_dt = pyr.pyarrow_to_r_datatype(py_dt)
+    assert isinstance(r_dt, rinterface.SexpEnvironment)
+
+
+def test_r2py_DataType():
+    r_dt = rinterface.evalr("""
+    require('arrow')
+    arrow::bool()
+    """)
+    py_dt = pyr.rarrow_to_py_datatype(r_dt)
+    assert isinstance(py_dt, pyarrow.DataType)
+
+
+def test_py2r_Field():
+    py_fd = pyarrow.field('foo', pyarrow.bool_())
+    r_fd = pyr.pyarrow_to_r_field(py_fd)
+    assert isinstance(r_fd, rinterface.SexpEnvironment)
+
+
+def test_r2py_Field():
+    r_fd = rinterface.evalr("""
+    require('arrow')
+    arrow::Field$create("foo", arrow::bool())
+    """)
+    py_fd = pyr.rarrow_to_py_field(r_fd)
+    assert isinstance(py_fd, pyarrow.lib.Field)
+
+
+def test_py2r_RecordBatch():
     dataf = pandas.DataFrame.from_dict(
         {'a': [1, 2, 3],
          'b': [4, 5, 6]}
@@ -31,7 +61,7 @@ def test_RecordBatch():
     assert isinstance(r_rb, rinterface.SexpEnvironment)
 
 
-def test_ChunkedArray():
+def test_py2r_ChunkedArray():
     py_ca = pyarrow.chunked_array([[1, 2, 3], [4, 5]])
     r_ca = pyr.pyarrow_to_r_chunkedarray(py_ca)
     assert isinstance(r_ca, rinterface.SexpEnvironment)

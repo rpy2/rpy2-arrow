@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     import rpy2.robjects
 
 rarrow = packages.importr('arrow')
-TARGET_VERSION = '4.0.'
+TARGET_VERSION = '5.0.'
 if not rarrow.__version__.startswith(TARGET_VERSION):
     warnings.warn(
         'This was designed againt arrow versions starting with %s'
@@ -80,6 +80,24 @@ def pyarrow_to_r_recordbatch(
     return r_recordbatch
 
 
+def pyarrow_to_r_recordbatchreader(
+        obj: 'pyarrow.lib.RecordBatchReader'
+):
+    """Create an R `arrow::RecordBatchReader` from a pyarrow RecordBatchReader.
+
+    This is sharing the C/C++ object between the two languages.
+    The returned object depends on the active conversion rule in
+    rpy2. By default it will be an `rpy2.robjects.Environment`.
+    """
+
+    stream_ptr = rarrow.allocate_arrow_array_stream()[0]
+    try:
+        obj._export_to_c(int(stream_ptr))
+        return rarrow.ImportRecordBatchReader(stream_ptr)
+    finally:
+        rarrow.delete_arrow_array_stream(stream_ptr)
+
+
 def pyarrow_to_r_chunkedarray(
         obj: 'pyarrow.lib.ChunkedArray'
 ):
@@ -96,13 +114,69 @@ def pyarrow_to_r_chunkedarray(
 
 def rarrow_to_py_chunkedarray(
         obj: 'rpy2.robjects.Environment'
-):
+) -> pyarrow.lib.ChunkedArray:
     """Create a pyarrow chunked array from an R `arrow::ChunkedArray` object.
 
     This is sharing the C/C++ object between the two languages.
     """
     chunks = tuple(rarrow_to_py_array(x) for x in obj['chunks'])
     return pyarrow.chunked_array(chunks)
+
+
+def pyarrow_to_r_datatype(
+        obj: 'pyarrow.lib.DataType'
+):
+    schema_ptr = rarrow.allocate_arrow_schema()[0]
+    try:
+        obj._export_to_c(int(schema_ptr))
+        return rarrow.ImportType(schema_ptr)
+    finally:
+        rarrow.delete_arrow_schema(schema_ptr)
+
+
+def rarrow_to_py_datatype(
+        obj: 'rpy2.robjects.Environment'
+) -> pyarrow.lib.DataType:
+    """Create a pyarrow.lib.DataType from an R `arrow::DataType` object.
+
+    This is sharing the C/C++ object between the two languages.
+    """
+
+    schema_ptr = rarrow.allocate_arrow_schema()[0]
+    try:
+        rarrow.ExportType(obj, schema_ptr)
+        py_datatype = pyarrow.lib.DataType._import_from_c(schema_ptr)
+    finally:
+        rarrow.delete_arrow_schema(schema_ptr)
+    return py_datatype
+
+
+def pyarrow_to_r_field(
+        obj: 'pyarrow.lib.Field'
+):
+    schema_ptr = rarrow.allocate_arrow_schema()[0]
+    try:
+        obj._export_to_c(int(schema_ptr))
+        return rarrow.ImportField(schema_ptr)
+    finally:
+        rarrow.delete_arrow_schema(schema_ptr)
+
+
+def rarrow_to_py_field(
+        obj: 'rpy2.robjects.Environment'
+) -> pyarrow.lib.Field:
+    """Create a pyarrow.lib.Field from an R `arrow::DataType` object.
+
+    This is sharing the C/C++ object between the two languages.
+    """
+
+    schema_ptr = rarrow.allocate_arrow_schema()[0]
+    try:
+        rarrow.ExportField(obj, schema_ptr)
+        py_field = pyarrow.Field._import_from_c(schema_ptr)
+    finally:
+        rarrow.delete_arrow_schema(schema_ptr)
+    return py_field
 
 
 def pyarrow_to_r_table(
@@ -194,12 +268,20 @@ def rarrow_to_py_schema(
 
 converter = conversion.Converter('default arrow conversion',
                                  template=robjects.default_converter)
+
 # Pyarrow to R arrow.
-converter.py2rpy.register(pyarrow.Array, pyarrow_to_r_array)
-converter.py2rpy.register(pyarrow.ChunkedArray,
+converter.py2rpy.register(pyarrow.lib.Array, pyarrow_to_r_array)
+converter.py2rpy.register(pyarrow.lib.Field, pyarrow_to_r_field)
+converter.py2rpy.register(pyarrow.lib.ChunkedArray,
                           pyarrow_to_r_chunkedarray)
-converter.py2rpy.register(pyarrow.Schema, pyarrow_to_r_schema)
-converter.py2rpy.register(pyarrow.Table, pyarrow_to_r_table)
+converter.py2rpy.register(pyarrow.lib.RecordBatch,
+                          pyarrow_to_r_recordbatch)
+converter.py2rpy.register(pyarrow.lib.RecordBatchReader,
+                          pyarrow_to_r_recordbatchreader)
+converter.py2rpy.register(pyarrow.lib.Schema, pyarrow_to_r_schema)
+converter.py2rpy.register(pyarrow.lib.Table, pyarrow_to_r_table)
+converter.py2rpy.register(pyarrow.lib.DataType, pyarrow_to_r_datatype)
+
 # R arrow to pyarrow.
 converter._rpy2py_nc_map.update(
     {
@@ -213,7 +295,9 @@ converter._rpy2py_nc_map[rinterface.SexpEnvironment].update(
     {
         'Array': rarrow_to_py_array,
         'ChunkedArray': rarrow_to_py_chunkedarray,
+        'Field': rarrow_to_py_field,
         'Schema': rarrow_to_py_schema,
-        'Table': rarrow_to_py_table
+        'Table': rarrow_to_py_table,
+        'Type': rarrow_to_py_datatype
     }
 )
