@@ -31,7 +31,7 @@ jobs:
       run: ${{ matrix.SYSTEM_DEPS }}        
     - name: Install R dependencies
       run: |
-        install.packages(c("assertthat", "cpp11", "tidyselect", "vctrs", "R6", "purr", "bit64"))
+        install.packages(c("assertthat", "cpp11", "tidyselect", "vctrs", "R6", "purrr", "bit64"))
         install.packages("arrow")
       shell: Rscript {0}
     - name: Install dependencies
