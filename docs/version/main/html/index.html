@@ -55,8 +55,9 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -e git://github.com/rpy2/rpy2-arrow.git@main#egg<span class="o">=</span>rpy2_arrow
 </pre></div>
 </div>
-<p>The package allows the sharing of <a class="reference external" href="https://arrow.apache.org/">Apache Arrow</a> data structures
-(Array, ChunkedArray, Table, Schema) between Python and R
+<p>The package allows the sharing of <a class="reference external" href="https://arrow.apache.org/">Apache Arrow</a>
+data structures (Array, ChunkedArray, Field, RecordBatch, RecordBatchReader,
+Table, Schema) between Python and R
 within the same process. The underlying C/C++ pointer is shared,
 meaning potentially large gain in performance compared to regular
 arrays or data frames shared between Python and R through the
@@ -66,8 +67,9 @@ availble to R was measured to be 200 times faster with the use of Arrow
 (see <a class="reference internal" href="conversion.html#conversion"><span class="std std-ref">Conversion</span></a>).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The R package <cite>arrow</cite> &gt;= 3.0.0 is required. It can be installed
-with the following R command.</p>
+<p>The R package <cite>arrow</cite> &gt;= 3.0.0 is required. The current version of
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2_arrow</span></code> is even targeting <cite>arrow</cite> v5.0.</p>
+<p>The latest released version of the R package can be installed in R with:</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">install.packages</span><span class="p">(</span><span class="s">&quot;arrow&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
