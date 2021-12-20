@@ -40,7 +40,7 @@ def pyarrow_to_r_array(
 
 
 def rarrow_to_py_array(
-        obj: rpy2.robjects.Environment
+        obj: robjects.Environment
 ):
     """Create a pyarrow array from an R `arrow::Array` object.
 
@@ -113,7 +113,7 @@ def pyarrow_to_r_chunkedarray(
 
 
 def rarrow_to_py_chunkedarray(
-        obj: rpy2.robjects.Environment
+        obj: robjects.Environment
 ) -> pyarrow.lib.ChunkedArray:
     """Create a pyarrow chunked array from an R `arrow::ChunkedArray` object.
 
@@ -135,7 +135,7 @@ def pyarrow_to_r_datatype(
 
 
 def rarrow_to_py_datatype(
-        obj: rpy2.robjects.Environment
+        obj: robjects.Environment
 ) -> pyarrow.lib.DataType:
     """Create a pyarrow.lib.DataType from an R `arrow::DataType` object.
 
@@ -163,7 +163,7 @@ def pyarrow_to_r_field(
 
 
 def rarrow_to_py_field(
-        obj: rpy2.robjects.Environment
+        obj: robjects.Environment
 ) -> pyarrow.lib.Field:
     """Create a pyarrow.lib.Field from an R `arrow::DataType` object.
 
@@ -204,7 +204,7 @@ def pyarrow_to_r_table(
 
 
 def rarrow_to_py_table(
-        obj: rpy2.robjects.Environment,
+        obj: robjects.Environment,
         rpy2py: typing.Optional[
             conversion.Converter] = None
 ):
@@ -248,7 +248,7 @@ def pyarrow_to_r_schema(
 
 
 def rarrow_to_py_schema(
-        obj: rpy2.robjects.Environment
+        obj: robjects.Environment
 ):
     """Create a pyarrow Schema fomr an R `arrow::Schema` object.
 
