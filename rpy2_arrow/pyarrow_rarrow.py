@@ -7,9 +7,6 @@ import typing
 import warnings
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    import rpy2.robjects
-
 rarrow = packages.importr('arrow')
 TARGET_VERSION = '6.0.'
 if not rarrow.__version__.startswith(TARGET_VERSION):
