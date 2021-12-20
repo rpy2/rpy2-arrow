@@ -5,7 +5,6 @@ import rpy2.robjects.conversion as conversion
 import rpy2.robjects.packages as packages
 import typing
 import warnings
-from typing import TYPE_CHECKING
 
 rarrow = packages.importr('arrow')
 TARGET_VERSION = '6.0.'
