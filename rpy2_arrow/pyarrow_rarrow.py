@@ -11,7 +11,7 @@ rarrow = packages.importr('arrow')
 TARGET_VERSION = '6.0.'
 if not rarrow.__version__.startswith(TARGET_VERSION):
     warnings.warn(
-        'This was designed againt arrow versions starting with %s'
+        'This was designed against arrow versions starting with %s'
         ' but you have %s' %
         (TARGET_VERSION, rarrow.__version__))
 
@@ -103,7 +103,7 @@ def pyarrow_to_r_recordbatchreader(
 def rarrow_to_py_recordbatchreader(
         obj: robjects.Environment
 ):
-    """Create a pyarrow RecordBatchReader fomr an R `arrow::RecordBatchReader` object.
+    """Create a pyarrow RecordBatchReader from an R `arrow::RecordBatchReader` object.
 
     This is sharing the C/C++ object between the two languages.
     The returned object depends on the active conversion rule in
@@ -215,7 +215,7 @@ def rarrow_to_py_table(
         rpy2py: typing.Optional[
             conversion.Converter] = None
 ):
-    """Create a pyarrow Table fomr an R `arrow::Table` object.
+    """Create a pyarrow Table from an R `arrow::Table` object.
 
     This is sharing the C/C++ object between the two languages.
     The returned object depends on the active conversion rule in
@@ -254,7 +254,7 @@ def pyarrow_to_r_schema(
 def rarrow_to_py_schema(
         obj: robjects.Environment
 ):
-    """Create a pyarrow Schema fomr an R `arrow::Schema` object.
+    """Create a pyarrow Schema from an R `arrow::Schema` object.
 
     This is sharing the C/C++ object between the two languages.
     The returned object depends on the active conversion rule in
