@@ -25,7 +25,7 @@ def pyarrow_to_r_array(
     The returned object depends on the active conversion rule in
     rpy2. By default it will be an `rpy2.robjects.Environment`.
     """
-    array_ptr = ffi.new("struct ArrowSchema*")
+    array_ptr = ffi.new("struct ArrowArray*")
     array_ptr_value = int(ffi.cast("uintptr_t", array_ptr))
     schema_ptr = ffi.new("struct ArrowSchema*")
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
@@ -41,7 +41,7 @@ def rarrow_to_py_array(
 
     This is sharing the C/C++ object between the two languages.
     """
-    array_ptr = ffi.new("struct ArrowSchema*")
+    array_ptr = ffi.new("struct ArrowArray*")
     array_ptr_value = int(ffi.cast("uintptr_t", array_ptr))
     schema_ptr = ffi.new("struct ArrowSchema*")
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
@@ -59,7 +59,7 @@ def pyarrow_to_r_recordbatch(
     The returned object depends on the active conversion rule in
     rpy2. By default it will be an `rpy2.robjects.Environment`.
     """
-    array_ptr = ffi.new("struct ArrowSchema*")
+    array_ptr = ffi.new("struct ArrowArray*")
     array_ptr_value = int(ffi.cast("uintptr_t", array_ptr))
     schema_ptr = ffi.new("struct ArrowSchema*")
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
@@ -75,7 +75,7 @@ def rarrow_to_py_recordbatch(
 
     This is sharing the C/C++ object between the two languages.
     """
-    array_ptr = ffi.new("struct ArrowSchema*")
+    array_ptr = ffi.new("struct ArrowArray*")
     array_ptr_value = int(ffi.cast("uintptr_t", array_ptr))
     schema_ptr = ffi.new("struct ArrowSchema*")
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
