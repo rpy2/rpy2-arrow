@@ -62,12 +62,36 @@ def test_py2r_RecordBatch():
 
 
 def test_r2py_RecordBatch():
-    r_ar = rinterface.evalr("""
+    r_rb = rinterface.evalr("""
     require('arrow')
     arrow::RecordBatch$create(a = c(1L, 2L, 3L), b = c(4L, 5L, 6L))
     """)
-    py_ar = pyr.rarrow_to_py_recordbatch(r_ar)
-    assert isinstance(py_ar, pyarrow.RecordBatch)
+    py_rb = pyr.rarrow_to_py_recordbatch(r_rb)
+    assert isinstance(py_rb, pyarrow.RecordBatch)
+
+
+def test_py2r_RecordBatchReader():
+    dataf = pandas.DataFrame.from_dict(
+        {'a': [1, 2, 3],
+         'b': [4, 5, 6]}
+    )
+    py_tb = pyarrow.table(dataf)
+    py_rbr = pyarrow.lib.RecordBatchReader.from_batches(
+        py_tb.schema, 
+        py_tb.to_batches())
+    r_rbr = pyr.pyarrow_to_r_recordbatchreader(py_rbr)
+    assert isinstance(r_rbr, rinterface.SexpEnvironment)
+
+
+# def test_r2py_RecordBatchReader():
+#     r_rbr = rinterface.evalr("""
+#     require('arrow')
+#     tb <- arrow::Table$create(a = c(1L, 2L, 3L), b = c(4L, 5L, 6L))
+#     scanner <- Scanner$create(tb)
+#     scanner$ToRecordBatchReader()
+#     """)
+#     py_rbr = pyr.rarrow_to_py_recordbatchreader(r_rbr)
+#     assert isinstance(py_rbr, pyarrow.lib.RecordBatchReader)
 
 
 def test_py2r_ChunkedArray():

@@ -113,7 +113,7 @@ def rarrow_to_py_recordbatchreader(
     stream_ptr = ffi.new("struct ArrowArrayStream*")
     stream_ptr_value = int(ffi.cast("uintptr_t", stream_ptr))
     obj["export_to_c"](str(stream_ptr_value))
-    return pyarrow.lib.RecordBatchReader._import_from_c(int(stream_ptr_value))
+    return pyarrow.lib.RecordBatchReader._import_from_c(stream_ptr_value)
 
 
 def pyarrow_to_r_chunkedarray(
