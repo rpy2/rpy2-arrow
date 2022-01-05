@@ -15,6 +15,19 @@ if not rarrow.__version__.startswith(TARGET_VERSION):
         ' but you have %s' %
         (TARGET_VERSION, rarrow.__version__))
 
+# In arrow >= 7.0.0, pointers can be passed as externalptr,
+# bit64::integer64(), or string, all of which prevent possible
+# problems with the previous versions which required a double().
+_use_ptr_string = rinterface.evalr('packageVersion("arrow") >= "6.0.1.9000"')
+
+def _rarrow_ptr(ptr_value):
+    global _use_ptr_string
+
+    if _use_ptr_string:
+        return str(ptr_value)
+    else:
+        return float(ptr_value)
+
 
 def pyarrow_to_r_array(
         obj: 'pyarrow.lib.Array'
@@ -31,7 +44,7 @@ def pyarrow_to_r_array(
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
     
     obj._export_to_c(array_ptr_value, schema_ptr_value)
-    return rarrow.Array["import_from_c"](str(array_ptr_value), str(schema_ptr_value))
+    return rarrow.Array["import_from_c"](_rarrow_ptr(array_ptr_value), _rarrow_ptr(schema_ptr_value))
 
 
 def rarrow_to_py_array(
@@ -46,7 +59,7 @@ def rarrow_to_py_array(
     schema_ptr = ffi.new("struct ArrowSchema*")
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
 
-    obj["export_to_c"](str(array_ptr_value), str(schema_ptr_value))
+    obj["export_to_c"](_rarrow_ptr(array_ptr_value), _rarrow_ptr(schema_ptr_value))
     return pyarrow.lib.Array._import_from_c(array_ptr_value, schema_ptr_value)
 
 
@@ -65,7 +78,7 @@ def pyarrow_to_r_recordbatch(
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
 
     obj._export_to_c(array_ptr_value, schema_ptr_value)
-    return rarrow.RecordBatch["import_from_c"](str(array_ptr_value), str(schema_ptr_value))
+    return rarrow.RecordBatch["import_from_c"](_rarrow_ptr(array_ptr_value), _rarrow_ptr(schema_ptr_value))
 
 
 def rarrow_to_py_recordbatch(
@@ -80,7 +93,7 @@ def rarrow_to_py_recordbatch(
     schema_ptr = ffi.new("struct ArrowSchema*")
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
 
-    obj["export_to_c"](str(array_ptr_value), str(schema_ptr_value))
+    obj["export_to_c"](_rarrow_ptr(array_ptr_value), _rarrow_ptr(schema_ptr_value))
     return pyarrow.lib.RecordBatch._import_from_c(array_ptr_value, schema_ptr_value)
 
 
@@ -97,7 +110,7 @@ def pyarrow_to_r_recordbatchreader(
     stream_ptr = ffi.new("struct ArrowArrayStream*")
     stream_ptr_value = int(ffi.cast("uintptr_t", stream_ptr))
     obj._export_to_c(stream_ptr_value)
-    return rarrow.RecordBatchReader["import_from_c"](str(stream_ptr_value))
+    return rarrow.RecordBatchReader["import_from_c"](_rarrow_ptr(stream_ptr_value))
 
 
 def rarrow_to_py_recordbatchreader(
@@ -112,7 +125,7 @@ def rarrow_to_py_recordbatchreader(
 
     stream_ptr = ffi.new("struct ArrowArrayStream*")
     stream_ptr_value = int(ffi.cast("uintptr_t", stream_ptr))
-    obj["export_to_c"](str(stream_ptr_value))
+    obj["export_to_c"](_rarrow_ptr(stream_ptr_value))
     return pyarrow.lib.RecordBatchReader._import_from_c(stream_ptr_value)
 
 
@@ -147,7 +160,7 @@ def pyarrow_to_r_datatype(
     schema_ptr = ffi.new("struct ArrowSchema*")
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
     obj._export_to_c(schema_ptr_value)
-    return rarrow.DataType["import_from_c"](str(schema_ptr_value))
+    return rarrow.DataType["import_from_c"](_rarrow_ptr(schema_ptr_value))
 
 
 def rarrow_to_py_datatype(
@@ -159,7 +172,7 @@ def rarrow_to_py_datatype(
     """
     schema_ptr = ffi.new("struct ArrowSchema*")
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
-    obj["export_to_c"](str(schema_ptr_value))
+    obj["export_to_c"](_rarrow_ptr(schema_ptr_value))
     return pyarrow.lib.DataType._import_from_c(int(schema_ptr_value))
 
 
@@ -169,7 +182,7 @@ def pyarrow_to_r_field(
     schema_ptr = ffi.new("struct ArrowSchema*")
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
     obj._export_to_c(schema_ptr_value)
-    return rarrow.Field["import_from_c"](str(schema_ptr_value))
+    return rarrow.Field["import_from_c"](_rarrow_ptr(schema_ptr_value))
 
 
 def rarrow_to_py_field(
@@ -182,7 +195,7 @@ def rarrow_to_py_field(
 
     schema_ptr = ffi.new("struct ArrowSchema*")
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
-    obj["export_to_c"](str(schema_ptr_value))
+    obj["export_to_c"](_rarrow_ptr(schema_ptr_value))
     return pyarrow.lib.Field._import_from_c(int(schema_ptr_value))
 
 
@@ -248,7 +261,7 @@ def pyarrow_to_r_schema(
     schema_ptr = ffi.new("struct ArrowSchema*")
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
     obj._export_to_c(schema_ptr_value)
-    return rarrow.Schema["import_from_c"](str(schema_ptr_value))
+    return rarrow.Schema["import_from_c"](_rarrow_ptr(schema_ptr_value))
 
 
 def rarrow_to_py_schema(
@@ -263,7 +276,7 @@ def rarrow_to_py_schema(
 
     schema_ptr = ffi.new("struct ArrowSchema*")
     schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
-    obj["export_to_c"](str(schema_ptr_value))
+    obj["export_to_c"](_rarrow_ptr(schema_ptr_value))
     return pyarrow.lib.Schema._import_from_c(int(schema_ptr_value))
 
 
