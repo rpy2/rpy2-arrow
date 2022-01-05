@@ -28,6 +28,7 @@ def _rarrow_ptr(ptr):
     else:
         return float(ptr_value)
 
+
 def _pyarrow_ptr(ptr):
     return int(ffi.cast("uintptr_t", ptr))
 
