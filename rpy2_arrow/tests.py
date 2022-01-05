@@ -83,15 +83,15 @@ def test_py2r_RecordBatchReader():
     assert isinstance(r_rbr, rinterface.SexpEnvironment)
 
 
-# def test_r2py_RecordBatchReader():
-#     r_rbr = rinterface.evalr("""
-#     require('arrow')
-#     tb <- arrow::Table$create(a = c(1L, 2L, 3L), b = c(4L, 5L, 6L))
-#     scanner <- Scanner$create(tb)
-#     scanner$ToRecordBatchReader()
-#     """)
-#     py_rbr = pyr.rarrow_to_py_recordbatchreader(r_rbr)
-#     assert isinstance(py_rbr, pyarrow.lib.RecordBatchReader)
+def test_r2py_RecordBatchReader():
+    r_rbr = rinterface.evalr("""
+    require('arrow')
+    tb <- arrow::Table$create(a = c(1L, 2L, 3L), b = c(4L, 5L, 6L))
+    scanner <- Scanner$create(tb)
+    scanner$ToRecordBatchReader()
+    """)
+    py_rbr = pyr.rarrow_to_py_recordbatchreader(r_rbr)
+    assert isinstance(py_rbr, pyarrow.lib.RecordBatchReader)
 
 
 def test_py2r_ChunkedArray():
