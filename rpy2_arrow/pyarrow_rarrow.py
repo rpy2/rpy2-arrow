@@ -18,7 +18,7 @@ if not rarrow.__version__.startswith(TARGET_VERSION):
 # In arrow >= 7.0.0, pointers can be passed as externalptr,
 # bit64::integer64(), or string, all of which prevent possible
 # problems with the previous versions which required a double().
-_use_ptr_string = rinterface.evalr('packageVersion("arrow") >= "6.0.1.9000"')
+_use_ptr_string = rinterface.evalr('packageVersion("arrow") >= "6.0.1.9000"')[0]
 
 def _rarrow_ptr(ptr_value):
     global _use_ptr_string
