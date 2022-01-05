@@ -68,6 +68,22 @@ def pyarrow_to_r_recordbatch(
     return rarrow.RecordBatch["import_from_c"](str(array_ptr_value), str(schema_ptr_value))
 
 
+def rarrow_to_py_recordbatch(
+        obj: robjects.Environment
+):
+    """Create a pyarrow record batch from an R `arrow::Array` object.
+
+    This is sharing the C/C++ object between the two languages.
+    """
+    array_ptr = ffi.new("struct ArrowSchema*")
+    array_ptr_value = int(ffi.cast("uintptr_t", array_ptr))
+    schema_ptr = ffi.new("struct ArrowSchema*")
+    schema_ptr_value = int(ffi.cast("uintptr_t", schema_ptr))
+
+    obj["export_to_c"](str(array_ptr_value), str(schema_ptr_value))
+    return pyarrow.lib.RecordBatch._import_from_c(array_ptr_value, schema_ptr_value)
+
+
 def pyarrow_to_r_recordbatchreader(
         obj: 'pyarrow.lib.RecordBatchReader'
 ):
@@ -82,6 +98,22 @@ def pyarrow_to_r_recordbatchreader(
     stream_ptr_value = int(ffi.cast("uintptr_t", stream_ptr))
     obj._export_to_c(stream_ptr_value)
     return rarrow.RecordBatchReader["import_from_c"](str(stream_ptr_value))
+
+
+def rarrow_to_py_recordbatchreader(
+        obj: robjects.Environment
+):
+    """Create a pyarrow RecordBatchReader fomr an R `arrow::RecordBatchReader` object.
+
+    This is sharing the C/C++ object between the two languages.
+    The returned object depends on the active conversion rule in
+    rpy2. By default it will be an `rpy2.robjects.Environment`.
+    """
+
+    stream_ptr = ffi.new("struct ArrowArrayStream*")
+    stream_ptr_value = int(ffi.cast("uintptr_t", stream_ptr))
+    obj["export_to_c"](str(stream_ptr_value))
+    return pyarrow.lib.RecordBatchReader._import_from_c(int(stream_ptr_value))
 
 
 def pyarrow_to_r_chunkedarray(
@@ -263,6 +295,8 @@ converter._rpy2py_nc_map.update(
 converter._rpy2py_nc_map[rinterface.SexpEnvironment].update(
     {
         'Array': rarrow_to_py_array,
+        'RecordBatch': rarrow_to_py_recordbatch,
+        'RecordBatchReader': rarrow_to_py_recordbatchreader,
         'ChunkedArray': rarrow_to_py_chunkedarray,
         'Field': rarrow_to_py_field,
         'Schema': rarrow_to_py_schema,

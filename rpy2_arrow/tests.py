@@ -61,6 +61,15 @@ def test_py2r_RecordBatch():
     assert isinstance(r_rb, rinterface.SexpEnvironment)
 
 
+def test_r2py_RecordBatch():
+    r_ar = rinterface.evalr("""
+    require('arrow')
+    arrow::RecordBatch$create(a = c(1L, 2L, 3L), b = c(4L, 5L, 6L))
+    """)
+    py_ar = pyr.rarrow_to_py_recordbatch(r_ar)
+    assert isinstance(py_ar, pyarrow.RecordBatch)
+
+
 def test_py2r_ChunkedArray():
     py_ca = pyarrow.chunked_array([[1, 2, 3], [4, 5]])
     r_ca = pyr.pyarrow_to_r_chunkedarray(py_ca)
