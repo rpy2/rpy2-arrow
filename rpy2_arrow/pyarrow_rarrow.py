@@ -5,28 +5,18 @@ import rpy2.robjects as robjects
 import rpy2.robjects.conversion as conversion
 import rpy2.robjects.packages as packages
 import typing
-import warnings
+
 
 rarrow = packages.importr('arrow')
-TARGET_VERSION = '6.0.'
-if not rarrow.__version__.startswith(TARGET_VERSION):
-    warnings.warn(
-        'This was designed against Arrow versions starting with %s'
-        ' but you have %s' %
-        (TARGET_VERSION, rarrow.__version__))
+
 
 # In arrow >= 7.0.0, pointers can be passed as externalptr,
 # bit64::integer64(), or string, all of which prevent possible
 # problems with the previous versions which required a double().
 _use_r_ptr_string = rinterface.evalr('packageVersion("arrow") >= "6.0.1.9000"')[0]
 def _rarrow_ptr(ptr):
-    global _use_r_ptr_string
     ptr_value = int(ffi.cast("uintptr_t", ptr))
-
-    if _use_r_ptr_string:
-        return str(ptr_value)
-    else:
-        return float(ptr_value)
+    return str(ptr_value) if _use_r_ptr_string else float(ptr_value)
 
 
 def _pyarrow_ptr(ptr):
@@ -44,7 +34,7 @@ def pyarrow_to_r_array(
     """
     array_ptr = ffi.new("struct ArrowArray*")
     schema_ptr = ffi.new("struct ArrowSchema*")
-    
+
     obj._export_to_c(_pyarrow_ptr(array_ptr), _pyarrow_ptr(schema_ptr))
     return rarrow.Array["import_from_c"](_rarrow_ptr(array_ptr), _rarrow_ptr(schema_ptr))
 
