@@ -11,7 +11,7 @@ rarrow = packages.importr('arrow')
 TARGET_VERSION = '6.0.'
 if not rarrow.__version__.startswith(TARGET_VERSION):
     warnings.warn(
-        'This was designed against arrow versions starting with %s'
+        'This was designed against Arrow versions starting with %s'
         ' but you have %s' %
         (TARGET_VERSION, rarrow.__version__))
 
