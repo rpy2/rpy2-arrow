@@ -10,6 +10,12 @@ import typing
 rarrow = packages.importr('arrow')
 
 
+# make sure a version is installed with the C API
+_rarrow_has_c_api = rinterface.evalr('packageVersion("arrow") >= "5.0.0"')[0]
+if not _rarrow_has_c_api:
+    raise ValueError("rpy2_arrow requires R 'arrow' package version >= 5.0.0")
+
+
 # In arrow >= 7.0.0, pointers can be passed as externalptr,
 # bit64::integer64(), or string, all of which prevent possible
 # problems with the previous versions which required a double().
