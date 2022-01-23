@@ -1,18 +1,38 @@
 import pyarrow  # type: ignore
+from pyarrow.cffi import ffi
 import rpy2.rinterface as rinterface
 import rpy2.robjects as robjects
 import rpy2.robjects.conversion as conversion
 import rpy2.robjects.packages as packages
 import typing
-import warnings
+
 
 rarrow = packages.importr('arrow')
-TARGET_VERSION = '6.0.'
-if not rarrow.__version__.startswith(TARGET_VERSION):
-    warnings.warn(
-        'This was designed againt arrow versions starting with %s'
-        ' but you have %s' %
-        (TARGET_VERSION, rarrow.__version__))
+
+
+# make sure a version is installed with the C API
+_rarrow_has_c_api = rinterface.evalr("""
+utils::packageVersion("arrow") >= base::package_version("5.0.0")
+""")[0]
+if not _rarrow_has_c_api:
+    raise ValueError("rpy2_arrow requires R 'arrow' package version >= 5.0.0")
+
+
+# In arrow >= 7.0.0, pointers can be passed as externalptr,
+# bit64::integer64(), or string, all of which prevent possible
+# problems with the previous versions which required a double().
+_use_r_ptr_string = rinterface.evalr("""
+utils::packageVersion("arrow") >= base::package_version("6.0.1.9000")
+""")[0]
+
+
+def _rarrow_ptr(ptr):
+    ptr_value = int(ffi.cast('uintptr_t', ptr))
+    return str(ptr_value) if _use_r_ptr_string else float(ptr_value)
+
+
+def _pyarrow_ptr(ptr):
+    return int(ffi.cast('uintptr_t', ptr))
 
 
 def pyarrow_to_r_array(
@@ -24,15 +44,11 @@ def pyarrow_to_r_array(
     The returned object depends on the active conversion rule in
     rpy2. By default it will be an `rpy2.robjects.Environment`.
     """
-    schema_ptr = rarrow.allocate_arrow_schema()[0]
-    array_ptr = rarrow.allocate_arrow_array()[0]
-    try:
-        obj._export_to_c(int(array_ptr), int(schema_ptr))
-        r_array = rarrow.ImportArray(array_ptr, schema_ptr)
-    finally:
-        rarrow.delete_arrow_schema(schema_ptr)
-        rarrow.delete_arrow_array(array_ptr)
-    return r_array
+    array_ptr = ffi.new('struct ArrowArray*')
+    schema_ptr = ffi.new('struct ArrowSchema*')
+
+    obj._export_to_c(_pyarrow_ptr(array_ptr), _pyarrow_ptr(schema_ptr))
+    return rarrow.Array['import_from_c'](_rarrow_ptr(array_ptr), _rarrow_ptr(schema_ptr))
 
 
 def rarrow_to_py_array(
@@ -42,17 +58,11 @@ def rarrow_to_py_array(
 
     This is sharing the C/C++ object between the two languages.
     """
+    array_ptr = ffi.new('struct ArrowArray*')
+    schema_ptr = ffi.new('struct ArrowSchema*')
 
-    schema_ptr = rarrow.allocate_arrow_schema()[0]
-    array_ptr = rarrow.allocate_arrow_array()[0]
-    try:
-        rarrow.ExportArray(obj, array_ptr, schema_ptr)
-        py_array = pyarrow.Array._import_from_c(int(array_ptr),
-                                                int(schema_ptr))
-    finally:
-        rarrow.delete_arrow_schema(schema_ptr)
-        rarrow.delete_arrow_array(array_ptr)
-    return py_array
+    obj['export_to_c'](_rarrow_ptr(array_ptr), _rarrow_ptr(schema_ptr))
+    return pyarrow.lib.Array._import_from_c(_pyarrow_ptr(array_ptr), _pyarrow_ptr(schema_ptr))
 
 
 def pyarrow_to_r_recordbatch(
@@ -64,16 +74,25 @@ def pyarrow_to_r_recordbatch(
     The returned object depends on the active conversion rule in
     rpy2. By default it will be an `rpy2.robjects.Environment`.
     """
+    array_ptr = ffi.new('struct ArrowArray*')
+    schema_ptr = ffi.new('struct ArrowSchema*')
 
-    schema_ptr = rarrow.allocate_arrow_schema()[0]
-    array_ptr = rarrow.allocate_arrow_array()[0]
-    try:
-        obj._export_to_c(int(array_ptr), int(schema_ptr))
-        r_recordbatch = rarrow.ImportRecordBatch(array_ptr, schema_ptr)
-    finally:
-        rarrow.delete_arrow_schema(schema_ptr)
-        rarrow.delete_arrow_array(array_ptr)
-    return r_recordbatch
+    obj._export_to_c(_pyarrow_ptr(array_ptr), _pyarrow_ptr(schema_ptr))
+    return rarrow.RecordBatch['import_from_c'](_rarrow_ptr(array_ptr), _rarrow_ptr(schema_ptr))
+
+
+def rarrow_to_py_recordbatch(
+        obj: robjects.Environment
+):
+    """Create a pyarrow record batch from an R `arrow::Array` object.
+
+    This is sharing the C/C++ object between the two languages.
+    """
+    array_ptr = ffi.new('struct ArrowArray*')
+    schema_ptr = ffi.new('struct ArrowSchema*')
+
+    obj['export_to_c'](_rarrow_ptr(array_ptr), _rarrow_ptr(schema_ptr))
+    return pyarrow.lib.RecordBatch._import_from_c(_pyarrow_ptr(array_ptr), _pyarrow_ptr(schema_ptr))
 
 
 def pyarrow_to_r_recordbatchreader(
@@ -86,12 +105,24 @@ def pyarrow_to_r_recordbatchreader(
     rpy2. By default it will be an `rpy2.robjects.Environment`.
     """
 
-    stream_ptr = rarrow.allocate_arrow_array_stream()[0]
-    try:
-        obj._export_to_c(int(stream_ptr))
-        return rarrow.ImportRecordBatchReader(stream_ptr)
-    finally:
-        rarrow.delete_arrow_array_stream(stream_ptr)
+    stream_ptr = ffi.new('struct ArrowArrayStream*')
+    obj._export_to_c(_pyarrow_ptr(stream_ptr))
+    return rarrow.RecordBatchReader['import_from_c'](_rarrow_ptr(stream_ptr))
+
+
+def rarrow_to_py_recordbatchreader(
+        obj: robjects.Environment
+):
+    """Create a pyarrow RecordBatchReader from an R `arrow::RecordBatchReader` object.
+
+    This is sharing the C/C++ object between the two languages.
+    The returned object depends on the active conversion rule in
+    rpy2. By default it will be an `rpy2.robjects.Environment`.
+    """
+
+    stream_ptr = ffi.new('struct ArrowArrayStream*')
+    obj['export_to_c'](_rarrow_ptr(stream_ptr))
+    return pyarrow.lib.RecordBatchReader._import_from_c(_pyarrow_ptr(stream_ptr))
 
 
 def pyarrow_to_r_chunkedarray(
@@ -122,12 +153,9 @@ def rarrow_to_py_chunkedarray(
 def pyarrow_to_r_datatype(
         obj: 'pyarrow.lib.DataType'
 ):
-    schema_ptr = rarrow.allocate_arrow_schema()[0]
-    try:
-        obj._export_to_c(int(schema_ptr))
-        return rarrow.ImportType(schema_ptr)
-    finally:
-        rarrow.delete_arrow_schema(schema_ptr)
+    schema_ptr = ffi.new('struct ArrowSchema*')
+    obj._export_to_c(_pyarrow_ptr(schema_ptr))
+    return rarrow.DataType['import_from_c'](_rarrow_ptr(schema_ptr))
 
 
 def rarrow_to_py_datatype(
@@ -137,25 +165,17 @@ def rarrow_to_py_datatype(
 
     This is sharing the C/C++ object between the two languages.
     """
-
-    schema_ptr = rarrow.allocate_arrow_schema()[0]
-    try:
-        rarrow.ExportType(obj, schema_ptr)
-        py_datatype = pyarrow.lib.DataType._import_from_c(schema_ptr)
-    finally:
-        rarrow.delete_arrow_schema(schema_ptr)
-    return py_datatype
+    schema_ptr = ffi.new('struct ArrowSchema*')
+    obj['export_to_c'](_rarrow_ptr(schema_ptr))
+    return pyarrow.lib.DataType._import_from_c(_pyarrow_ptr(schema_ptr))
 
 
 def pyarrow_to_r_field(
         obj: 'pyarrow.lib.Field'
 ):
-    schema_ptr = rarrow.allocate_arrow_schema()[0]
-    try:
-        obj._export_to_c(int(schema_ptr))
-        return rarrow.ImportField(schema_ptr)
-    finally:
-        rarrow.delete_arrow_schema(schema_ptr)
+    schema_ptr = ffi.new('struct ArrowSchema*')
+    obj._export_to_c(_pyarrow_ptr(schema_ptr))
+    return rarrow.Field['import_from_c'](_rarrow_ptr(schema_ptr))
 
 
 def rarrow_to_py_field(
@@ -166,13 +186,9 @@ def rarrow_to_py_field(
     This is sharing the C/C++ object between the two languages.
     """
 
-    schema_ptr = rarrow.allocate_arrow_schema()[0]
-    try:
-        rarrow.ExportField(obj, schema_ptr)
-        py_field = pyarrow.Field._import_from_c(schema_ptr)
-    finally:
-        rarrow.delete_arrow_schema(schema_ptr)
-    return py_field
+    schema_ptr = ffi.new('struct ArrowSchema*')
+    obj['export_to_c'](_rarrow_ptr(schema_ptr))
+    return pyarrow.lib.Field._import_from_c(_pyarrow_ptr(schema_ptr))
 
 
 def pyarrow_to_r_table(
@@ -204,7 +220,7 @@ def rarrow_to_py_table(
         rpy2py: typing.Optional[
             conversion.Converter] = None
 ):
-    """Create a pyarrow Table fomr an R `arrow::Table` object.
+    """Create a pyarrow Table from an R `arrow::Table` object.
 
     This is sharing the C/C++ object between the two languages.
     The returned object depends on the active conversion rule in
@@ -234,32 +250,24 @@ def pyarrow_to_r_schema(
     rpy2. By default it will be an `rpy2.robjects.Environment`.
     """
 
-    schema_ptr = rarrow.allocate_arrow_schema()[0]
-    try:
-        obj._export_to_c(int(schema_ptr))
-        r_schema = rarrow.ImportSchema(schema_ptr)
-    finally:
-        rarrow.delete_arrow_schema(schema_ptr)
-    return r_schema
+    schema_ptr = ffi.new('struct ArrowSchema*')
+    obj._export_to_c(_pyarrow_ptr(schema_ptr))
+    return rarrow.Schema['import_from_c'](_rarrow_ptr(schema_ptr))
 
 
 def rarrow_to_py_schema(
         obj: robjects.Environment
 ):
-    """Create a pyarrow Schema fomr an R `arrow::Schema` object.
+    """Create a pyarrow Schema from an R `arrow::Schema` object.
 
     This is sharing the C/C++ object between the two languages.
     The returned object depends on the active conversion rule in
     rpy2. By default it will be an `rpy2.robjects.Environment`.
     """
 
-    schema_ptr = rarrow.allocate_arrow_schema()[0]
-    try:
-        rarrow.ExportSchema(obj, schema_ptr)
-        py_schema = pyarrow.Schema._import_from_c(int(schema_ptr))
-    finally:
-        rarrow.delete_arrow_schema(schema_ptr)
-    return py_schema
+    schema_ptr = ffi.new('struct ArrowSchema*')
+    obj['export_to_c'](_rarrow_ptr(schema_ptr))
+    return pyarrow.lib.Schema._import_from_c(_pyarrow_ptr(schema_ptr))
 
 
 converter = conversion.Converter('default arrow conversion',
@@ -292,6 +300,8 @@ converter._rpy2py_nc_map[rinterface.SexpEnvironment].update(
         'Array': rarrow_to_py_array,
         'ChunkedArray': rarrow_to_py_chunkedarray,
         'Field': rarrow_to_py_field,
+        'RecordBatch': rarrow_to_py_recordbatch,
+        'RecordBatchReader': rarrow_to_py_recordbatchreader,
         'Schema': rarrow_to_py_schema,
         'Table': rarrow_to_py_table,
         'Type': rarrow_to_py_datatype

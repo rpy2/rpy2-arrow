@@ -61,6 +61,54 @@ def test_py2r_RecordBatch():
     assert isinstance(r_rb, rinterface.SexpEnvironment)
 
 
+def test_r2py_RecordBatch():
+    r_rb = rinterface.evalr("""
+    require('arrow')
+    arrow::RecordBatch$create(a = c(1L, 2L, 3L), b = c(4L, 5L, 6L))
+    """)
+    py_rb = pyr.rarrow_to_py_recordbatch(r_rb)
+    assert isinstance(py_rb, pyarrow.RecordBatch)
+
+
+def test_py2r_RecordBatchReader():
+    dataf = pandas.DataFrame.from_dict(
+        {'a': [1, 2, 3],
+         'b': [4, 5, 6]}
+    )
+    py_tb = pyarrow.table(dataf)
+    py_rbr = pyarrow.lib.RecordBatchReader.from_batches(
+        py_tb.schema,
+        py_tb.to_batches())
+    r_rbr = pyr.pyarrow_to_r_recordbatchreader(py_rbr)
+    assert isinstance(r_rbr, rinterface.SexpEnvironment)
+
+
+def test_r2py_RecordBatchReader():
+    # An R-native way to get a RecordBatchReader segfaults under CRAN
+    # arrow but not under development arrow, so use the exported
+    # Python RecordBatchReader instead.
+    # r_rbr = rinterface.evalr("""
+    # require('arrow')
+    # tb <- arrow::Table$create(a = c(1L, 2L, 3L), b = c(4L, 5L, 6L))
+    # scanner <- Scanner$create(tb)
+    # scanner$ToRecordBatchReader()
+    # """)
+    dataf = pandas.DataFrame.from_dict(
+        {'a': [1, 2, 3],
+         'b': [4, 5, 6]}
+    )
+    py_tb = pyarrow.table(dataf)
+    py_rbr = pyarrow.lib.RecordBatchReader.from_batches(
+        py_tb.schema,
+        py_tb.to_batches())
+    r_rbr = pyr.pyarrow_to_r_recordbatchreader(py_rbr)
+    assert isinstance(r_rbr, rinterface.SexpEnvironment)
+
+    # convert back to Python
+    py_rbr = pyr.rarrow_to_py_recordbatchreader(r_rbr)
+    assert isinstance(py_rbr, pyarrow.lib.RecordBatchReader)
+
+
 def test_py2r_ChunkedArray():
     py_ca = pyarrow.chunked_array([[1, 2, 3], [4, 5]])
     r_ca = pyr.pyarrow_to_r_chunkedarray(py_ca)
