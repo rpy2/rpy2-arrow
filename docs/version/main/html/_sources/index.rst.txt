@@ -42,7 +42,7 @@ availble to R was measured to be 200 times faster with the use of Arrow
 .. note::
 
    The R package `arrow` >= 3.0.0 is required. The current version of
-   :mod:`rpy2_arrow` is even targeting `arrow` v5.0.
+   :mod:`rpy2_arrow` is even targeting `arrow` > v5.0.
 
    The latest released version of the R package can be installed in R with:
 
