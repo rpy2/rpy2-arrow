@@ -77,7 +77,7 @@ def test_py2r_RecordBatchReader():
     )
     py_tb = pyarrow.table(dataf)
     py_rbr = pyarrow.lib.RecordBatchReader.from_batches(
-        py_tb.schema, 
+        py_tb.schema,
         py_tb.to_batches())
     r_rbr = pyr.pyarrow_to_r_recordbatchreader(py_rbr)
     assert isinstance(r_rbr, rinterface.SexpEnvironment)
@@ -99,7 +99,7 @@ def test_r2py_RecordBatchReader():
     )
     py_tb = pyarrow.table(dataf)
     py_rbr = pyarrow.lib.RecordBatchReader.from_batches(
-        py_tb.schema, 
+        py_tb.schema,
         py_tb.to_batches())
     r_rbr = pyr.pyarrow_to_r_recordbatchreader(py_rbr)
     assert isinstance(r_rbr, rinterface.SexpEnvironment)
