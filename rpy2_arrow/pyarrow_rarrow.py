@@ -20,6 +20,7 @@ if not _rarrow_has_c_api:
 # bit64::integer64(), or string, all of which prevent possible
 # problems with the previous versions which required a double().
 _use_r_ptr_string = rinterface.evalr('packageVersion("arrow") >= "6.0.1.9000"')[0]
+
 def _rarrow_ptr(ptr):
     ptr_value = int(ffi.cast("uintptr_t", ptr))
     return str(ptr_value) if _use_r_ptr_string else float(ptr_value)
