@@ -18,7 +18,7 @@ if __name__ == '__main__':
         requires=['pyarrow', 'rpy2'],
         extras_require=extras_require,
         packages=['rpy2_arrow', ],
-        url='https://github.com/rpy2/rpy2-arrow',
+        url='https://rpy2.github.io/rpy2-arrow/',
         classifiers=['Programming Language :: Python',
                      'Programming Language :: Python :: 3',
                      'Programming Language :: Python :: 3.6',
