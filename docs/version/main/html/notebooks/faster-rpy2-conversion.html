@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>Faster pandas-R conversions &#8212; rpy2-arrow 0.0.4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -12,6 +12,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -32,7 +33,7 @@
           <div class="body" role="main">
             
   <section id="faster-pandas-r-conversions">
-<h1>Faster pandas-R conversions<a class="headerlink" href="#faster-pandas-r-conversions" title="Permalink to this headline">¶</a></h1>
+<h1>Faster pandas-R conversions<a class="headerlink" href="#faster-pandas-r-conversions" title="Permalink to this heading">¶</a></h1>
 <p>This example of custom conversion with jupyter and the
 “R magic” in <a class="reference external" href="https://rpy2.github.io/doc/v3.4.x/html/interactive.html#module-rpy2.ipython" title="(in rpy2 v3.4.5)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2.ipython</span></code></a> demonstrates how
 Arrow can greatly improve performances when moving
@@ -77,8 +78,8 @@ the notebook was written.</p>
 <span class="go">3 3 def</span>
 <span class="go">4 4 abc</span>
 <span class="go">5 5 def</span>
-<span class="go">CPU times: user 7.58 s, sys: 108 ms, total: 7.69 s</span>
-<span class="go">Wall time: 7.69 s</span>
+<span class="go">CPU times: user 7.08 s, sys: 152 ms, total: 7.23 s</span>
+<span class="go">Wall time: 7.23 s</span>
 </pre></div>
 </div>
 <p>The conversion of a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> can be accelerated by using
@@ -136,8 +137,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">4     3 def  </span>
 <span class="go">5     4 abc  </span>
 <span class="go">6     5 def  </span>
-<span class="go">CPU times: user 211 ms, sys: 0 ns, total: 211 ms</span>
-<span class="go">Wall time: 211 ms</span>
+<span class="go">CPU times: user 255 ms, sys: 3.98 ms, total: 259 ms</span>
+<span class="go">Wall time: 259 ms</span>
 </pre></div>
 </div>
 <p>The conversion is much faster.</p>
@@ -166,8 +167,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 24.9 ms, sys: 23 us, total: 24.9 ms</span>
-<span class="go">Wall time: 24.8 ms</span>
+<span class="go">CPU times: user 25.6 ms, sys: 46 us, total: 25.6 ms</span>
+<span class="go">Wall time: 25.4 ms</span>
 </pre></div>
 </div>
 <p>This time the conversion is about as fast but is likely requiring less
@@ -208,8 +209,8 @@ with the R package <code class="docutils literal notranslate"><span class="pre">
 <span class="go">  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;</span>
 <span class="go">1 abc   250000     0 249999</span>
 <span class="go">2 def   250000     1 250000</span>
-<span class="go">CPU times: user 86.4 ms, sys: 0 ns, total: 86.4 ms</span>
-<span class="go">Wall time: 88 ms</span>
+<span class="go">CPU times: user 79.1 ms, sys: 7.98 ms, total: 87.1 ms</span>
+<span class="go">Wall time: 86.9 ms</span>
 </pre></div>
 </div>
 </section>
@@ -256,7 +257,7 @@ with the R package <code class="docutils literal notranslate"><span class="pre">
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -273,7 +274,7 @@ with the R package <code class="docutils literal notranslate"><span class="pre">
       &copy;2021, Laurent Gautier.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

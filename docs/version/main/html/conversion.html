@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>Conversion &#8212; rpy2-arrow 0.0.4 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -12,6 +12,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -33,7 +34,7 @@
           <div class="body" role="main">
             
   <section id="conversion">
-<span id="id1"></span><h1>Conversion<a class="headerlink" href="#conversion" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>Conversion<a class="headerlink" href="#conversion" title="Permalink to this heading">¶</a></h1>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2</span></code> is using a conversion system with which rules to share objects
 between Python and R can be specified (see <cite>rpy2 documentation about
 conversion</cite>).</p>
@@ -41,7 +42,7 @@ conversion</cite>).</p>
 <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2-arrow</span></code> already implements the bulk of what it is required.
 The only remaining part is how to combine them for your own need.</p>
 <section id="faster-pandas-r-conversions">
-<span id="faster-rpy2-conversions"></span><h2>Faster pandas-R conversions<a class="headerlink" href="#faster-pandas-r-conversions" title="Permalink to this headline">¶</a></h2>
+<span id="faster-rpy2-conversions"></span><h2>Faster pandas-R conversions<a class="headerlink" href="#faster-pandas-r-conversions" title="Permalink to this heading">¶</a></h2>
 <p>This example of custom conversion with jupyter and the
 “R magic” in <a class="reference external" href="https://rpy2.github.io/doc/v3.4.x/html/interactive.html#module-rpy2.ipython" title="(in rpy2 v3.4.5)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2.ipython</span></code></a> demonstrates how
 Arrow can greatly improve performances when moving
@@ -84,8 +85,8 @@ the notebook was written.</p>
 <span class="go">3 3 def</span>
 <span class="go">4 4 abc</span>
 <span class="go">5 5 def</span>
-<span class="go">CPU times: user 7.79 s, sys: 116 ms, total: 7.91 s</span>
-<span class="go">Wall time: 8.2 s</span>
+<span class="go">CPU times: user 7.36 s, sys: 107 ms, total: 7.47 s</span>
+<span class="go">Wall time: 7.47 s</span>
 </pre></div>
 </div>
 <p>The conversion of a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> can be accelerated by using
@@ -141,8 +142,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">4 3 def</span>
 <span class="go">5 4 abc</span>
 <span class="go">6 5 def</span>
-<span class="go">CPU times: user 29.6 ms, sys: 4.05 ms, total: 33.7 ms</span>
-<span class="go">Wall time: 33.4 ms</span>
+<span class="go">CPU times: user 23.6 ms, sys: 7.85 ms, total: 31.4 ms</span>
+<span class="go">Wall time: 31 ms</span>
 </pre></div>
 </div>
 <p>The conversion is much faster.</p>
@@ -171,8 +172,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 28.5 ms, sys: 0 ns, total: 28.5 ms</span>
-<span class="go">Wall time: 28.6 ms</span>
+<span class="go">CPU times: user 26.9 ms, sys: 103 us, total: 27 ms</span>
+<span class="go">Wall time: 26.1 ms</span>
 </pre></div>
 </div>
 <p>This time the conversion is about as fast but is likely requiring less
@@ -198,7 +199,7 @@ with the R package <code class="docutils literal notranslate"><span class="pre">
 <span class="gp">   ...: </span>
 </pre></div>
 </div>
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="o">%%time</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [9]: </span><span class="o">%%time</span>
 <span class="gp">   ...: </span><span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">pd_dataf</span> <span class="o">-</span><span class="n">c</span> <span class="n">conv2</span>
 <span class="gp">   ...: </span>
 <span class="gp">   ...: </span><span class="n">res</span> <span class="o">&lt;-</span> <span class="n">pd_dataf</span> <span class="o">%&gt;%</span>
@@ -213,8 +214,8 @@ with the R package <code class="docutils literal notranslate"><span class="pre">
 <span class="go">  &lt;chr&gt;  &lt;int&gt; &lt;int&gt;  &lt;dbl&gt;</span>
 <span class="go">1 abc   250000     0 249999</span>
 <span class="go">2 def   250000     1 250000</span>
-<span class="go">CPU times: user 114 ms, sys: 20.1 ms, total: 134 ms</span>
-<span class="go">Wall time: 134 ms</span>
+<span class="go">CPU times: user 119 ms, sys: 16 ms, total: 135 ms</span>
+<span class="go">Wall time: 135 ms</span>
 </pre></div>
 </div>
 </section>
@@ -266,7 +267,7 @@ with the R package <code class="docutils literal notranslate"><span class="pre">
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -283,7 +284,7 @@ with the R package <code class="docutils literal notranslate"><span class="pre">
       &copy;2021, Laurent Gautier.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
