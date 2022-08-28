@@ -209,7 +209,7 @@ def _pyarrow_table_to_r_table_ri(tbl: pyarrow.lib.Table) -> rinterface.SexpEnvir
 
 def pyarrow_table_to_r_table(obj: pyarrow.lib.Table):
     """Create an R `arrow::Table` object from a pyarrow Table.
-    
+
     This is sharing the C/C++ object between the two languages.
     The returned object depends on the active conversion rule in
     rpy2. By default it will be an `rpy2.robjects.Environment`.
