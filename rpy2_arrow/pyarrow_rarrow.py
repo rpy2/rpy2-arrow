@@ -191,28 +191,37 @@ def rarrow_to_py_field(
     return pyarrow.lib.Field._import_from_c(_pyarrow_ptr(schema_ptr))
 
 
-def pyarrow_to_r_table(
-        obj: 'pyarrow.lib.Table',
-        py2rpy: typing.Optional[
-            conversion.Converter] = None
-):
-    """Create an R `arrow::Table` object from a pyarrow Table.
+_as_arrow_table_from_stream_ptr = rinterface.evalr(
+    """
+    function(ptr) {
+      arrow::as_arrow_table(arrow::RecordBatchReader$import_from_c(ptr))
+    }
+    """
+)
 
+
+def _pyarrow_table_to_r_table_ri(tbl: pyarrow.lib.Table) -> rinterface.SexpEnvironment:
+    """Create an R `arrow` Table to mirror an Arrow Table in `pyarrow`."""
+    reader_ptr = ffi.new('struct ArrowArrayStream*')
+    tbl.to_reader()._export_to_c(_pyarrow_ptr(reader_ptr))
+    return _as_arrow_table_from_stream_ptr(str(_pyarrow_ptr(reader_ptr)))
+
+
+def pyarrow_table_to_r_table(obj: pyarrow.lib.Table):
+    """Create an R `arrow::Table` object from a pyarrow Table.
+    
     This is sharing the C/C++ object between the two languages.
     The returned object depends on the active conversion rule in
     rpy2. By default it will be an `rpy2.robjects.Environment`.
-    """
 
-    if py2rpy is None:
-        py2rpy = converter
-    # TODO: this is using the converter defined in the module,
-    # not the converter currently in rpy2.robjects.conversion.
-    kwargs = dict(
-        (k, converter.py2rpy(v))
-        for k, v in zip(obj.schema.names, obj.columns)
-    )
-    kwargs['schema'] = pyarrow_to_r_schema(obj.schema)
-    return rarrow.Table['create'](**kwargs)
+    :param:obj: A :class:`pyarrow.lib.Table`.
+    :return: The result of conversion rules for R `arrow` `Table` objects.
+    By default a :class:`rpy2.robjects.Environment`.
+    """
+    # `res` is a low-level (rinterface-level) rpy2 object. This is an
+    # rpy2 robject-level function. Use the conversion.
+    res = _pyarrow_table_to_r_table_ri(obj)
+    return conversion.get_conversion().py2rpy(res)
 
 
 def rarrow_to_py_table(
@@ -283,7 +292,7 @@ converter.py2rpy.register(pyarrow.lib.RecordBatch,
 converter.py2rpy.register(pyarrow.lib.RecordBatchReader,
                           pyarrow_to_r_recordbatchreader)
 converter.py2rpy.register(pyarrow.lib.Schema, pyarrow_to_r_schema)
-converter.py2rpy.register(pyarrow.lib.Table, pyarrow_to_r_table)
+converter.py2rpy.register(pyarrow.lib.Table, pyarrow_table_to_r_table)
 converter.py2rpy.register(pyarrow.lib.DataType, pyarrow_to_r_datatype)
 
 # R arrow to pyarrow.
