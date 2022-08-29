@@ -31,7 +31,7 @@ def _rarrow_ptr(ptr):
     return str(ptr_value) if _use_r_ptr_string else float(ptr_value)
 
 
-def _pyarrow_ptr(ptr):
+def _c_ptr_to_int(ptr):
     return int(ffi.cast('uintptr_t', ptr))
 
 
@@ -47,7 +47,7 @@ def pyarrow_to_r_array(
     array_ptr = ffi.new('struct ArrowArray*')
     schema_ptr = ffi.new('struct ArrowSchema*')
 
-    obj._export_to_c(_pyarrow_ptr(array_ptr), _pyarrow_ptr(schema_ptr))
+    obj._export_to_c(_c_ptr_to_int(array_ptr), _c_ptr_to_int(schema_ptr))
     return rarrow.Array['import_from_c'](_rarrow_ptr(array_ptr), _rarrow_ptr(schema_ptr))
 
 
@@ -62,7 +62,7 @@ def rarrow_to_py_array(
     schema_ptr = ffi.new('struct ArrowSchema*')
 
     obj['export_to_c'](_rarrow_ptr(array_ptr), _rarrow_ptr(schema_ptr))
-    return pyarrow.lib.Array._import_from_c(_pyarrow_ptr(array_ptr), _pyarrow_ptr(schema_ptr))
+    return pyarrow.lib.Array._import_from_c(_c_ptr_to_int(array_ptr), _c_ptr_to_int(schema_ptr))
 
 
 def pyarrow_to_r_recordbatch(
@@ -77,7 +77,7 @@ def pyarrow_to_r_recordbatch(
     array_ptr = ffi.new('struct ArrowArray*')
     schema_ptr = ffi.new('struct ArrowSchema*')
 
-    obj._export_to_c(_pyarrow_ptr(array_ptr), _pyarrow_ptr(schema_ptr))
+    obj._export_to_c(_c_ptr_to_int(array_ptr), _c_ptr_to_int(schema_ptr))
     return rarrow.RecordBatch['import_from_c'](_rarrow_ptr(array_ptr), _rarrow_ptr(schema_ptr))
 
 
@@ -92,7 +92,7 @@ def rarrow_to_py_recordbatch(
     schema_ptr = ffi.new('struct ArrowSchema*')
 
     obj['export_to_c'](_rarrow_ptr(array_ptr), _rarrow_ptr(schema_ptr))
-    return pyarrow.lib.RecordBatch._import_from_c(_pyarrow_ptr(array_ptr), _pyarrow_ptr(schema_ptr))
+    return pyarrow.lib.RecordBatch._import_from_c(_c_ptr_to_int(array_ptr), _c_ptr_to_int(schema_ptr))
 
 
 def pyarrow_to_r_recordbatchreader(
@@ -106,7 +106,7 @@ def pyarrow_to_r_recordbatchreader(
     """
 
     stream_ptr = ffi.new('struct ArrowArrayStream*')
-    obj._export_to_c(_pyarrow_ptr(stream_ptr))
+    obj._export_to_c(_c_ptr_to_int(stream_ptr))
     return rarrow.RecordBatchReader['import_from_c'](_rarrow_ptr(stream_ptr))
 
 
@@ -122,7 +122,7 @@ def rarrow_to_py_recordbatchreader(
 
     stream_ptr = ffi.new('struct ArrowArrayStream*')
     obj['export_to_c'](_rarrow_ptr(stream_ptr))
-    return pyarrow.lib.RecordBatchReader._import_from_c(_pyarrow_ptr(stream_ptr))
+    return pyarrow.lib.RecordBatchReader._import_from_c(_c_ptr_to_int(stream_ptr))
 
 
 def pyarrow_to_r_chunkedarray(
@@ -154,7 +154,7 @@ def pyarrow_to_r_datatype(
         obj: 'pyarrow.lib.DataType'
 ):
     schema_ptr = ffi.new('struct ArrowSchema*')
-    obj._export_to_c(_pyarrow_ptr(schema_ptr))
+    obj._export_to_c(_c_ptr_to_int(schema_ptr))
     return rarrow.DataType['import_from_c'](_rarrow_ptr(schema_ptr))
 
 
@@ -167,14 +167,14 @@ def rarrow_to_py_datatype(
     """
     schema_ptr = ffi.new('struct ArrowSchema*')
     obj['export_to_c'](_rarrow_ptr(schema_ptr))
-    return pyarrow.lib.DataType._import_from_c(_pyarrow_ptr(schema_ptr))
+    return pyarrow.lib.DataType._import_from_c(_c_ptr_to_int(schema_ptr))
 
 
 def pyarrow_to_r_field(
         obj: 'pyarrow.lib.Field'
 ):
     schema_ptr = ffi.new('struct ArrowSchema*')
-    obj._export_to_c(_pyarrow_ptr(schema_ptr))
+    obj._export_to_c(_c_ptr_to_int(schema_ptr))
     return rarrow.Field['import_from_c'](_rarrow_ptr(schema_ptr))
 
 
@@ -188,7 +188,7 @@ def rarrow_to_py_field(
 
     schema_ptr = ffi.new('struct ArrowSchema*')
     obj['export_to_c'](_rarrow_ptr(schema_ptr))
-    return pyarrow.lib.Field._import_from_c(_pyarrow_ptr(schema_ptr))
+    return pyarrow.lib.Field._import_from_c(_c_ptr_to_int(schema_ptr))
 
 
 _as_arrow_table_from_stream_ptr = rinterface.evalr(
@@ -203,8 +203,8 @@ _as_arrow_table_from_stream_ptr = rinterface.evalr(
 def _pyarrow_table_to_r_table_ri(tbl: pyarrow.lib.Table) -> rinterface.SexpEnvironment:
     """Create an R `arrow` Table to mirror an Arrow Table in `pyarrow`."""
     reader_ptr = ffi.new('struct ArrowArrayStream*')
-    tbl.to_reader()._export_to_c(_pyarrow_ptr(reader_ptr))
-    return _as_arrow_table_from_stream_ptr(str(_pyarrow_ptr(reader_ptr)))
+    tbl.to_reader()._export_to_c(_c_ptr_to_int(reader_ptr))
+    return _as_arrow_table_from_stream_ptr(str(_c_ptr_to_int(reader_ptr)))
 
 
 def pyarrow_table_to_r_table(obj: pyarrow.lib.Table):
@@ -260,7 +260,7 @@ def pyarrow_to_r_schema(
     """
 
     schema_ptr = ffi.new('struct ArrowSchema*')
-    obj._export_to_c(_pyarrow_ptr(schema_ptr))
+    obj._export_to_c(_c_ptr_to_int(schema_ptr))
     return rarrow.Schema['import_from_c'](_rarrow_ptr(schema_ptr))
 
 
@@ -276,7 +276,7 @@ def rarrow_to_py_schema(
 
     schema_ptr = ffi.new('struct ArrowSchema*')
     obj['export_to_c'](_rarrow_ptr(schema_ptr))
-    return pyarrow.lib.Schema._import_from_c(_pyarrow_ptr(schema_ptr))
+    return pyarrow.lib.Schema._import_from_c(_c_ptr_to_int(schema_ptr))
 
 
 converter = conversion.Converter('default arrow conversion',
