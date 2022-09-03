@@ -129,8 +129,8 @@ def test_py2r_Table():
         {'a': [1, 2, 3],
          'b': [4, 5, 6]}
     )
-    py_tb = pyarrow.record_batch(dataf)
-    r_tb = pyr.pyarrow_to_r_table(py_tb)
+    py_tb = pyarrow.Table.from_pandas(dataf)
+    r_tb = pyr.pyarrow_table_to_r_table(py_tb)
     assert isinstance(r_tb, rinterface.SexpEnvironment)
 
 
