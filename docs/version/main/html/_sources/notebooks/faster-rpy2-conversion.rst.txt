@@ -42,7 +42,10 @@ the notebook was written.
        ...: %%R -i pd_dataf
        ...: print(head(pd_dataf))
        ...: rm(pd_dataf)
-       
+
+
+From :class:`pandas.DataFrame` to R `data.frame` through an Arrow Table
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The conversion of a :class:`pandas.DataFrame` can be accelerated by using
 Apache Arrow as an intermediate step. The package ``pyarrow`` is using
@@ -96,7 +99,11 @@ Our custom converter ``conv`` can be specified as a parameter to
        ...: rm(pd_dataf)
 
 
-The conversion is much faster.
+The conversion is *much* faster.
+
+
+From :class:`pandas.DataFrame` to and Arrow Table visible to R
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is also possible to only convert to an Arrow data structure.
 
@@ -146,14 +153,40 @@ with the R package ``dplyr``:
     In [8]: %%R
        ...: suppressMessages(require(dplyr))
 
+..
+   .. ipython::
+
+       In [9]: %%time
+	  ...: %%R -i pd_dataf -c conv2
+	  ...: 
+	  ...: res <- pd_dataf %>%
+	  ...:     group_by(y) %>%
+	  ...:     summarize(n = length(x),
+	  ...:               min = min(x),
+	  ...:               avg = mean(x))
+	  ...: print(res)
+
+
+:class:`Arrow.lib.Table` shared across Python and R
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+An even more performant solution is to share an Arrow Table between Python
+and R. The package :mod:`rpy2_arrow` has a converter to just do that.
+
 .. ipython::
 
-    In [9]: %%time
-       ...: %%R -i pd_dataf -c conv2
-       ...: 
-       ...: res <- pd_dataf %>%
-       ...:     group_by(y) %>%
-       ...:     summarize(n = length(x),
-       ...:               min = min(x),
-       ...:               avg = mean(x))
-       ...: print(res)
+    In [2]: tbl = pyarrow.lib.Table.from_pandas(pd_dataf)
+       ...: pyra_conv = pyra.converter  # work around `%%R` limitations. 
+
+.. ipython::
+
+    In [2]: %%time
+       ...: %%R -i tbl -c pyra_conv
+       ...: print(head(tbl))
+       ...: rm(tbl)
+
+At the time of writing this is approximately 700 times faster than the :class:`pandas.DataFrame`
+to R `data.frame` conversion performed without Arrow presented at the begining of this page.
+
+
+
