@@ -6,7 +6,7 @@ on:
       - 'gh-pages'
 
 env:
-  R-VERSION: "4.1"
+  R-VERSION: "4.2"
 
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.9
       - name: Set up R
         uses: r-lib/actions/setup-r@master
         with:
