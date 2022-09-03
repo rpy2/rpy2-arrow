@@ -193,8 +193,8 @@ def rarrow_to_py_field(
 
 _as_arrow_table_from_stream_ptr = rinterface.evalr(
     """
-    function(ptr) {
-      arrow::as_arrow_table(arrow::RecordBatchReader$import_from_c(ptr))
+    function(recordbatchreader) {
+      arrow::as_arrow_table(recordbatchreader)
     }
     """
 )
@@ -202,9 +202,8 @@ _as_arrow_table_from_stream_ptr = rinterface.evalr(
 
 def _pyarrow_table_to_r_table_ri(tbl: pyarrow.lib.Table) -> rinterface.SexpEnvironment:
     """Create an R `arrow` Table to mirror an Arrow Table in `pyarrow`."""
-    reader_ptr = ffi.new('struct ArrowArrayStream*')
-    tbl.to_reader()._export_to_c(_c_ptr_to_int(reader_ptr))
-    return _as_arrow_table_from_stream_ptr(str(_c_ptr_to_int(reader_ptr)))
+    recordbatchreader = pyarrow_to_r_recordbatchreader(tbl.to_reader())
+    return _as_arrow_table_from_stream_ptr(recordbatchreader)
 
 
 def pyarrow_table_to_r_table(obj: pyarrow.lib.Table):
