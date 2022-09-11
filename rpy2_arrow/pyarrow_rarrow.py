@@ -11,9 +11,12 @@ rarrow = packages.importr('arrow')
 
 
 # make sure a version is installed with the C API
-_rarrow_has_c_api = rinterface.evalr("""
-utils::packageVersion("arrow") >= base::package_version("5.0.0")
-""")[0]
+_rarrow_has_c_api = rinterface.BoolSexpVector(
+    rinterface.evalr("""
+    utils::packageVersion("arrow") >= base::package_version("5.0.0")
+    """)
+)[0]
+
 if not _rarrow_has_c_api:
     raise ValueError("rpy2_arrow requires R 'arrow' package version >= 5.0.0")
 
@@ -21,17 +24,19 @@ if not _rarrow_has_c_api:
 # In arrow >= 7.0.0, pointers can be passed as externalptr,
 # bit64::integer64(), or string, all of which prevent possible
 # problems with the previous versions which required a double().
-_use_r_ptr_string = rinterface.evalr("""
-utils::packageVersion("arrow") >= base::package_version("6.0.1.9000")
-""")[0]
+_use_r_ptr_string = rinterface.BoolSexpVector(
+    rinterface.evalr("""
+    utils::packageVersion("arrow") >= base::package_version("6.0.1.9000")
+    """)
+)[0]
 
 
-def _rarrow_ptr(ptr):
+def _rarrow_ptr(ptr) -> typing.Union[str, float]:
     ptr_value = int(ffi.cast('uintptr_t', ptr))
     return str(ptr_value) if _use_r_ptr_string else float(ptr_value)
 
 
-def _c_ptr_to_int(ptr):
+def _c_ptr_to_int(ptr) -> int:
     return int(ffi.cast('uintptr_t', ptr))
 
 
@@ -53,7 +58,7 @@ def pyarrow_to_r_array(
 
 def rarrow_to_py_array(
         obj: robjects.Environment
-):
+) -> pyarrow.Array:
     """Create a pyarrow array from an R `arrow::Array` object.
 
     This is sharing the C/C++ object between the two languages.
@@ -83,7 +88,7 @@ def pyarrow_to_r_recordbatch(
 
 def rarrow_to_py_recordbatch(
         obj: robjects.Environment
-):
+) -> pyarrow.lib.RecordBatch:
     """Create a pyarrow record batch from an R `arrow::Array` object.
 
     This is sharing the C/C++ object between the two languages.
@@ -112,7 +117,7 @@ def pyarrow_to_r_recordbatchreader(
 
 def rarrow_to_py_recordbatchreader(
         obj: robjects.Environment
-):
+) -> pyarrow.lib.RecordBatchReader:
     """Create a pyarrow RecordBatchReader from an R `arrow::RecordBatchReader` object.
 
     This is sharing the C/C++ object between the two languages.
@@ -191,12 +196,14 @@ def rarrow_to_py_field(
     return pyarrow.lib.Field._import_from_c(_c_ptr_to_int(schema_ptr))
 
 
-_as_arrow_table_from_stream_ptr = rinterface.evalr(
-    """
-    function(recordbatchreader) {
-      arrow::as_arrow_table(recordbatchreader)
-    }
-    """
+_as_arrow_table_from_stream_ptr = rinterface.SexpClosure(
+    rinterface.evalr(
+        """
+        function(recordbatchreader) {
+        arrow::as_arrow_table(recordbatchreader)
+        }
+        """
+    )
 )
 
 
@@ -227,7 +234,7 @@ def rarrow_to_py_table(
         obj: robjects.Environment,
         rpy2py: typing.Optional[
             conversion.Converter] = None
-):
+) -> pyarrow.Table:
     """Create a pyarrow Table from an R `arrow::Table` object.
 
     This is sharing the C/C++ object between the two languages.
@@ -265,7 +272,7 @@ def pyarrow_to_r_schema(
 
 def rarrow_to_py_schema(
         obj: robjects.Environment
-):
+) -> pyarrow.Schema:
     """Create a pyarrow Schema from an R `arrow::Schema` object.
 
     This is sharing the C/C++ object between the two languages.
@@ -278,8 +285,10 @@ def rarrow_to_py_schema(
     return pyarrow.lib.Schema._import_from_c(_c_ptr_to_int(schema_ptr))
 
 
-converter = conversion.Converter('default arrow conversion',
-                                 template=robjects.default_converter)
+converter: conversion.Converter = conversion.Converter(
+    'default arrow conversion',
+    template=robjects.default_converter
+)
 
 # Pyarrow to R arrow.
 converter.py2rpy.register(pyarrow.lib.Array, pyarrow_to_r_array)
