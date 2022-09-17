@@ -43,7 +43,7 @@ can be useful out of the box, check how achieve
 <a class="reference internal" href="conversion.html#faster-rpy2-conversions"><span class="std std-ref">faster rpy2 conversions</span></a>.</p>
 </div>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyarrow</span>
-<span class="kn">import</span> <span class="nn">rpy2_arrow.pyarrow_rarrow</span> <span class="k">as</span> <span class="nn">pyra</span>
+<span class="kn">import</span> <span class="nn">rpy2_arrow.arrow</span> <span class="k">as</span> <span class="nn">pyra</span>
 
 <span class="c1"># Create an array on the Python side using pyarrow</span>
 <span class="n">py_array</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
@@ -91,12 +91,15 @@ with:</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>On the R side object is using an R package called <cite>R6</cite> to
-implement OOP. <cite>R6</cite> objects inherit from R environments,
-which is why they appear this say by default with
-<code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2_arrow</span></code>.
-<code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2</span></code> has an extension package <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2_R6</span></code> to map R6.
-This package should soon offer a integration with it as an option.</p>
+<p>The R package <cite>arrow</cite> creates objects using an other R package called
+<cite>R6</cite>. R has several options for OOP, and <cite>R6</cite> objects inherit from the
+base R type “environment”. This is why the base converter
+<code class="xref py py-data docutils literal notranslate"><span class="pre">rpy2_arrow.arrow.converter</span></code> will show Arrow objects on the
+R side as <a class="reference external" href="https://rpy2.github.io/doc/v3.5.x/html/robjects_environments.html#rpy2.robjects.Environment" title="(in rpy2 v3.5.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">rpy2.robjects.Environment</span></code></a> or
+<code class="xref py py-class docutils literal notranslate"><span class="pre">rpy2.rinterface.SexpEnvironment</span></code>.</p>
+<p>The package <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2_R6</span></code> offers utilities to facilitate the mapping
+of R6 classes to Python classes. An option
+to use it with <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2_arrow</span></code> could be offer later.</p>
 </div>
 <p>For exampple, we can call its method <cite>ToString</cite>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>

@@ -11,7 +11,7 @@ Basic usage
 .. testcode::
 
    import pyarrow
-   import rpy2_arrow.pyarrow_rarrow as pyra
+   import rpy2_arrow.arrow as pyra
 
    # Create an array on the Python side using pyarrow
    py_array = pyarrow.array(range(10))
@@ -63,12 +63,16 @@ with:
 
 .. note::
 
-   On the R side object is using an R package called `R6` to
-   implement OOP. `R6` objects inherit from R environments,
-   which is why they appear this say by default with
-   :mod:`rpy2_arrow`.
-   :mod:`rpy2` has an extension package :mod:`rpy2_R6` to map R6.
-   This package should soon offer a integration with it as an option.
+   The R package `arrow` creates objects using an other R package called
+   `R6`. R has several options for OOP, and `R6` objects inherit from the
+   base R type "environment". This is why the base converter
+   :data:`rpy2_arrow.arrow.converter` will show Arrow objects on the
+   R side as :class:`rpy2.robjects.Environment` or
+   :class:`rpy2.rinterface.SexpEnvironment`.
+
+   The package :mod:`rpy2_R6` offers utilities to facilitate the mapping
+   of R6 classes to Python classes. An option
+   to use it with :mod:`rpy2_arrow` could be offer later.
 
 For exampple, we can call its method `ToString`:
 
