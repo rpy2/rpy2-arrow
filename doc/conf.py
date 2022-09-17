@@ -37,7 +37,10 @@ extensions = [
     'IPython.sphinxext.ipython_directive'
 ]
 
-intersphinx_mapping = {'rpy2': ('https://rpy2.github.io/doc/v3.4.x/html', None)}
+intersphinx_mapping = {
+    'rpy2': ('https://rpy2.github.io/doc/v3.5.x/html/', None),
+    'rpy2-R6': ('https://rpy2.github.io/rpy2-R6/version/master/html/', None),
+}
 
 
 # Add any paths that contain templates here, relative to this directory.

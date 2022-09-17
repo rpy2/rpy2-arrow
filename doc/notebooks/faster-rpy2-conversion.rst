@@ -65,7 +65,7 @@ custom converter for :mod:`rpy2` is done in few lines of code.
        ...: from rpy2.robjects.packages import importr
        ...: import rpy2.robjects.conversion
        ...: import rpy2.rinterface
-       ...: import rpy2_arrow.pyarrow_rarrow as pyra
+       ...: import rpy2_arrow.arrow as pyra
        ...:
        ...: base = importr('base')
        ...:
