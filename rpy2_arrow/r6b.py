@@ -1,15 +1,15 @@
 import rpy2_R6.r6b as r6b
-import rpy2_arrow.pyarrow_rarrow as pyr
+import rpy2_arrow.arrow as pyra
 import rpy2.rinterface as rinterface
 import rpy2.robjects
 import rpy2.robjects.conversion
 
 # Python proxies for the R6 class factories
-array_factory = r6b.R6DynamicClassGenerator(pyr.rarrow.Array)
-recordbatch_factory = r6b.R6DynamicClassGenerator(pyr.rarrow.RecordBatch)
-chunkedarray_factory = r6b.R6DynamicClassGenerator(pyr.rarrow.ChunkedArray)
-schema_factory = r6b.R6DynamicClassGenerator(pyr.rarrow.Schema)
-table_factory = r6b.R6DynamicClassGenerator(pyr.rarrow.Table)
+array_factory = r6b.R6DynamicClassGenerator(pyra.rarrow.Array)
+recordbatch_factory = r6b.R6DynamicClassGenerator(pyra.rarrow.RecordBatch)
+chunkedarray_factory = r6b.R6DynamicClassGenerator(pyra.rarrow.ChunkedArray)
+schema_factory = r6b.R6DynamicClassGenerator(pyra.rarrow.Schema)
+table_factory = r6b.R6DynamicClassGenerator(pyra.rarrow.Table)
 
 
 # Conversion functions and rules

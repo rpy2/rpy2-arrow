@@ -1,7 +1,7 @@
 import rpy2.rinterface as rinterface
 import rpy2.robjects.conversion as conversion
 import rpy2.robjects as ro
-import rpy2_arrow.pyarrow_rarrow as pyr
+import rpy2_arrow.arrow as pyra
 import rpy2_arrow.r6b as r6b_ar
 import rpy2_R6.r6b as r6b
 import pyarrow
@@ -12,8 +12,8 @@ import pytest
 @pytest.mark.parametrize(
     'pyarrow_constructor,pyr_py2r',
     [
-        (pyarrow.array, pyr.pyarrow_to_r_array),
-        (pyarrow.chunked_array, pyr.pyarrow_to_r_chunkedarray)
+        (pyarrow.array, pyra.pyarrow_to_r_array),
+        (pyarrow.chunked_array, pyra.pyarrow_to_r_chunkedarray)
     ]
 )
 def test_rpy2py_arrays(pyarrow_constructor, pyr_py2r):
