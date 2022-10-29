@@ -1,0 +1,53 @@
+[build-system]
+requires = [
+    "setuptools >= 61",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rpy2-arrow"
+description = "Bridge Arrow between Python and R when using rpy2"
+readme = "README.md"
+requires-python = ">=3.7"
+license = { text = "MIT" }
+authors = [{ name = "Laurent Gautier", email = "lgautier@gmail.com" }]
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+]
+dependencies = [
+    "pyarrow",
+    "rpy2>= 3.5"
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+test = ["pytest", "pandas"]
+R6 = ["rpy2-R6"]
+all = ["pytest", "pandas", "rpy2-R6"]
+
+[project.urls]
+Homepage = "https://rpy2.github.io/rpy2-arrow/"
+Documentation = "https://rpy2.github.io/rpy2-arrow/version/main/html/index.html"
+Source = "https://github.com/rpy2/rpy2-arrow/"
+Tracker = "https://github.com/rpy2/rpy2-arrow/issue"
+
+[tool.setuptools]
+packages = [
+    "rpy2_arrow"
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "rpy2_arrow.__version__" }
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["rpy2/tests"]
