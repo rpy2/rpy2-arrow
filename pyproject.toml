@@ -50,4 +50,4 @@ version = { attr = "rpy2_arrow.__version__" }
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-testpaths = ["rpy2/tests"]
+testpaths = ["rpy2_arrow/tests"]
