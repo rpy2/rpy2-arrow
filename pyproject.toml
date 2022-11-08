@@ -25,7 +25,7 @@ classifiers = [
 ]
 dependencies = [
     "pyarrow",
-    "rpy2>= 3.5"
+    "rpy2 >= 3.4"
 ]
 dynamic = ["version"]
 

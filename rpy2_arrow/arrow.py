@@ -227,7 +227,12 @@ def pyarrow_table_to_r_table(obj: pyarrow.lib.Table):
     # `res` is a low-level (rinterface-level) rpy2 object. This is an
     # rpy2 robject-level function. Use the conversion.
     res = _pyarrow_table_to_r_table_ri(obj)
-    return conversion.get_conversion().py2rpy(res)
+    converter = (
+        conversion.get_conversion()  # rpy2 >=3.5.2
+        if hasattr(conversion, 'get_conversion') else
+        conversion.converter  # rpy2 <3.5.2
+    )
+    return converter.py2rpy(res)
 
 
 def rarrow_to_py_table(
