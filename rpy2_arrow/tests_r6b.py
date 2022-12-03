@@ -3,7 +3,7 @@ import rpy2.robjects.conversion as conversion
 import rpy2.robjects as ro
 import rpy2_arrow.arrow as pyra
 import rpy2_arrow.r6b as r6b_ar
-import rpy2_R6.r6b as r6b
+import rpy2_r6.r6b as r6b
 import pyarrow
 import pytest
 
