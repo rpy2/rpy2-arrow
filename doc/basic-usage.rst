@@ -70,7 +70,7 @@ with:
    R side as :class:`rpy2.robjects.Environment` or
    :class:`rpy2.rinterface.SexpEnvironment`.
 
-   The package :mod:`rpy2_R6` offers utilities to facilitate the mapping
+   The package :mod:`rpy2_r6` offers utilities to facilitate the mapping
    of R6 classes to Python classes. An option
    to use it with :mod:`rpy2_arrow` could be offer later.
 

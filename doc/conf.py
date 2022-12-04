@@ -39,7 +39,7 @@ extensions = [
 
 intersphinx_mapping = {
     'rpy2': ('https://rpy2.github.io/doc/v3.5.x/html/', None),
-    'rpy2-R6': ('https://rpy2.github.io/rpy2-R6/version/master/html/', None),
+    'rpy2-r6': ('https://rpy2.github.io/rpy2-r6/version/master/html/', None),
 }
 
 
