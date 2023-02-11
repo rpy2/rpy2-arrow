@@ -10,9 +10,6 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -45,7 +42,7 @@ The only remaining part is how to combine them for your own need.</p>
 <section id="faster-pandas-r-conversions">
 <span id="faster-rpy2-conversions"></span><h2>Faster pandas-R conversions<a class="headerlink" href="#faster-pandas-r-conversions" title="Permalink to this heading">¶</a></h2>
 <p>This example of custom conversion with jupyter and the
-“R magic” in <a class="reference external" href="https://rpy2.github.io/doc/v3.5.x/html/interactive.html#module-rpy2.ipython" title="(in rpy2 v3.5.4)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2.ipython</span></code></a> demonstrates how
+“R magic” in <a class="reference external" href="https://rpy2.github.io/doc/v3.5.x/html/interactive.html#module-rpy2.ipython" title="(in rpy2 v3.5.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2.ipython</span></code></a> demonstrates how
 Arrow can greatly improve performances when moving
 data between Python and R.</p>
 <div class="admonition note">
@@ -86,8 +83,8 @@ the notebook was written.</p>
 <span class="go">3 3 def</span>
 <span class="go">4 4 abc</span>
 <span class="go">5 5 def</span>
-<span class="go">CPU times: user 4.07 s, sys: 84.2 ms, total: 4.16 s</span>
-<span class="go">Wall time: 4.21 s</span>
+<span class="go">CPU times: user 3.51 s, sys: 67.4 ms, total: 3.58 s</span>
+<span class="go">Wall time: 3.88 s</span>
 </pre></div>
 </div>
 <section id="from-pandas-dataframe-to-r-data-frame-through-an-arrow-table">
@@ -145,8 +142,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">4 3 def</span>
 <span class="go">5 4 abc</span>
 <span class="go">6 5 def</span>
-<span class="go">CPU times: user 49.3 ms, sys: 12.1 ms, total: 61.4 ms</span>
-<span class="go">Wall time: 61.2 ms</span>
+<span class="go">CPU times: user 41.7 ms, sys: 8.11 ms, total: 49.8 ms</span>
+<span class="go">Wall time: 49.7 ms</span>
 </pre></div>
 </div>
 <p>The conversion is <em>much</em> faster.</p>
@@ -178,8 +175,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 47.1 ms, sys: 3.96 ms, total: 51 ms</span>
-<span class="go">Wall time: 50.9 ms</span>
+<span class="go">CPU times: user 37.2 ms, sys: 7.98 ms, total: 45.2 ms</span>
+<span class="go">Wall time: 45 ms</span>
 </pre></div>
 </div>
 <p>This time the conversion is about as fast but is likely requiring less
@@ -226,8 +223,8 @@ and R. The package <code class="xref py py-mod docutils literal notranslate"><sp
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 4.87 ms, sys: 3.86 ms, total: 8.73 ms</span>
-<span class="go">Wall time: 8.74 ms</span>
+<span class="go">CPU times: user 7.88 ms, sys: 0 ns, total: 7.88 ms</span>
+<span class="go">Wall time: 7.89 ms</span>
 </pre></div>
 </div>
 <p>At the time of writing this is approximately 700 times faster than the <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>
@@ -299,8 +296,8 @@ to R <cite>data.frame</cite> conversion performed without Arrow presented at the
       &copy;2021, Laurent Gautier.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |
       <a href="_sources/conversion.rst.txt"
