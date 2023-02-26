@@ -24,12 +24,12 @@ def test_rpy2py_arrays(pyarrow_constructor, pyr_py2r):
     # TODO: bug in rpy2's layering of conversion rules?
     # with conversion.local_converter(
     #         ro.default_converter + r6b_ar.converter
-    # ) as cv:
+    # ).context() as cv:
     env_map = (ro.conversion
                .converter.rpy2py_nc_name[rinterface.SexpEnvironment])
     with conversion.NameClassMapContext(
             env_map,
             r6b_ar.converter.rpy2py_nc_name[rinterface.SexpEnvironment]._map
-    ):
+    ).context():
         r6_ar = pyr_py2r(py_ar)
         assert isinstance(r6_ar, r6b.R6)
