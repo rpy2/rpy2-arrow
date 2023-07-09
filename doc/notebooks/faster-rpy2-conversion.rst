@@ -176,12 +176,11 @@ and R. The package :mod:`rpy2_arrow` has a converter to just do that.
 .. ipython::
 
     In [2]: tbl = pyarrow.lib.Table.from_pandas(pd_dataf)
-       ...: pyra_conv = pyra.converter  # work around `%%R` limitations. 
 
 .. ipython::
 
     In [2]: %%time
-       ...: %%R -i tbl -c pyra_conv
+       ...: %%R -i tbl -c pyra.converter
        ...: print(head(tbl))
        ...: rm(tbl)
 
