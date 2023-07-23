@@ -8,10 +8,7 @@ This package supports sharing Apache Arrow data structures across Python and R b
 R's [arrow](https://arrow.apache.org/docs/r/index.html),
 and Python's [pyarrow](https://arrow.apache.org/docs/python/index.html).
 
-This is still work in progress, but there is:
-
-- [HTML doc](https://rpy2.github.io/rpy2-arrow/version/main/html/)
-- [demo notebooks](doc/notebooks/).
+This is still work in progress. The [HTML doc](https://rpy2.github.io/rpy2-arrow/version/main/html/) should be up-to-date.
 
 To install:
 
