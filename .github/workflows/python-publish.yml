@@ -15,7 +15,7 @@ on:
     branches:
       - master
 jobs:
-  deploy:
+  pypi-publish:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -39,7 +39,7 @@ jobs:
     - name: Build package
       run: python -m build
     - name: Publish package to PyPI
-      uses: pypa/gh-action-pypi-publish@master
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
