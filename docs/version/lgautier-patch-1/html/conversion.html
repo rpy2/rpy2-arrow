@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Conversion &#8212; rpy2-arrow 0.0.6 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script src="_static/documentation_options.js?v=1fd71caa"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Basic usage" href="basic-usage.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="conversion">
+<span id="id1"></span><h1>Conversion<a class="headerlink" href="#conversion" title="Link to this heading">¶</a></h1>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2</span></code> is using a conversion system with which rules to share objects
+between Python and R can be specified (see <cite>rpy2 documentation about
+conversion</cite>).</p>
+<p>Rules for Arrow data structure can be specified, and the package
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2-arrow</span></code> already implements the bulk of what it is required.
+The only remaining part is how to combine them for your own need.</p>
+<section id="faster-pandas-r-conversions">
+<span id="faster-rpy2-conversions"></span><h2>Faster pandas-R conversions<a class="headerlink" href="#faster-pandas-r-conversions" title="Link to this heading">¶</a></h2>
+<p>This example of custom conversion with jupyter and the
+“R magic” in <a class="reference external" href="https://rpy2.github.io/doc/v3.5.x/html/interactive.html#module-rpy2.ipython" title="(in rpy2 v3.5.13)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2.ipython</span></code></a> demonstrates how
+Arrow can greatly improve performances when moving
+data between Python and R.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This section is a jupyter notebook. It can be downloaded
+as a notebook from <a class="reference external" href="./faster-rpy2-conversion.ipynb">here</a>.</p>
+</div>
+<p>We create a test <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>. The size is set to show a
+noticeable able effect without waiting too long for the slowest
+conversion on the laptop the notebook ran on. Feel free to change the
+variable <code class="docutils literal notranslate"><span class="pre">_N</span></code> to what suits best your hardware, and your patience.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">   ...: </span><span class="c1"># Number or rows in the DataFrame.</span>
+<span class="gp">   ...: </span><span class="n">_N</span> <span class="o">=</span> <span class="mi">500000</span>
+<span class="gp">   ...: </span><span class="n">pd_dataf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="n">_N</span><span class="p">),</span>
+<span class="gp">   ...: </span>                         <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span> <span class="s1">&#39;def&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">_N</span><span class="o">//</span><span class="mi">2</span><span class="p">)})</span>
+<span class="gp">   ...: </span>
+</pre></div>
+</div>
+<p>Next we load the ipython/jupyter extension in R to communicate with R in
+a (Python) notebook.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [2]: </span><span class="o">%</span><span class="k">load_ext</span> rpy2.ipython
+</pre></div>
+</div>
+<p>With the extension loaded, the <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> can be imported in a R cell
+(declared with <code class="docutils literal notranslate"><span class="pre">%%R</span></code>) using the argument <code class="docutils literal notranslate"><span class="pre">-i</span></code>. It takes few seconds
+for the conversion system to create a copy of it in R on the machine where
+the notebook was written.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [3]: </span><span class="o">%%time</span>
+<span class="gp">   ...: </span><span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">pd_dataf</span>
+<span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">))</span>
+<span class="gp">   ...: </span><span class="n">rm</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="go">  x   y</span>
+<span class="go">0 0 abc</span>
+<span class="go">1 1 def</span>
+<span class="go">2 2 abc</span>
+<span class="go">3 3 def</span>
+<span class="go">4 4 abc</span>
+<span class="go">5 5 def</span>
+<span class="go">CPU times: user 2.76 s, sys: 68 ms, total: 2.83 s</span>
+<span class="go">Wall time: 2.84 s</span>
+</pre></div>
+</div>
+<section id="from-pandas-dataframe-to-r-data-frame-through-an-arrow-table">
+<h3>From <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to R <cite>data.frame</cite> through an Arrow Table<a class="headerlink" href="#from-pandas-dataframe-to-r-data-frame-through-an-arrow-table" title="Link to this heading">¶</a></h3>
+<p>The conversion of a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> can be accelerated by using
+Apache Arrow as an intermediate step. The package <code class="docutils literal notranslate"><span class="pre">pyarrow</span></code> is using
+compiled code to go efficiently from a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to an Arrow
+data structure, and the R package <code class="docutils literal notranslate"><span class="pre">arrow</span></code> can do the same from Arrow data
+structure to an R <code class="docutils literal notranslate"><span class="pre">data.frame</span></code>.</p>
+<p>The package <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2-arrow</span></code> can help manage the conversion between Python
+wrappers to Arrow data structures (Python package <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyarrow</span></code>) and R
+wrappers to Arrow data structures (R package <code class="docutils literal notranslate"><span class="pre">arrow</span></code>). Creating a
+custom converter for <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2</span></code> is done in few lines of code.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [4]: </span><span class="kn">import</span> <span class="nn">pyarrow</span>
+<span class="gp">   ...: </span><span class="kn">from</span> <span class="nn">rpy2.robjects.packages</span> <span class="kn">import</span> <span class="n">importr</span>
+<span class="gp">   ...: </span><span class="kn">import</span> <span class="nn">rpy2.robjects.conversion</span>
+<span class="gp">   ...: </span><span class="kn">import</span> <span class="nn">rpy2.rinterface</span>
+<span class="gp">   ...: </span><span class="kn">import</span> <span class="nn">rpy2_arrow.arrow</span> <span class="k">as</span> <span class="nn">pyra</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="n">base</span> <span class="o">=</span> <span class="n">importr</span><span class="p">(</span><span class="s1">&#39;base&#39;</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="c1"># We use the converter included in rpy2-arrow as template.</span>
+<span class="gp">   ...: </span><span class="n">conv</span> <span class="o">=</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">Converter</span><span class="p">(</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;Pandas to data.frame&#39;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">template</span><span class="o">=</span><span class="n">pyra</span><span class="o">.</span><span class="n">converter</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="nd">@conv</span><span class="o">.</span><span class="n">py2rpy</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+<span class="gp">   ...: </span><span class="k">def</span> <span class="nf">py2rpy_pandas</span><span class="p">(</span><span class="n">dataf</span><span class="p">):</span>
+<span class="gp">   ...: </span>    <span class="n">pa_tbl</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">dataf</span><span class="p">)</span>
+<span class="gp">   ...: </span>    <span class="c1"># pa_tbl is a pyarrow table, and this is something</span>
+<span class="gp">   ...: </span>    <span class="c1"># that the converter shipping with rpy2-arrow knows</span>
+<span class="gp">   ...: </span>    <span class="c1"># how to handle.</span>
+<span class="gp">   ...: </span>    <span class="k">return</span> <span class="n">base</span><span class="o">.</span><span class="n">as_data_frame</span><span class="p">(</span><span class="n">pa_tbl</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="c1"># We build a custom converter that is the default converter</span>
+<span class="gp">   ...: </span><span class="c1"># for ipython/jupyter shipping with rpy2, to which we add</span>
+<span class="gp">   ...: </span><span class="c1"># rules for Arrow + pandas we just made.</span>
+<span class="gp">   ...: </span><span class="n">conv</span> <span class="o">=</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">ipython</span><span class="o">.</span><span class="n">rmagic</span><span class="o">.</span><span class="n">converter</span> <span class="o">+</span> <span class="n">conv</span>
+<span class="gp">   ...: </span>
+</pre></div>
+</div>
+<p>Our custom converter <code class="docutils literal notranslate"><span class="pre">conv</span></code> can be specified as a parameter to
+<code class="docutils literal notranslate"><span class="pre">%%R</span></code>:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [5]: </span><span class="o">%%time</span>
+<span class="gp">   ...: </span><span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">pd_dataf</span> <span class="o">-</span><span class="n">c</span> <span class="n">conv</span>
+<span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">class</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">))</span>
+<span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">))</span>
+<span class="gp">   ...: </span><span class="n">rm</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="go">[1] &quot;data.frame&quot;</span>
+<span class="go">  x   y</span>
+<span class="go">1 0 abc</span>
+<span class="go">2 1 def</span>
+<span class="go">3 2 abc</span>
+<span class="go">4 3 def</span>
+<span class="go">5 4 abc</span>
+<span class="go">6 5 def</span>
+<span class="go">CPU times: user 40.7 ms, sys: 0 ns, total: 40.7 ms</span>
+<span class="go">Wall time: 40.7 ms</span>
+</pre></div>
+</div>
+<p>The conversion is <em>much</em> faster.</p>
+</section>
+<section id="from-pandas-dataframe-to-and-arrow-table-visible-to-r">
+<h3>From <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> to and Arrow Table visible to R<a class="headerlink" href="#from-pandas-dataframe-to-and-arrow-table-visible-to-r" title="Link to this heading">¶</a></h3>
+<p>It is also possible to only convert to an Arrow data structure.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [6]: </span><span class="n">conv2</span> <span class="o">=</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">robjects</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">Converter</span><span class="p">(</span>
+<span class="gp">   ...: </span>    <span class="s1">&#39;Pandas to pyarrow&#39;</span><span class="p">,</span>
+<span class="gp">   ...: </span>    <span class="n">template</span><span class="o">=</span><span class="n">pyra</span><span class="o">.</span><span class="n">converter</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="nd">@conv2</span><span class="o">.</span><span class="n">py2rpy</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+<span class="gp">   ...: </span><span class="k">def</span> <span class="nf">py2rpy_pandas</span><span class="p">(</span><span class="n">dataf</span><span class="p">):</span>
+<span class="gp">   ...: </span>    <span class="n">pa_tbl</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">dataf</span><span class="p">)</span>
+<span class="gp">   ...: </span>    <span class="k">return</span> <span class="n">pyra</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">py2rpy</span><span class="p">(</span><span class="n">pa_tbl</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="gp">   ...: </span><span class="n">conv2</span> <span class="o">=</span> <span class="n">rpy2</span><span class="o">.</span><span class="n">ipython</span><span class="o">.</span><span class="n">rmagic</span><span class="o">.</span><span class="n">converter</span> <span class="o">+</span> <span class="n">conv2</span>
+<span class="gp">   ...: </span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="o">%%time</span>
+<span class="gp">   ...: </span><span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">pd_dataf</span> <span class="o">-</span><span class="n">c</span> <span class="n">conv2</span>
+<span class="gp">   ...: </span><span class="nb">print</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">))</span>
+<span class="gp">   ...: </span><span class="n">rm</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+<span class="go">Table</span>
+<span class="go">6 rows x 2 columns</span>
+<span class="go">$x &lt;int64&gt;</span>
+<span class="go">$y &lt;string&gt;</span>
+
+<span class="go">See $metadata for additional Schema metadata</span>
+<span class="go">CPU times: user 73.6 ms, sys: 4.16 ms, total: 77.7 ms</span>
+<span class="go">Wall time: 77.5 ms</span>
+</pre></div>
+</div>
+<p>This time the conversion is about as fast but is likely requiring less
+memory. When casting the Arrow data table into an R <code class="docutils literal notranslate"><span class="pre">data.frame</span></code>, I
+believe there is a moment in time where copies of the data will coexist
+in the Python <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>, in the <code class="docutils literal notranslate"><span class="pre">Arrow</span></code> table, and in the R
+<code class="docutils literal notranslate"><span class="pre">data.frame</span></code>. This is transient though; the <code class="docutils literal notranslate"><span class="pre">Arrow</span></code> table only
+exists during the scope of <code class="docutils literal notranslate"><span class="pre">py2rpy_pandas</span></code> for <code class="docutils literal notranslate"><span class="pre">conv</span></code>. For
+<code class="docutils literal notranslate"><span class="pre">conv2</span></code>, the data will only be copied once. It will coexist in the
+Python <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> and in the <code class="docutils literal notranslate"><span class="pre">Arrow</span></code> table (the content of which
+will be shared between Python and R if I understand it right).</p>
+<p>The R package <code class="docutils literal notranslate"><span class="pre">arrow</span></code> implements methods for Arrow
+data structures to make their behavior close to <code class="docutils literal notranslate"><span class="pre">data.frame</span></code> objects.
+This can make Arrow data table work with R functions designed for data frames,
+and bring very significant performance gains. When in combination with
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2-arrow</span></code>, this means that Arrow tables accessed or created
+from Python can be used with R code without the performance penalty of
+copying data, and with the possible performance gain that the R package
+<code class="docutils literal notranslate"><span class="pre">arrow</span></code> may bring for such data structures. For example,
+with the R package <code class="docutils literal notranslate"><span class="pre">dplyr</span></code>:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [8]: </span><span class="o">%%</span><span class="k">R</span>
+<span class="gp">   ...: </span>suppressMessages(require(dplyr))
+<span class="gp">   ...: </span>
+</pre></div>
+</div>
+</section>
+<section id="arrow-lib-table-shared-across-python-and-r">
+<h3><code class="xref py py-class docutils literal notranslate"><span class="pre">Arrow.lib.Table</span></code> shared across Python and R<a class="headerlink" href="#arrow-lib-table-shared-across-python-and-r" title="Link to this heading">¶</a></h3>
+<p>An even more performant solution is to share an Arrow Table between Python
+and R. The package <code class="xref py py-mod docutils literal notranslate"><span class="pre">rpy2_arrow</span></code> has a converter to just do that.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [9]: </span><span class="n">tbl</span> <span class="o">=</span> <span class="n">pyarrow</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">pd_dataf</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [10]: </span><span class="o">%%time</span>
+<span class="gp">   ....: </span><span class="o">%%</span><span class="n">R</span> <span class="o">-</span><span class="n">i</span> <span class="n">tbl</span> <span class="o">-</span><span class="n">c</span> <span class="n">pyra</span><span class="o">.</span><span class="n">converter</span>
+<span class="gp">   ....: </span><span class="nb">print</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">tbl</span><span class="p">))</span>
+<span class="gp">   ....: </span><span class="n">rm</span><span class="p">(</span><span class="n">tbl</span><span class="p">)</span>
+<span class="gp">   ....: </span>
+<span class="go">Table</span>
+<span class="go">6 rows x 2 columns</span>
+<span class="go">$x &lt;int64&gt;</span>
+<span class="go">$y &lt;string&gt;</span>
+
+<span class="go">See $metadata for additional Schema metadata</span>
+<span class="go">CPU times: user 5.74 ms, sys: 184 us, total: 5.93 ms</span>
+<span class="go">Wall time: 5.93 ms</span>
+</pre></div>
+</div>
+<p>At the time of writing this is approximately 700 times faster than the <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>
+to R <cite>data.frame</cite> conversion performed without Arrow presented at the begining of this page.</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/rpy2-arrow-logo-web.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">rpy2-arrow</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="basic-usage.html">Basic usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Conversion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#faster-pandas-r-conversions">Faster pandas-R conversions</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="basic-usage.html" title="previous chapter">Basic usage</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Laurent Gautier.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/conversion.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
