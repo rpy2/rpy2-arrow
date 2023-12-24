@@ -49,7 +49,7 @@ jobs:
         flake8 rpy2_arrow --count --max-complexity=10 --max-line-length=127 --statistics
     - name: Install package
       run: |
-        python setup.py install
+        pip install .
     - name: Test with pytest
       run: |
         export LD_LIBRARY_PATH=$(python -m rpy2.situation LD_LIBRARY_PATH):${LD_LIBRARY_PATH}
