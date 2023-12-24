@@ -7,8 +7,19 @@ on:
     - cron: '0 0 1 * *'
 
 jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    - name: Lint with flake8
+      run: |
+        pip install flake8
+        flake8 rpy2_arrow --count --max-complexity=10 --max-line-length=127 --statistics
   build:
-
     runs-on: ${{ matrix.os }}
     strategy:
       max-parallel: 4
@@ -43,13 +54,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install git+https://github.com/rpy2/rpy2-r6
-    - name: Lint with flake8
+    - name: Build package
       run: |
-        pip install flake8
-        flake8 rpy2_arrow --count --max-complexity=10 --max-line-length=127 --statistics
+        python -m build 
     - name: Install package
       run: |
-        pip install .
+        pip install $(ls -t1 dist/*.whl | tail -1)
     - name: Test with pytest
       run: |
         export LD_LIBRARY_PATH=$(python -m rpy2.situation LD_LIBRARY_PATH):${LD_LIBRARY_PATH}
