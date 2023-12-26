@@ -24,9 +24,9 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10", "3.11" ,"3.12"]
+        python-version: [3.8, 3.9, "3.10", "3.11" ,"3.12"]
         r-version: ['release']
-        os: [ubuntu-latest, macOS-latest]
+        os: [ubuntu-22.04, ubuntu-latest, macOS-latest]
         include:
         - os: ubuntu-latest
           SYSTEM_DEPS: sudo apt-get install -y libcurl4-gnutls-dev
