@@ -24,10 +24,12 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10", "3.11"]
+        python-version: [3.8, 3.9, "3.10", "3.11" ,"3.12"]
         r-version: ['release']
-        os: [ubuntu-latest, macOS-latest]
+        os: [ubuntu-22.04, ubuntu-latest, macOS-latest]
         include:
+        - os: ubuntu-22.04
+          SYSTEM_DEPS: sudo apt-get install -y libcurl4-gnutls-dev
         - os: ubuntu-latest
           SYSTEM_DEPS: sudo apt-get install -y libcurl4-gnutls-dev
         - os: macOS-latest
@@ -47,6 +49,7 @@ jobs:
     - name: Install R dependencies
       run: |
         install.packages(c("assertthat", "cpp11", "tidyselect", "vctrs", "R6", "purrr", "bit64"))
+        Sys.setenv("NOT_CRAN" = "true")
         install.packages("arrow")
       shell: Rscript {0}
     - name: Install dependencies
