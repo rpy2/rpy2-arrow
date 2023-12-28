@@ -26,8 +26,8 @@ class TestPolars:
     def test_pypolars_to_rarrow(self):
         podataf = polars.DataFrame({'a': [1, 2], 'b': [3, 4]})
         rartable = rpy2polars.pypolars_to_rarrow(podataf)
-        assert tuple(rpy2.robjects.r('podataf[["a"]]')) == (1, 2)
-        assert tuple(rpy2.robjects.r('podataf[["b"]]')) == (3, 4)
+        assert tuple(rartable.rx2('a')) == (1, 2)
+        assert tuple(rartable.rx2('b')) == (3, 4)
 
     def test_rarrow_to_pypolars(self):
         artable = pyarrow.Table.from_pylist([{'a': 1, 'b': 3}, {'a': 2, 'b': 4}])
