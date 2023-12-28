@@ -6,7 +6,6 @@ except ImportError:
     HAS_POLARS = False
 
 import pytest
-import pyarrow
 import rpy2.rinterface
 import rpy2.robjects
 import rpy2_arrow.arrow as rpy2arrow
@@ -44,7 +43,7 @@ class TestPolars:
 
     def test_converter_py2rpy(self):
         podataf = polars.DataFrame({'a': [1, 2], 'b': [3, 4]})
-        with rpy2polars.converter.context() as ctx:
+        with rpy2polars.converter.context():
             rpy2.robjects.globalenv['podataf'] = podataf
         assert tuple(rpy2.robjects.globalenv['podataf'].rclass) == ('DataFrame',)
 
