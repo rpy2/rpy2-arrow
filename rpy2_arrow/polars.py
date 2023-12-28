@@ -1,5 +1,4 @@
 import polars
-import pyarrow
 import rpy2.rinterface
 import rpy2.robjects
 import rpy2.robjects.conversion as conversion
@@ -47,7 +46,7 @@ def pypolars_to_rpolars(dataf: polars.DataFrame) -> rpy2.robjects.Environment:
     # additional conversion off.
     with rpy2.robjects.default_converter.context() as ctx:
         return rpack_polars.pl['from_arrow'](r_arrow_table)
-    
+
 
 # TODO: rpy2.rinterface.SexpExtPtr should have an robjects-level wrapper?
 def rpolar_to_pypolars(dataf: rpy2.rinterface.SexpExtPtr) -> polars.DataFrame:
