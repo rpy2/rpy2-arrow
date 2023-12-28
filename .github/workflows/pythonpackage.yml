@@ -52,6 +52,14 @@ jobs:
         Sys.setenv("NOT_CRAN" = "true")
         install.packages("arrow")
       shell: Rscript {0}
+    - name: Install R dependency "polars"
+      run: |
+        if (Sys.info()["sysname"] == "Darwin") {
+          install.packages("polars", repos = "https://rpolars.r-universe.dev")
+        } else {
+          install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
+        }
+      shell: Rscript {0}
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -63,7 +71,7 @@ jobs:
         python -m build 
     - name: Install package
       run: |
-        pip install $(ls -t1 dist/*.whl | tail -1)
+        pip install $(ls -t1 dist/*.whl | tail -1)`[all]`
     - name: Test with pytest
       run: |
         export LD_LIBRARY_PATH=$(python -m rpy2.situation LD_LIBRARY_PATH):${LD_LIBRARY_PATH}
