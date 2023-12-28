@@ -44,7 +44,7 @@ def pypolars_to_rpolars(dataf: polars.DataFrame) -> rpy2.robjects.Environment:
     rpack_polars = ensure_r_polars()
     # TODO: There appear to be an odd shortcircuiting that requires toggling
     # additional conversion off.
-    with rpy2.robjects.default_converter.context() as ctx:
+    with rpy2.robjects.default_converter.context():
         return rpack_polars.pl['from_arrow'](r_arrow_table)
 
 
