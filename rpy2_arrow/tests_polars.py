@@ -6,10 +6,8 @@ except ImportError:
     HAS_POLARS = False
 
 import pytest
-import pyarrow
 import rpy2.rinterface
 import rpy2.robjects
-import rpy2_arrow.arrow as rpy2arrow
 
 R_DOLLAR = rpy2.robjects.r('`$`')
 R_ASVECTOR = rpy2.robjects.r('as.vector')
@@ -44,7 +42,7 @@ class TestPolars:
             ([1.1, 2.1], polars.Float32, _cmp_float),
             ([1.1, 2.1], polars.Float64, _cmp_float),
             (['wx', 'yz'], polars.Utf8, _cmp_simple),
-            (['wx', 'yz', 'wx'], polars.Categorical, _cmp_simple) # Fails.
+            (['wx', 'yz', 'wx'], polars.Categorical, _cmp_simple)  # Fails.
         ])
     def test_pypolars_to_rarrow(self, values, dtype, cmp):
         podataf = polars.DataFrame({'a': values}, schema={'a': dtype})
