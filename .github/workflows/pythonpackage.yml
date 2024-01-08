@@ -77,4 +77,4 @@ jobs:
         export LD_LIBRARY_PATH=$(python -m rpy2.situation LD_LIBRARY_PATH):${LD_LIBRARY_PATH}
         pip install pytest codecov pytest-cov
         pip install pandas
-        pytest --cov rpy2_arrow.pyarrow_rarrow --cov rpy2_arrow.r6b rpy2_arrow/tests*.py
+        pytest --cov rpy2_arrow.pyarrow_rarrow --cov rpy2_arrow.r6b --cov rpy2_arrow.polars rpy2_arrow/tests*.py
