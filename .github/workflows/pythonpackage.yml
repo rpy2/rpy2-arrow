@@ -55,6 +55,7 @@ jobs:
     - name: Install R dependency "polars" (MacOS)
       if: startsWith(matrix.os, 'MacOS')
       run: |
+        install.packages("nanoarrow")
         install.packages("polars", repos = "https://rpolars.r-universe.dev")
       shell: Rscript {0}
     - name: Install R dependency "polars" (Linux)
