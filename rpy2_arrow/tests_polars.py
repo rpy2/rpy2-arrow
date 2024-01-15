@@ -97,15 +97,18 @@ class TestPolars:
             ([1.1, 2.1], polars.Float64, 'Float64', _cmp_float),
             (['wx', 'yz'], polars.Utf8, 'Utf8', _cmp_simple),
             # Segfault with Categorical
-            # (['wx', 'yz', 'wx'], polars.Categorical)
+            # (['wx', 'yz', 'wx'], polars.Categorical,
+            #  'DictionaryType', _cmp_simple)
         ])
     def test_converter_py2rpy(self, values, dtype, rpotype, cmp):
         podataf = polars.DataFrame({'a': values}, schema={'a': dtype})
         globalenv = rpy2.robjects.globalenv
+        if rpotype == 'DictionaryType':
+            import pdb; pdb.set_trace()
         with rpy2polars.converter.context():
             globalenv['podataf'] = podataf
         r_podataf = globalenv['podataf']
-        assert tuple(r_podataf.rclass) == ('DataFrame',)
+        assert tuple(r_podataf.rclass) == ('RPolarsDataFrame',)
 
         assert tuple(
             R_DOLLAR(r_podataf, 'schema').names
