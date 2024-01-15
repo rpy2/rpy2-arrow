@@ -52,13 +52,15 @@ jobs:
         Sys.setenv("NOT_CRAN" = "true")
         install.packages("arrow")
       shell: Rscript {0}
-    - name: Install R dependency "polars"
+    - name: Install R dependency "polars" (MacOS)
+      if: startsWith(matrix.os, 'MacOS')
       run: |
-        if (Sys.info()["sysname"] == "Darwin") {
-          install.packages("polars", repos = "https://rpolars.r-universe.dev")
-        } else {
-          install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
-        }
+        install.packages("polars", repos = "https://rpolars.r-universe.dev")
+      shell: Rscript {0}
+    - name: Install R dependency "polars" (Linux)
+      if: startsWith(matrix.os, 'ubuntu')
+      run: |
+        install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
       shell: Rscript {0}
     - name: Install dependencies
       run: |
