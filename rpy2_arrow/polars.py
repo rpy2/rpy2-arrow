@@ -18,6 +18,8 @@ def ensure_r_polars():
     if rpack_polars is None:
         rpack_polars = rpy2.robjects.packages.importr('polars',
                                                       on_conflict='warn')
+    rpack_polars_version_info = rpack_polars.__version__.split('.')
+    assert tuple(int(_) for _ in rpack_polars_version_info[:2]) >= (0, 12)
     return rpack_polars
 
 
@@ -81,6 +83,6 @@ converter._rpy2py_nc_map[rpy2.rinterface.SexpEnvironment].update(
 
 converter._rpy2py_nc_map[rpy2.rinterface.SexpExtPtr].update(
     {
-        'DataFrame': rpolar_to_pypolars,
+        'RPolarsDataFrame': rpolar_to_pypolars,
     }
 )
