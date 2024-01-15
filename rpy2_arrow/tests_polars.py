@@ -103,8 +103,6 @@ class TestPolars:
     def test_converter_py2rpy(self, values, dtype, rpotype, cmp):
         podataf = polars.DataFrame({'a': values}, schema={'a': dtype})
         globalenv = rpy2.robjects.globalenv
-        if rpotype == 'DictionaryType':
-            import pdb; pdb.set_trace()
         with rpy2polars.converter.context():
             globalenv['podataf'] = podataf
         r_podataf = globalenv['podataf']
