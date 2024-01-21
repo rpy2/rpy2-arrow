@@ -47,7 +47,7 @@ def pypolars_to_rpolars(dataf: polars.DataFrame) -> rpy2.robjects.Environment:
     # TODO: There appear to be an odd shortcircuiting that requires toggling
     # additional conversion off.
     with rpy2.robjects.default_converter.context():
-        return rpack_polars.pl['from_arrow'](r_arrow_table)
+        return rpack_polars.as_polars_df(r_arrow_table)
 
 
 # TODO: rpy2.rinterface.SexpExtPtr should have an robjects-level wrapper?
