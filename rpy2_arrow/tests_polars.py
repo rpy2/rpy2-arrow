@@ -48,9 +48,11 @@ class TestPolars:
             (['wx', 'yz', 'wx'], polars.Categorical,
              'DictionaryType', _cmp_simple)
         ])
-    def test_pypolars_to_rarrow(self, values, dtype, rarrowclass, cmp):
+    def test_pypolars_to_rarrow_dataframe(
+            self, values, dtype, rarrowclass, cmp
+    ):
         podataf = polars.DataFrame({'a': values}, schema={'a': dtype})
-        rar_table = rpy2polars.pypolars_to_rarrow(podataf)
+        rar_table = rpy2polars.pypolars_to_rarrow_dataframe(podataf)
         assert rar_table.rclass[0] == 'Table'
         assert tuple(
             R_DOLLAR(R_DOLLAR(rar_table, 'schema'), 'names')
@@ -69,20 +71,20 @@ class TestPolars:
             (['wx', 'yz'], 'c("wx", "yz")', _cmp_simple),
             (['wx', 'yz', 'wx'], 'factor(c("wx", "yz", "wx"))', _cmp_simple),
         ])
-    def test_rarrow_to_pypolars(self, values, rstr, cmp):
+    def test_rarrow_to_pypolars_dataframe(self, values, rstr, cmp):
         rartable = rpy2.robjects.r(
             f'arrow::arrow_table(data.frame(a = {rstr}))'
         )
-        podataf = rpy2polars.rarrow_to_pypolars(rartable)
+        podataf = rpy2polars.rarrow_to_pypolars_dataframe(rartable)
         assert cmp(podataf['a'], values)
 
-    def test_rpolar_to_pypolars(self):
+    def test_rpolar_to_pypolars_dataframe(self):
         rpack_polars = rpy2polars.ensure_r_polars()
         rpodataf = rpack_polars.pl['DataFrame'](
             a=rpy2.robjects.IntVector([1, 2]),
             b=rpy2.robjects.StrVector(['wx', 'yz'])
         )
-        podataf = rpy2polars.rpolar_to_pypolars(rpodataf)
+        podataf = rpy2polars.rpolar_to_pypolars_dataframe(rpodataf)
         assert tuple(podataf['a']) == (1, 2)
         assert tuple(podataf['b']) == ('wx', 'yz')
 
@@ -99,7 +101,7 @@ class TestPolars:
             (['wx', 'yz', 'wx'], polars.Categorical,
              'Categorical', _cmp_simple)
         ])
-    def test_converter_py2rpy(self, values, dtype, rpotype, cmp):
+    def test_converter_py2rpy_dataframe(self, values, dtype, rpotype, cmp):
         podataf = polars.DataFrame({'a': values}, schema={'a': dtype})
         globalenv = rpy2.robjects.globalenv
         with rpy2polars.converter.context():
@@ -128,7 +130,7 @@ class TestPolars:
             (['wx', 'yz', 'wx'], 'factor(c("wx", "yz", "wx"))',
              _cmp_simple, polars.Categorical),
         ])
-    def test_converter_rpy2py(self, values, rstr, cmp, dtype):
+    def test_converter_rpy2py_dataframe(self, values, rstr, cmp, dtype):
         rpy2.robjects.r(
             f'require(polars); podataf <- pl$DataFrame(a = {rstr})'
         )
@@ -138,3 +140,28 @@ class TestPolars:
         assert isinstance(podataf, polars.dataframe.frame.DataFrame)
         assert cmp(podataf['a'], values)
         assert podataf['a'].dtype == dtype
+
+    @pytest.mark.parametrize(
+        'rstr,cls',
+        [
+            ('pl$DataFrame(a = as.integer(c(1, 2)))',
+             polars.DataFrame),
+            ('pl$DataFrame(a = as.integer(c(1, 2)), b = c("a", "b"))',
+             polars.DataFrame)
+
+        ]
+    )
+    def test_rpl_to_pl(self, rstr, cls):
+        rplobj_ri = rpy2.rinterface.evalr(
+            f'require(polars); {rstr}'
+        )
+        with rpy2polars.converter.context() as ctx:
+            plobj = ctx.rpy2py(rplobj_ri)
+        assert isinstance(plobj, cls)
+
+    def test_pl_to_rpl(self):
+        plobj = polars.DataFrame({'a': [1,2,3]})
+        cls = rpy2.robjects.ExternalPointer
+        with rpy2polars.converter.context() as ctx:
+            rplobj = ctx.py2rpy(plobj)
+        assert isinstance(rplobj, cls)

@@ -13,7 +13,7 @@ rpack_polars: typing.Optional[types.ModuleType] = None
 rpack_arrow: typing.Optional[types.ModuleType] = None
 
 
-def ensure_r_polars():
+def ensure_r_polars() -> types.ModuleType:
     global rpack_polars
     if rpack_polars is None:
         rpack_polars = rpy2.robjects.packages.importr('polars',
@@ -23,7 +23,7 @@ def ensure_r_polars():
     return rpack_polars
 
 
-def ensure_r_arrow():
+def ensure_r_arrow() -> types.ModuleType:
     global rpack_arrow
     if rpack_arrow is None:
         rpack_arrow = rpy2.robjects.packages.importr('arrow',
@@ -31,20 +31,30 @@ def ensure_r_arrow():
     return rpack_arrow
 
 
-def pypolars_to_rarrow(dataf: polars.DataFrame) -> rpy2.robjects.Environment:
+def pypolars_to_rarrow_dataframe(
+        dataf: polars.DataFrame
+) -> rpy2.robjects.Environment:
     _ = dataf.to_arrow()
     return rpy2arrow.pyarrow_table_to_r_table(_)
 
 
-def rarrow_to_pypolars(
+def rarrow_to_pypolars_dataframe(
         dataf: rpy2.robjects.Environment
-) -> typing.Union[polars.DataFrame, polars.Series]:
+) -> polars.DataFrame:
     _ = rpy2arrow.rarrow_to_py_table(dataf)
-    return polars.from_arrow(_)
+    res = polars.from_arrow(_)
+    if not isinstance(res, polars.DataFrame):
+        raise ValueError(
+            'polars.from_arrow() did not convert the object to a '
+            'polars.DataFrame'
+        )
+    return res
 
 
-def pypolars_to_rpolars(dataf: polars.DataFrame) -> rpy2.robjects.Environment:
-    r_arrow_table = pypolars_to_rarrow(dataf)
+def pypolars_to_rpolars_dataframe(
+        dataf: polars.DataFrame
+) -> rpy2.robjects.ExternalPointer:
+    r_arrow_table = pypolars_to_rarrow_dataframe(dataf)
     rpack_polars = ensure_r_polars()
     # TODO: There appear to be an odd shortcircuiting that requires toggling
     # additional conversion off.
@@ -53,14 +63,14 @@ def pypolars_to_rpolars(dataf: polars.DataFrame) -> rpy2.robjects.Environment:
 
 
 # TODO: rpy2.rinterface.SexpExtPtr should have an robjects-level wrapper?
-def rpolar_to_pypolars(
+def rpolar_to_pypolars_dataframe(
         dataf: rpy2.rinterface.SexpExtPtr
-) -> typing.Union[polars.DataFrame, polars.Series]:
+) -> polars.DataFrame:
     # R polars to R arrow.
     rpack_arrow = ensure_r_arrow()
     ensure_r_polars()
     r_arrow_table = rpack_arrow.as_arrow_table(dataf)
-    return rarrow_to_pypolars(r_arrow_table)
+    return rarrow_to_pypolars_dataframe(r_arrow_table)
 
 
 converter: conversion.Converter = conversion.Converter(
@@ -68,7 +78,8 @@ converter: conversion.Converter = conversion.Converter(
     template=rpy2.robjects.default_converter
 )
 
-converter.py2rpy.register(polars.dataframe.frame.DataFrame, pypolars_to_rpolars)
+converter.py2rpy.register(polars.dataframe.frame.DataFrame,
+                          pypolars_to_rpolars_dataframe)
 
 converter._rpy2py_nc_map.update(
     {
@@ -81,12 +92,24 @@ converter._rpy2py_nc_map.update(
 
 converter._rpy2py_nc_map[rpy2.rinterface.SexpEnvironment].update(
     {
-        'Table': rarrow_to_pypolars,
+        'Table': rarrow_to_pypolars_dataframe,
     }
 )
 
 converter._rpy2py_nc_map[rpy2.rinterface.SexpExtPtr].update(
     {
-        'RPolarsDataFrame': rpolar_to_pypolars,
+        'RPolarsDataFrame': rpolar_to_pypolars_dataframe,
     }
 )
+
+
+def pl_to_rpl(df):
+    """Convenience shortcut to convert a polars object to a R polars object."""
+    with polars2ri.converter.context() as conversion_ctx:
+        return converstion_ctx.py2rpy(df)
+
+
+def rpl_to_pl(df):
+    """Convenience shortcut to convert a R polars object to a polars object."""
+    with polars2ri.converter.context() as conversion_ctx:
+        return converstion_ctx.rpy2py(df)
