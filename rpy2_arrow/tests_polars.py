@@ -96,9 +96,8 @@ class TestPolars:
             ([1.1, 2.1], polars.Float32, 'Float32', _cmp_float),
             ([1.1, 2.1], polars.Float64, 'Float64', _cmp_float),
             (['wx', 'yz'], polars.Utf8, 'Utf8', _cmp_simple),
-            # Segfault with Categorical
-            # (['wx', 'yz', 'wx'], polars.Categorical,
-            #  'DictionaryType', _cmp_simple)
+            (['wx', 'yz', 'wx'], polars.Categorical,
+             'Categorical', _cmp_simple)
         ])
     def test_converter_py2rpy(self, values, dtype, rpotype, cmp):
         podataf = polars.DataFrame({'a': values}, schema={'a': dtype})
