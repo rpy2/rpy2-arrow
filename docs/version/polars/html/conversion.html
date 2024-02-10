@@ -83,8 +83,8 @@ the notebook was written.</p>
 <span class="go">3 3 def</span>
 <span class="go">4 4 abc</span>
 <span class="go">5 5 def</span>
-<span class="go">CPU times: user 2.76 s, sys: 71.9 ms, total: 2.83 s</span>
-<span class="go">Wall time: 2.94 s</span>
+<span class="go">CPU times: user 2.8 s, sys: 46.3 ms, total: 2.85 s</span>
+<span class="go">Wall time: 2.87 s</span>
 </pre></div>
 </div>
 <section id="from-pandas-dataframe-to-r-data-frame-through-an-arrow-table">
@@ -142,8 +142,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">4 3 def</span>
 <span class="go">5 4 abc</span>
 <span class="go">6 5 def</span>
-<span class="go">CPU times: user 36 ms, sys: 4.01 ms, total: 40 ms</span>
-<span class="go">Wall time: 40 ms</span>
+<span class="go">CPU times: user 27 ms, sys: 11.9 ms, total: 38.9 ms</span>
+<span class="go">Wall time: 38.9 ms</span>
 </pre></div>
 </div>
 <p>The conversion is <em>much</em> faster.</p>
@@ -175,8 +175,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 76.5 ms, sys: 21 us, total: 76.5 ms</span>
-<span class="go">Wall time: 76.3 ms</span>
+<span class="go">CPU times: user 68.9 ms, sys: 4.09 ms, total: 73 ms</span>
+<span class="go">Wall time: 72.7 ms</span>
 </pre></div>
 </div>
 <p>This time the conversion is about as fast but is likely requiring less
@@ -221,8 +221,8 @@ and R. The package <code class="xref py py-mod docutils literal notranslate"><sp
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 5.99 ms, sys: 0 ns, total: 5.99 ms</span>
-<span class="go">Wall time: 5.99 ms</span>
+<span class="go">CPU times: user 5.53 ms, sys: 0 ns, total: 5.53 ms</span>
+<span class="go">Wall time: 5.54 ms</span>
 </pre></div>
 </div>
 <p>At the time of writing this is approximately 700 times faster than the <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>
