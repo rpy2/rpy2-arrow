@@ -36,7 +36,9 @@ def pypolars_to_rarrow(dataf: polars.DataFrame) -> rpy2.robjects.Environment:
     return rpy2arrow.pyarrow_table_to_r_table(_)
 
 
-def rarrow_to_pypolars(dataf: rpy2.robjects.Environment) -> polars.DataFrame:
+def rarrow_to_pypolars(
+        dataf: rpy2.robjects.Environment
+) -> typing.Union[polars.DataFrame, polars.Series]:
     _ = rpy2arrow.rarrow_to_py_table(dataf)
     return polars.from_arrow(_)
 
@@ -51,7 +53,9 @@ def pypolars_to_rpolars(dataf: polars.DataFrame) -> rpy2.robjects.Environment:
 
 
 # TODO: rpy2.rinterface.SexpExtPtr should have an robjects-level wrapper?
-def rpolar_to_pypolars(dataf: rpy2.rinterface.SexpExtPtr) -> polars.DataFrame:
+def rpolar_to_pypolars(
+        dataf: rpy2.rinterface.SexpExtPtr
+) -> typing.Union[polars.DataFrame, polars.Series]:
     # R polars to R arrow.
     rpack_arrow = ensure_r_arrow()
     ensure_r_polars()
