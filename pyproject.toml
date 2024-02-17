@@ -9,13 +9,12 @@ build-backend = "setuptools.build_meta"
 name = "rpy2-arrow"
 description = "Bridge Arrow between Python and R when using rpy2"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 license = { text = "MIT" }
 authors = [{ name = "Laurent Gautier", email = "lgautier@gmail.com" }]
 classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -26,14 +25,15 @@ classifiers = [
 ]
 dependencies = [
     "pyarrow",
-    "rpy2 >= 3.4"
+    "rpy2 >= 3.5.15"
 ]
 dynamic = ["version"]
 
 [project.optional-dependencies]
+polars = ["polars"]
 test = ["pytest", "pandas"]
 R6 = ["rpy2-R6"]
-all = ["pytest", "pandas", "rpy2-R6"]
+all = ["pytest", "pandas", "rpy2-R6", "polars"]
 
 [project.urls]
 Homepage = "https://rpy2.github.io/rpy2-arrow/"
