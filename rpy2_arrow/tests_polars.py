@@ -161,5 +161,5 @@ class TestPolars:
     def test_pl_to_rpl(self):
         plobj = polars.DataFrame({'a': [1, 2, 3]})
         cls = rpy2.robjects.ExternalPointer
-        rplobj = rplobj.pl_to_rpl(plobj)
+        rplobj = rpy2polars.pl_to_rpl(plobj)
         assert isinstance(rplobj, cls)
