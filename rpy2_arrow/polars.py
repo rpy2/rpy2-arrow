@@ -105,11 +105,11 @@ converter._rpy2py_nc_map[rpy2.rinterface.SexpExtPtr].update(
 
 def pl_to_rpl(df):
     """Convenience shortcut to convert a polars object to a R polars object."""
-    with polars.converter.context() as conversion_ctx:
+    with converter.context() as conversion_ctx:
         return conversion_ctx.py2rpy(df)
 
 
 def rpl_to_pl(df):
     """Convenience shortcut to convert a R polars object to a polars object."""
-    with polars.converter.context() as conversion_ctx:
+    with converter.context() as conversion_ctx:
         return conversion_ctx.rpy2py(df)

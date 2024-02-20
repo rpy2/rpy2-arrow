@@ -155,13 +155,11 @@ class TestPolars:
         rplobj_ri = rpy2.rinterface.evalr(
             f'require(polars); {rstr}'
         )
-        with rpy2polars.converter.context() as ctx:
-            plobj = ctx.rpy2py(rplobj_ri)
+        plobj = rpy2polars.rpl_to_pl(rplobj_ri)
         assert isinstance(plobj, cls)
 
     def test_pl_to_rpl(self):
         plobj = polars.DataFrame({'a': [1, 2, 3]})
         cls = rpy2.robjects.ExternalPointer
-        with rpy2polars.converter.context() as ctx:
-            rplobj = ctx.py2rpy(plobj)
+        rplobj = rplobj.pl_to_rpl(plobj)
         assert isinstance(rplobj, cls)
