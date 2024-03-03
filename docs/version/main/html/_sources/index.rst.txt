@@ -12,6 +12,7 @@ Welcome to rpy2-arrow's documentation!
 
    basic-usage
    conversion
+   polars
 
 Installation
 ============

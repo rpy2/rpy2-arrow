@@ -76,8 +76,8 @@ the notebook was written.</p>
 <span class="go">3 3 def</span>
 <span class="go">4 4 abc</span>
 <span class="go">5 5 def</span>
-<span class="go">CPU times: user 2.84 s, sys: 44.4 ms, total: 2.88 s</span>
-<span class="go">Wall time: 2.88 s</span>
+<span class="go">CPU times: user 2.84 s, sys: 55.4 ms, total: 2.89 s</span>
+<span class="go">Wall time: 2.89 s</span>
 </pre></div>
 </div>
 <section id="from-pandas-dataframe-to-r-data-frame-through-an-arrow-table">
@@ -135,8 +135,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">4 3 def</span>
 <span class="go">5 4 abc</span>
 <span class="go">6 5 def</span>
-<span class="go">CPU times: user 37.2 ms, sys: 0 ns, total: 37.2 ms</span>
-<span class="go">Wall time: 37.1 ms</span>
+<span class="go">CPU times: user 32.5 ms, sys: 3.76 ms, total: 36.3 ms</span>
+<span class="go">Wall time: 36.3 ms</span>
 </pre></div>
 </div>
 <p>The conversion is <em>much</em> faster.</p>
@@ -168,8 +168,8 @@ custom converter for <code class="xref py py-mod docutils literal notranslate"><
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 21.3 ms, sys: 93 us, total: 21.4 ms</span>
-<span class="go">Wall time: 21.3 ms</span>
+<span class="go">CPU times: user 21 ms, sys: 66 us, total: 21 ms</span>
+<span class="go">Wall time: 21 ms</span>
 </pre></div>
 </div>
 <p>This time the conversion is about as fast but is likely requiring less
@@ -214,8 +214,8 @@ and R. The package <code class="xref py py-mod docutils literal notranslate"><sp
 <span class="go">$y &lt;string&gt;</span>
 
 <span class="go">See $metadata for additional Schema metadata</span>
-<span class="go">CPU times: user 5.32 ms, sys: 0 ns, total: 5.32 ms</span>
-<span class="go">Wall time: 5.33 ms</span>
+<span class="go">CPU times: user 4.77 ms, sys: 53 us, total: 4.82 ms</span>
+<span class="go">Wall time: 4.83 ms</span>
 </pre></div>
 </div>
 <p>At the time of writing this is approximately 700 times faster than the <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>
@@ -247,6 +247,7 @@ to R <cite>data.frame</cite> conversion performed without Arrow presented at the
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../basic-usage.html">Basic usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../conversion.html">Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../polars.html">Polars</a></li>
 </ul>
 
 <div class="relations">
