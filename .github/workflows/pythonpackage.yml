@@ -25,7 +25,7 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: [3.8, 3.9, "3.10", "3.11" ,"3.12"]
-        r-version: ['release']
+        r-version: ['4.3', '4.4']
         os: [ubuntu-22.04, ubuntu-latest, macOS-latest]
         include:
         - os: ubuntu-22.04
@@ -62,7 +62,7 @@ jobs:
       if: startsWith(matrix.os, 'ubuntu')
       run: |
         install.packages("nanoarrow")
-        install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
+        install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/${{ r-version }}")
       shell: Rscript {0}
     - name: Install dependencies
       run: |
