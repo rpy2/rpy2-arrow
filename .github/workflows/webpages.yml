@@ -6,7 +6,7 @@ on:
       - 'gh-pages'
 
 env:
-  R-VERSION: "4.2"
+  R-VERSION: "4.4"
 
 
 jobs:
@@ -40,6 +40,8 @@ jobs:
         run: |
           install.packages("dplyr")
           install.packages("arrow")
+          Sys.setenv(NOT_CRAN = "true")
+          install.packages("polars", repos = "https://community.r-multiverse.org")
         shell: Rscript {0}
       - name: Install Python dependencies
         run: |
