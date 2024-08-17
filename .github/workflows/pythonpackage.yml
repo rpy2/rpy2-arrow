@@ -62,7 +62,8 @@ jobs:
       if: startsWith(matrix.os, 'ubuntu')
       run: |
         install.packages("nanoarrow")
-        install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/${{ matrix.r-version }}")
+        Sys.setenv(NOT_CRAN = "true")
+        install.packages("polars", repos = "https://community.r-multiverse.org")
       shell: Rscript {0}
     - name: Install dependencies
       run: |
