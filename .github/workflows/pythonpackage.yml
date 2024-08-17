@@ -62,7 +62,7 @@ jobs:
       if: startsWith(matrix.os, 'ubuntu')
       run: |
         install.packages("nanoarrow")
-        install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.3")
+        install.packages("polars", repos = "https://rpolars.r-universe.dev/bin/linux/jammy/4.4")
       shell: Rscript {0}
     - name: Install dependencies
       run: |
