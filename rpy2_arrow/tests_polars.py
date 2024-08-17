@@ -115,9 +115,22 @@ class TestPolars:
         field = R_SQBRACKET(
             R_DOLLAR(r_podataf, 'schema'), 1
         )[0]
+        type_in_library = R_DOLLAR(
+            R_DOLLAR(
+                getattr(
+                    rpy2polars.rpack_polars, 'pl'
+                ),
+                'dtypes'
+            ),
+            rpotype
+        )
         assert R_EQUAL(
             field,
-            R_DOLLAR(getattr(rpy2polars.rpack_polars, 'pl'), rpotype)
+            # `r-polars` is a bit inconsistent in the way it declares
+            # types. Some are R functions while others are non-callable
+            # objects.
+            type_in_library() if 'function' in type_in_library.rclass
+            else type_in_library
         )
 
     @pytest.mark.parametrize(
