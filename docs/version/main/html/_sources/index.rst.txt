@@ -14,6 +14,7 @@ Welcome to rpy2-arrow's documentation!
    conversion
    polars
 
+
 Installation
 ============
 
@@ -56,7 +57,7 @@ Polars
 ======
 
 If using :mod:`polars`, how to use conversion rules for it are in
-section :ref:`polars`.
+Section :ref:`polars`.
 
 
 Indices and tables
