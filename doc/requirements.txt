@@ -1,5 +1,6 @@
 ipython
 pandas
+polars
 pyarrow
 rpy2
 rpy2-arrow
