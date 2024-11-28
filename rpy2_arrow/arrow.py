@@ -12,21 +12,22 @@ rarrow = packages.importr('arrow')
 
 if rinterface.BoolSexpVector(
         rinterface.evalr("""
-        utils::packageVersion("arrow") < base::package_version("12.0")
+        utils::packageVersion("arrow") < base::package_version("17.0.0")
         """)
 )[0]:
-    warnings.warn('Segfaults may occur with the R package arrow < 12.0')
+    warnings.warn('Segfaults may occur with the R package arrow < 17.0.0')
 
 # make sure a version is installed with the C API
 _rarrow_has_c_api = rinterface.BoolSexpVector(
     rinterface.evalr("""
-    utils::packageVersion("arrow") >= base::package_version("5.0.0")
+    utils::packageVersion("arrow") >= base::package_version("17.0.0")
     """)
 )[0]
 
 if not _rarrow_has_c_api:
-    raise ValueError("rpy2_arrow requires R 'arrow' package version >= 5.0.0")
+    raise ValueError("rpy2_arrow requires R 'arrow' package version >= 17.0.0")
 
+# TODO: remove since we require 'arrow' >= 17.0
 # In arrow >= 7.0.0, pointers can be passed as externalptr,
 # bit64::integer64(), or string, all of which prevent possible
 # problems with the previous versions which required a double().
