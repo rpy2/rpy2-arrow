@@ -58,7 +58,7 @@ jobs:
           make html
           git rev-parse --short HEAD > _build/html/.revforbuild
       - name: Archive documentation
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: html-doc
           path: doc/_build/html
