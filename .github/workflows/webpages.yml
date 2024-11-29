@@ -56,7 +56,7 @@ jobs:
           python -m rpy2.situation
           cd doc
           make html
-          git rev-parse --short HEAD > _build/html/.revforbuild
+          git rev-parse --short HEAD > _build/html/_revforbuild
       - name: Archive documentation
         uses: actions/upload-artifact@v4
         with:
@@ -88,13 +88,13 @@ jobs:
           git rm -r --ignore-unmatch "${DOCPATH}"
           echo "Creating docpath."
           mkdir -p "${DOCPATH}"
-          mv html-doc/.revforbuild .
+          mv html-doc/_revforbuild .
           mv -T html-doc "${DOCPATH}"
           echo "Adding docpath to local repos"
           git add "${DOCPATH}"
           if [ -z $(git status -uno --porcelain) ]; then
             echo "No changes to be committed."  
           else
-            git commit -m "HTML Sphinx build for $(cat .revforbuild)" "${DOCPATH}";
+            git commit -m "HTML Sphinx build for $(cat _revforbuild)" "${DOCPATH}";
             git push;
           fi
