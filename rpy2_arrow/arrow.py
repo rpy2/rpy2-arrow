@@ -1,3 +1,4 @@
+import os
 import pyarrow  # type: ignore
 from pyarrow.cffi import ffi
 import rpy2.rinterface as rinterface
@@ -25,7 +26,12 @@ _rarrow_has_c_api = rinterface.BoolSexpVector(
 )[0]
 
 if not _rarrow_has_c_api:
-    raise ValueError("rpy2_arrow requires R 'arrow' package version >= 17.0.0")
+    raise ValueError(
+        os.linesep.join(
+            ("rpy2_arrow requires R 'arrow' package version >= 17.0.0.",
+             "(see https://www.cve.org/CVERecord?id=CVE-2024-52338).")
+        )
+    )
 
 # TODO: remove since we require 'arrow' >= 17.0
 # In arrow >= 7.0.0, pointers can be passed as externalptr,
