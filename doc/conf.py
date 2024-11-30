@@ -22,7 +22,7 @@ copyright = '2021, Laurent Gautier'
 author = 'Laurent Gautier'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.1'
+release = '0.1.2'
 
 
 # -- General configuration ---------------------------------------------------
