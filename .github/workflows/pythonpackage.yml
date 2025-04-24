@@ -17,7 +17,7 @@ jobs:
         python-version: "3.10"
     - name: Lint with flake8
       run: |
-        pip install flake8
+        python -m pip install flake8
         flake8 rpy2_arrow --count --max-complexity=10 --max-line-length=127 --statistics
   build:
     runs-on: ${{ matrix.os }}
@@ -80,19 +80,19 @@ jobs:
       shell: Rscript {0}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install git+https://github.com/rpy2/rpy2-r6
+        python3 -m pip install --upgrade pip
+        python3 -m pip install -r requirements.txt
+        python3 -m pip install git+https://github.com/rpy2/rpy2-r6
     - name: Build package
       run: |
-        pip install build
-        python -m build 
+        python3 -m pip install build
+        python3 -m build 
     - name: Install package
       run: |
-        pip install $(ls -t1 dist/*.whl | tail -1)'[all]'
+        python3 -m pip install $(ls -t1 dist/*.whl | tail -1)'[all]'
     - name: Test with pytest
       run: |
-        export LD_LIBRARY_PATH=$(python -m rpy2.situation LD_LIBRARY_PATH):${LD_LIBRARY_PATH}
-        pip install pytest codecov pytest-cov
-        pip install pandas
+        export LD_LIBRARY_PATH=$(python3 -m rpy2.situation LD_LIBRARY_PATH):${LD_LIBRARY_PATH}
+        python3 -m pip install pytest codecov pytest-cov
+        python3 -m pip install pandas
         pytest --cov rpy2_arrow.pyarrow_rarrow --cov rpy2_arrow.r6b --cov rpy2_arrow.polars rpy2_arrow/tests*.py
