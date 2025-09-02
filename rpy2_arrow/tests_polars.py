@@ -13,7 +13,7 @@ R_DOLLAR = rpy2.rinterface.baseenv['$']
 R_ASVECTOR = rpy2.rinterface.baseenv['as.vector']
 R_SQBRACKET = rpy2.rinterface.baseenv['[']
 R_LENGTH = rpy2.rinterface.baseenv['length']
-R_EQUAL = rpy2.rinterface.baseenv['==']
+R_IDENTICAL = rpy2.rinterface.baseenv['identical']
 
 
 def _cmp_simple(v1, v2):
@@ -120,13 +120,13 @@ class TestPolars:
                 rpy2polars.rpack_polars, 'pl'
             ),
         rpotype)
-        assert R_EQUAL(
-            field,
+        assert R_IDENTICAL(
+            field.rclass,
             # `r-polars` is a bit inconsistent in the way it declares
             # types. Some are R functions while others are non-callable
             # objects.
             type_in_library() if 'function' in type_in_library.rclass
-            else type_in_library
+            else type_in_library.rclass
         )
 
     @pytest.mark.parametrize(
