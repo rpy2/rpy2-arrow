@@ -107,7 +107,7 @@ class TestPolars:
         with rpy2polars.converter.context():
             globalenv['podataf'] = podataf
         r_podataf = globalenv['podataf']
-        assert tuple(r_podataf.rclass) == ('RPolarsDataFrame',)
+        assert tuple(r_podataf.rclass) == ('polars_data_frame',)
 
         assert tuple(
             R_DOLLAR(r_podataf, 'schema').names
