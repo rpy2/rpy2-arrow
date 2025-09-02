@@ -116,14 +116,10 @@ class TestPolars:
             R_DOLLAR(r_podataf, 'schema'), 1
         )[0]
         type_in_library = R_DOLLAR(
-            R_DOLLAR(
-                getattr(
-                    rpy2polars.rpack_polars, 'pl'
-                ),
-                'dtypes'
+            getattr(
+                rpy2polars.rpack_polars, 'pl'
             ),
-            rpotype
-        )
+        rpotype)
         assert R_EQUAL(
             field,
             # `r-polars` is a bit inconsistent in the way it declares
