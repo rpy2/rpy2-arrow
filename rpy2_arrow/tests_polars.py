@@ -119,7 +119,8 @@ class TestPolars:
             getattr(
                 rpy2polars.rpack_polars, 'pl'
             ),
-        rpotype)
+            rpotype
+        )
         assert R_IDENTICAL(
             field.rclass,
             # `r-polars` is a bit inconsistent in the way it declares
