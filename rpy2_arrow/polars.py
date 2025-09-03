@@ -58,9 +58,8 @@ def pypolars_to_rpolars_dataframe(
     rpack_polars = ensure_r_polars()
     # TODO: There appear to be an odd shortcircuiting that requires toggling
     # additional conversion off.
-    with rpy2.robjects.default_converter.context():
+    with rpy2arrow.converter.context():
         return rpack_polars.as_polars_df(r_arrow_table)
-
 
 # TODO: rpy2.rinterface.SexpExtPtr should have an robjects-level wrapper?
 def rpolar_to_pypolars_dataframe(
@@ -69,7 +68,19 @@ def rpolar_to_pypolars_dataframe(
     # R polars to R arrow.
     rpack_arrow = ensure_r_arrow()
     ensure_r_polars()
-    r_arrow_table = rpack_arrow.as_arrow_table(dataf)
+    with rpy2.robjects.default_converter.context():
+        r_arrow_table = rpack_arrow.as_arrow_table(dataf)
+    return rarrow_to_pypolars_dataframe(r_arrow_table)
+
+
+def rpolars_env_to_pypolars_dataframe(
+        dataf: rpy2.rinterface.sexp.SexpEnvironment
+) -> polars.DataFrame:
+    # R polars to R arrow.
+    rpack_arrow = ensure_r_arrow()
+    ensure_r_polars()
+    with rpy2.robjects.default_converter.context():
+        r_arrow_table = rpack_arrow.as_arrow_table(dataf)
     return rarrow_to_pypolars_dataframe(r_arrow_table)
 
 
@@ -92,12 +103,14 @@ converter._rpy2py_nc_map.update(
 
 converter._rpy2py_nc_map[rpy2.rinterface.SexpEnvironment].update(
     {
-        'Table': rarrow_to_pypolars_dataframe,
+        'polars_data_frame': rpolars_env_to_pypolars_dataframe,
+        'Table': rarrow_to_pypolars_dataframe
     }
 )
 
 converter._rpy2py_nc_map[rpy2.rinterface.SexpExtPtr].update(
     {
+        # TODO: is this still needed?
         'polars_data_frame': rpolar_to_pypolars_dataframe,
     }
 )

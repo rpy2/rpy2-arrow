@@ -97,7 +97,7 @@ class TestPolars:
             ([1, 2], polars.Int64, 'Int64', _cmp_simple),  # Fails.
             ([1.1, 2.1], polars.Float32, 'Float32', _cmp_float),
             ([1.1, 2.1], polars.Float64, 'Float64', _cmp_float),
-            (['wx', 'yz'], polars.Utf8, 'Utf8', _cmp_simple),
+            (['wx', 'yz'], polars.Utf8, 'String', _cmp_simple),
             (['wx', 'yz', 'wx'], polars.Categorical,
              'Categorical', _cmp_simple)
         ])
@@ -169,6 +169,6 @@ class TestPolars:
 
     def test_pl_to_rpl(self):
         plobj = polars.DataFrame({'a': [1, 2, 3]})
-        cls = rpy2.robjects.ExternalPointer
+        cls = rpy2.robjects.environments.Environment
         rplobj = rpy2polars.pl_to_rpl(plobj)
         assert isinstance(rplobj, cls)
