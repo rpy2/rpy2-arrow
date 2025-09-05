@@ -125,7 +125,9 @@ def pyarrow_to_r_recordbatchreader(
 
     stream_ptr = ffi.new('struct ArrowArrayStream*')
     obj._export_to_c(_c_ptr_to_int(stream_ptr))
-    return rarrow.RecordBatchReader['import_from_c'](_rarrow_ptr(stream_ptr))
+    with robjects.default_converter.context():
+        r_ptr = _rarrow_ptr(stream_ptr)
+        return rarrow.RecordBatchReader['import_from_c'](r_ptr)
 
 
 def rarrow_to_py_recordbatchreader(
