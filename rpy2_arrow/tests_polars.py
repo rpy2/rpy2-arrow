@@ -13,7 +13,7 @@ R_DOLLAR = rpy2.rinterface.baseenv['$']
 R_ASVECTOR = rpy2.rinterface.baseenv['as.vector']
 R_SQBRACKET = rpy2.rinterface.baseenv['[']
 R_LENGTH = rpy2.rinterface.baseenv['length']
-R_EQUAL = rpy2.rinterface.baseenv['==']
+R_IDENTICAL = rpy2.rinterface.baseenv['identical']
 
 
 def _cmp_simple(v1, v2):
@@ -97,7 +97,7 @@ class TestPolars:
             ([1, 2], polars.Int64, 'Int64', _cmp_simple),  # Fails.
             ([1.1, 2.1], polars.Float32, 'Float32', _cmp_float),
             ([1.1, 2.1], polars.Float64, 'Float64', _cmp_float),
-            (['wx', 'yz'], polars.Utf8, 'Utf8', _cmp_simple),
+            (['wx', 'yz'], polars.Utf8, 'String', _cmp_simple),
             (['wx', 'yz', 'wx'], polars.Categorical,
              'Categorical', _cmp_simple)
         ])
@@ -107,7 +107,7 @@ class TestPolars:
         with rpy2polars.converter.context():
             globalenv['podataf'] = podataf
         r_podataf = globalenv['podataf']
-        assert tuple(r_podataf.rclass) == ('RPolarsDataFrame',)
+        assert tuple(r_podataf.rclass) == ('polars_data_frame', 'polars_object')
 
         assert tuple(
             R_DOLLAR(r_podataf, 'schema').names
@@ -116,21 +116,18 @@ class TestPolars:
             R_DOLLAR(r_podataf, 'schema'), 1
         )[0]
         type_in_library = R_DOLLAR(
-            R_DOLLAR(
-                getattr(
-                    rpy2polars.rpack_polars, 'pl'
-                ),
-                'dtypes'
+            getattr(
+                rpy2polars.rpack_polars, 'pl'
             ),
             rpotype
         )
-        assert R_EQUAL(
-            field,
+        assert R_IDENTICAL(
+            field.rclass,
             # `r-polars` is a bit inconsistent in the way it declares
             # types. Some are R functions while others are non-callable
             # objects.
             type_in_library() if 'function' in type_in_library.rclass
-            else type_in_library
+            else type_in_library.rclass
         )
 
     @pytest.mark.parametrize(
@@ -173,6 +170,6 @@ class TestPolars:
 
     def test_pl_to_rpl(self):
         plobj = polars.DataFrame({'a': [1, 2, 3]})
-        cls = rpy2.robjects.ExternalPointer
+        cls = rpy2.robjects.environments.Environment
         rplobj = rpy2polars.pl_to_rpl(plobj)
         assert isinstance(rplobj, cls)
