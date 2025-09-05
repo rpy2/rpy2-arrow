@@ -61,6 +61,7 @@ def pypolars_to_rpolars_dataframe(
     with rpy2arrow.converter.context():
         return rpack_polars.as_polars_df(r_arrow_table)
 
+
 # TODO: rpy2.rinterface.SexpExtPtr should have an robjects-level wrapper?
 def rpolar_to_pypolars_dataframe(
         dataf: rpy2.rinterface.SexpExtPtr
