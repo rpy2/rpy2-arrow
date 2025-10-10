@@ -76,9 +76,6 @@ jobs:
 	  any::R6
 	  any::purr
 	  any::bit64
-        needs: |
-          website
-          coverage
     - name: Install R arrow package
       run: |
         Sys.setenv("NOT_CRAN" = "true")
