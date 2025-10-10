@@ -69,12 +69,12 @@ jobs:
       with:
         cache-version: 2
         extra-packages: |
-          any::asserthat
+          any::assertthat
           any::cpp11
           any::tidyselect
           any::vctrs
           any::R6
-          any::purr
+          any::purrr
           any::bit64
     - name: Install R arrow package
       run: |
