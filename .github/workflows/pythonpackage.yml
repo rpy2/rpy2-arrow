@@ -71,11 +71,11 @@ jobs:
         extra-packages: |
           any::asserthat
           any::cpp11
-	  any::tidyselect
-	  any::vctrs
-	  any::R6
-	  any::purr
-	  any::bit64
+          any::tidyselect
+          any::vctrs
+          any::R6
+          any::purr
+          any::bit64
         needs: |
           website
           coverage
