@@ -65,9 +65,22 @@ jobs:
             curl -LO https://mac.r-project.org/bin/darwin20/arm64/"${name}"
             sudo tar xJf "${name}" -C /
         done
-    - name: Install R dependencies
+    - uses: r-lib/actions/setup-r-dependencies@v2
+      with:
+        cache-version: 2
+        extra-packages: |
+          any::asserthat
+          any::cpp11
+	  any::tidyselect
+	  any::vctrs
+	  any::R6
+	  any::purr
+	  any::bit64
+        needs: |
+          website
+          coverage
+    - name: Install R arrow package
       run: |
-        install.packages(c("assertthat", "cpp11", "tidyselect", "vctrs", "R6", "purrr", "bit64"))
         Sys.setenv("NOT_CRAN" = "true")
         install.packages("arrow")
       shell: Rscript {0}
