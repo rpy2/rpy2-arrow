@@ -85,7 +85,7 @@ custom converter for :mod:`rpy2` is done in few lines of code.
        ...: # We build a custom converter that is the default converter
        ...: # for ipython/jupyter shipping with rpy2, to which we add
        ...: # rules for Arrow + pandas we just made.
-       ...: conv = rpy2.ipython.rmagic.converter + conv
+       ...: conv = rpy2.ipython.rmagic.default.converter + conv
 
 Our custom converter ``conv`` can be specified as a parameter to
 ``%%R``:
@@ -118,7 +118,7 @@ It is also possible to only convert to an Arrow data structure.
        ...:     pa_tbl = pyarrow.Table.from_pandas(dataf)
        ...:     return pyra.converter.py2rpy(pa_tbl)
        ...:   
-       ...: conv2 = rpy2.ipython.rmagic.converter + conv2
+       ...: conv2 = rpy2.ipython.rmagic.default.converter + conv2
 
 .. ipython::
 
