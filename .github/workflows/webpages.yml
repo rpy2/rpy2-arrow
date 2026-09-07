@@ -43,13 +43,23 @@ jobs:
           Sys.setenv(NOT_CRAN = "true")
           install.packages("polars", repos = "https://community.r-multiverse.org")
         shell: Rscript {0}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+      - name: Create venv
+        run: |
+             uv venv --no-project --no-config --no-managed-python rpy2-arrow-env
+      - name: Install dependencies
+        run: |
+             source rpy2-arrow-env/bin/activate
+             uv pip install --upgrade pip
+             uv pip install -r requirements.txt
+        uv pip install git+https://github.com/rpy2/rpy2-r6
       - name: Install Python dependencies
         run: |
           sudo apt-get update
           sudo apt-get install pandoc
-          python -m pip install --upgrade pip
-          python setup.py install
-          pip install -r doc/requirements.txt
+          uv pip install -r doc/requirements.txt
+          uv pip install .
       - name: Build HTML doc
         run: |
           export LD_LIBRARY_PATH=$(python -m rpy2.situation LD_LIBRARY_PATH):${LD_LIBRARY_PATH}
