@@ -6,7 +6,7 @@ on:
       - 'gh-pages'
 
 env:
-  R-VERSION: "4.4"
+  R-VERSION: "4.5"
 
 
 jobs:
