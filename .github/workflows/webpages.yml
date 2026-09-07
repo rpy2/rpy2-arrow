@@ -58,6 +58,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install pandoc
+          source rpy2-arrow-env/bin/activate
           uv pip install -r doc/requirements.txt
           uv pip install .
       - name: Build HTML doc
