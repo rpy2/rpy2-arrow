@@ -53,7 +53,7 @@ jobs:
              source rpy2-arrow-env/bin/activate
              uv pip install --upgrade pip
              uv pip install -r requirements.txt
-        uv pip install git+https://github.com/rpy2/rpy2-r6
+             uv pip install git+https://github.com/rpy2/rpy2-r6
       - name: Install Python dependencies
         run: |
           sudo apt-get update
