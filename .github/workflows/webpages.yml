@@ -63,6 +63,7 @@ jobs:
           uv pip install .
       - name: Build HTML doc
         run: |
+          source rpy2-arrow-env/bin/activate
           export LD_LIBRARY_PATH=$(python -m rpy2.situation LD_LIBRARY_PATH):${LD_LIBRARY_PATH}
           python -m rpy2.situation
           cd doc
