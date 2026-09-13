@@ -71,6 +71,7 @@ jobs:
           any::R6
           any::purrr
           any::bit64
+          any::S7
     - name: Install R arrow package
       run: |
         Sys.setenv("NOT_CRAN" = "true")
