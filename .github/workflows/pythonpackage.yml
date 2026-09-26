@@ -28,7 +28,7 @@ jobs:
       matrix:
         python-version: [3.9, "3.10", "3.11" ,"3.12", "3.13", "3.14"]
         r-version: ['release']
-        rpy2-r6: ["rpy2-r6", "git+https://github.com/rpy2/rpy2-r6"]
+        rpy2-r6: ["rpy2-R6", "git+https://github.com/rpy2/rpy2-R6"]
         os: [ubuntu-22.04, ubuntu-latest, macOS-latest]
         include:
         - os: ubuntu-22.04
