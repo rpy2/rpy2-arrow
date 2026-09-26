@@ -28,6 +28,7 @@ jobs:
       matrix:
         python-version: [3.9, "3.10", "3.11" ,"3.12", "3.13", "3.14"]
         r-version: ['release']
+        rpy2-r6: ["rpy2-r6", "git+https://github.com/rpy2/rpy2-r6"]
         os: [ubuntu-22.04, ubuntu-latest, macOS-latest]
         include:
         - os: ubuntu-22.04
@@ -100,7 +101,7 @@ jobs:
         source rpy2-arrow-env/bin/activate
         uv pip install --upgrade pip
         uv pip install -r requirements.txt
-        uv pip install git+https://github.com/rpy2/rpy2-r6
+        uv pip install "${{ matrix.rpy2-r6 }}"
     - name: Build package
       run: |
         source rpy2-arrow-env/bin/activate
