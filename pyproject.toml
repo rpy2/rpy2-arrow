@@ -34,6 +34,7 @@ dynamic = ["version"]
 polars = ["polars"]
 test = ["pytest", "pandas"]
 R6 = ["rpy2-R6"]
+R6-dev = ["pip @ git+https://github.com/rpy2/rpy2-r6"]
 all = ["pytest", "pandas", "rpy2-R6", "polars"]
 
 [project.urls]
