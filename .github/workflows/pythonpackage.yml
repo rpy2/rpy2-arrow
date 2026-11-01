@@ -26,7 +26,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.9, "3.10", "3.11" ,"3.12", "3.13", "3.14"]
+        python-version: [3.9, "3.10", "3.11" ,"3.12", "3.13", "3.14". "3.15"]
         r-version: ['release']
         rpy2-arrow-install-options: ["[all]", "[all, R6-dev]"]
         os: [ubuntu-22.04, ubuntu-latest, macOS-latest]
